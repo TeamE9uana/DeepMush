@@ -1,0 +1,24 @@
+django
+djangorestframework
+PyJWT == 2.1.0
+djangorestframework-simplejwt == 4.8.0
+pillow
+drf-yasg
+django-allauth
+dj_rest_auth
+django-cors-headers
+gevent
+boto3
+
+celery
+redis
+django_celery_beat
+django_celery_results
+
+coverage
+
+hypothesis
+hypothesis[all]
+
+gunicorn
+uvicorn
