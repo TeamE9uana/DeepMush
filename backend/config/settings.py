@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'rest_framework.authtoken',
 
     'config',
@@ -70,6 +72,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
 
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.kakao',
 
     'drf_yasg',
 
@@ -106,18 +109,64 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+IS_DOCKER = os.environ.get('IS_DOCKER')
+
+log_filename = "django" if IS_DOCKER else "django.debug"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "./logs/django.log",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+USE_POSTGRES = os.environ.get('USE_POSTGRES')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'deepmush',
         'USER': 'deepmush',
         'PASSWORD': 'deepmush',
         'HOST': 'database',
-        'PORT': '5432',
+        'PORT': 5432,
+    }
+} if USE_POSTGRES else {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': DB_DIR / 'db.sqlite3',
+    }
+}
+
+SOCIALACCOUNT_PROVIDERS = {
+    'kakao': {
+        'APP': {
+            'key': get_secret('KAKAO_REST_API_KEY')
+        }
+    },
+    'google': {
+        'SCOPE': [
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
     }
 }
 
