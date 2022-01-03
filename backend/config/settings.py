@@ -42,6 +42,12 @@ STATICFILES_DIRS = [
     BASE_DIR
 ]
 
+AUTH_USER_MODEL = 'auth.User'
+
+# site_id is primary key for queryset item in the site application.
+# if add a site instead of replacing for the given examples.com, then you should use 2.
+SITE_ID = 1
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,13 +57,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
+    'rest_framework.authtoken',
+
+    'config',
+
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+
+    'allauth.socialaccount.providers.google',
 
     'drf_yasg',
 
@@ -100,10 +112,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DB_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'deepmush',
+        'USER': 'deepmush',
+        'PASSWORD': 'deepmush',
+        'HOST': 'database',
+        'PORT': '5432',
     }
 }
+
 
 SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'config.urls.api_info',

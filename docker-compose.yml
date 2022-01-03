@@ -1,0 +1,31 @@
+version: "3.3"
+
+services:
+  database:
+    container_name: database
+    hostname: database
+    image: postgres:latest
+    expose:
+      - "5432"
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=deepmush
+      - POSTGRES_PASSWORD=deepmush
+      - POSTGRES_DB=deepmush
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/backend
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    tty: true
