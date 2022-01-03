@@ -35,6 +35,12 @@ DEBUG = get_secret("DEBUG") if get_secret("DEBUG") else False
 
 ALLOWED_HOSTS = ['*']
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+STATICFILES_DIRS = [
+    BASE_DIR
+]
 
 # Application definition
 
@@ -45,6 +51,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+
+    'drf_yasg',
+
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +105,10 @@ DATABASES = {
     }
 }
 
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'config.urls.api_info',
+    'USE_SESSION_AUTH': False
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
