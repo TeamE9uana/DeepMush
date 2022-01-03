@@ -8,7 +8,7 @@ services:
     expose:
       - "5432"
     volumes:
-      - ./backend/db:/var/lib/postgresql/data
+      - ./db:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=deepmush
       - POSTGRES_PASSWORD=deepmush
