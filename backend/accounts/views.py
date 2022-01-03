@@ -12,7 +12,7 @@ from rest_framework import status
 from django.shortcuts import redirect
 from rest_framework.authtoken.models import Token
 from config.environments import get_secret
-from config.models import Profiles
+from config.models import Profile
 from config.serializers import ProfileSerializer
 from drf_yasg.utils import swagger_auto_schema
 # Data class for shorthand notation
@@ -20,7 +20,6 @@ from drf_yasg.utils import swagger_auto_schema
 
 class Constants:
     KAKAO_CALLBACK_URI: str = get_secret('KAKAO_CALLBACK_URI')
-    APPLE_CALLBACK_URI: str = get_secret('APPLE_CALLBACK_URI')
     REST_API_KEY: str = get_secret('KAKAO_REST_API_KEY')
     BASE_URL: str = get_secret('BASE_URL')
 
@@ -117,13 +116,13 @@ class KakaoCallbackView(APIView):
             user: User = token_object.user
             social_user: SocialAccount = SocialAccount.objects.get(user=user)
 
-        profiles = Profiles.objects.filter(user=user)
+        profiles = Profile.objects.filter(user=user)
 
         if not profiles.exists():
             username = social_user.extra_data.get(
                 'properties', {}).get('nickname', '')
-            Profiles.objects.create(name=username, user=user)
-            profiles = Profiles.objects.filter(user=user)
+            Profile.objects.create(name=username, user=user)
+            profiles = Profile.objects.filter(user=user)
 
         profile = profiles.get()
         profile = ProfileSerializer(profile).data
