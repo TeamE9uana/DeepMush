@@ -5,6 +5,8 @@ services:
     container_name: database
     hostname: database
     image: postgres:latest
+    expose:
+      - "5432"
     volumes:
       - ./backend/db:/var/lib/postgresql/data
     environment:
