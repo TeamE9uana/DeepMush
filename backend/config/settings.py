@@ -51,7 +51,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
+    'rest_framework.authtoken',
+
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -100,10 +102,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DB_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'deepmush',
+        'USER': 'deepmush',
+        'PASSWORD': 'deepmush',
+        'HOST': 'database',
+        'PORT': '5432',
     }
 }
+
 
 SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'config.urls.api_info',
