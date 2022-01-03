@@ -42,6 +42,12 @@ STATICFILES_DIRS = [
     BASE_DIR
 ]
 
+AUTH_USER_MODEL = 'auth.User'
+
+# site_id is primary key for queryset item in the site application.
+# if add a site instead of replacing for the given examples.com, then you should use 2.
+SITE_ID = 1
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,6 +66,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+
+    'allauth.socialaccount.providers.google',
 
     'drf_yasg',
 
