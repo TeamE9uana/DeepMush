@@ -9,6 +9,8 @@ services:
       - "5432"
     volumes:
       - ./db:/var/lib/postgresql/data
+    networks:
+      - db-tier
     environment:
       - POSTGRES_USER=deepmush
       - POSTGRES_PASSWORD=deepmush
@@ -20,6 +22,11 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/backend
+    environment:
+      - USE_POSTGRES=1
+      - IS_DOCKER=1
+    networks:
+      - db-tier
     deploy:
       resources:
         limits:
@@ -29,3 +36,7 @@ services:
           cpus: "0.5"
           memory: 512M
     tty: true
+
+networks:
+  db-tier:
+    driver: bridge
