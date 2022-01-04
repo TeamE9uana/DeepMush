@@ -12,74 +12,14 @@ import { Svg, Path } from "react-native-svg";
 
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
+import { LoginPage } from "./src/component/LoginPage";
+import { ExpoCameraPage } from "./src/component/ExpoCameraPage";
+
 export default function App() {
   return (
-    <View style={stylesheet.container}>
-      <View style={stylesheet.header}>
-        <Text style={stylesheet.headertext}>🍄deepmush</Text>
-      </View>
-      <View style={stylesheet.body}>
-        <Image
-          style={stylesheet._image_1}
-          source={{ uri: imageUrl_image_1 }}
-        ></Image>
-      </View>
-
-      <View style={stylesheet.footer}>
-        <View>
-          <View
-            style={{
-              borderBottomColor: "black",
-              borderBottomWidth: 1,
-            }}
-          />
-        </View>
-
-        <View style={stylesheet.logincontainer}>
-          <TouchableOpacity
-            style={[stylesheet.buttonContainer, stylesheet.fabookButton]}
-          >
-            <View style={stylesheet.socialButtonContent}>
-              <Image
-                style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/facebook/androidL/40/FFFFFF",
-                }}
-              />
-              <Text style={stylesheet.loginText}>Continue with facebook</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[stylesheet.buttonContainer, stylesheet.googleButton]}
-          >
-            <View style={stylesheet.socialButtonContent}>
-              <Image
-                style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/google/androidL/40/FFFFFF",
-                }}
-              />
-              <Text style={stylesheet.loginText}>Continue with google</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[stylesheet.buttonContainer, stylesheet.kakaoButton]}
-          >
-            <View style={stylesheet.socialButtonContent}>
-              <Image
-                style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/google/androidL/40/FFFFFF",
-                }}
-              />
-              <Text style={stylesheet.loginText}>Continue with kakao</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+    <>
+      <ExpoCameraPage />
+    </>
   );
 }
 
@@ -97,7 +37,7 @@ const stylesheet = StyleSheet.create({
 
   headertext: {
     paddingTop: "20%",
-    fontSize: "35%",
+    fontSize: 25,
   },
 
   body: {
