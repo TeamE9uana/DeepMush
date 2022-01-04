@@ -1,4 +1,6 @@
 from json.decoder import JSONDecodeError
+
+from django.http import HttpResponse
 from config.settings import DEBUG
 from typing import Optional
 from django.contrib.auth.models import User
@@ -28,15 +30,17 @@ class Constants:
     GOOGLE_CLIENT_ID = get_secret("GOOGLE_CLIENT_ID")
     GOOGLE_CLIENT_SECRET: str = get_secret("GOOGLE_CLIENT_SECRET")
 
-    # google OAuth2 요청시 사용되는 임의의 문자열
-    GOOGLE_STATE: str = get_secret("GOOGLE_STATE")
-    GOOGLE_SCOPE: str = "https://www.googleapis.com/auth/userinfo.email"
+    GOOGLE_SCOPE: str = " ".join(["https://www.googleapis.com/auth/userinfo.email",
+                                  "https://www.googleapis.com/auth/userinfo.profile"])
 
 
 class GoogleLoginView(APIView):
     @swagger_auto_schema(operation_id="구글 로그인")
     def get(self, request):
-        return redirect(f"https://accounts.google.com/o/oauth2/v2/auth?client_id={Constants.GOOGLE_CLIENT_ID}&response_type=code&redirect_uri={Constants.GOOGLE_CALLBACK_URI}&scope={Constants.GOOGLE_SCOPE}")
+        CLIENT_ID = Constants.GOOGLE_CLIENT_ID
+        REDIRECT_URI = Constants.GOOGLE_CALLBACK_URI
+        SCOPE = Constants.GOOGLE_SCOPE
+        return redirect(f"https://accounts.google.com/o/oauth2/v2/auth?client_id={CLIENT_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={SCOPE}")
 
 
 # original code from @Chanjongp (https://github.com/Chanjongp/Django_Social_Login)
@@ -48,24 +52,31 @@ class GoogleCallbackView(APIView):
         GOOGLE_CLIENT_ID = Constants.GOOGLE_CLIENT_ID
         GOOGLE_CLIENT_SECRET = Constants.GOOGLE_CLIENT_SECRET
         GOOGLE_CALLBACK_URI = Constants.GOOGLE_CALLBACK_URI
-        GOOGLE_STATE = Constants.GOOGLE_STATE
+        BASE_URL = Constants.BASE_URL
 
         code = request.GET.get('code')
         """
         Access Token Request
         """
+        data = {
+            'code': code,
+            'client_id': GOOGLE_CLIENT_ID,
+            'client_secret': GOOGLE_CLIENT_SECRET,
+            'redirect_uri': GOOGLE_CALLBACK_URI,
+            'grant_type': 'authorization_code'
+        }
         token_req = requests.post(
-            f"https://oauth2.googleapis.com/token?client_id={GOOGLE_CLIENT_ID}&client_secret={GOOGLE_CLIENT_SECRET}&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}&state={GOOGLE_STATE}")
+            f"https://oauth2.googleapis.com/token", data=data)
         token_req_json = token_req.json()
         error = token_req_json.get("error")
         if error is not None:
-            raise JSONDecodeError(error)
+            return JsonResponse(token_req_json)
         access_token = token_req_json.get('access_token')
         """
         Email Request
         """
         email_req = requests.get(
-            f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
+            f"https://www.googleapis.com/oauth2/v1/userinfo", params={'alt': 'json', 'access_token': access_token})
         email_req_status = email_req.status_code
         if email_req_status != 200:
             return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
@@ -91,7 +102,7 @@ class GoogleCallbackView(APIView):
         # 로그인 / 가입 로직
         data = {'access_token': access_token, 'code': code}
         accept = requests.post(
-            Constants.GOOGLE_CALLBACK_URI, data=data)
+            f"{BASE_URL}accounts/google/login/finish/", data=data)
         accept_status = accept.status_code
         sign_type = 'signin' if is_sign_in else 'signup'
         if accept_status != 200:
@@ -101,10 +112,10 @@ class GoogleCallbackView(APIView):
         # DB에 자동으로 저장되는 변수이고, Request에서 Authorization 헤더에 Token으로 보내면 되는 값임.
         # 다만 'key' 라는 키값은 이해하기 힘드므로 access_token으로 이름을 변경함.
         accept_json = accept.json()
+        print(accept_json)
         permanent_token = accept_json.get('key')
 
         # profile 값 찾기
-
         token_object: Token = Token.objects.get(key=permanent_token)
 
         if not is_sign_in:
@@ -115,8 +126,7 @@ class GoogleCallbackView(APIView):
         profiles = Profile.objects.filter(user=user)
 
         if not profiles:
-            username = social_user.extra_data.get(
-                'properties', {}).get('nickname', '')
+            username = email_req_json.get('name', '')
             Profile.objects.create(name=username, user=user)
             profiles = Profile.objects.filter(user=user)
 
@@ -126,7 +136,7 @@ class GoogleCallbackView(APIView):
         return JsonResponse({'access_token': permanent_token, 'profile': profile})
 
 
-class GoogleLogin(SocialLoginView):
+class GoogleLoginToDjango(SocialLoginView):
     adapter_class = google_view.GoogleOAuth2Adapter
     callback_url = Constants.GOOGLE_CALLBACK_URI
     client_class = OAuth2Client

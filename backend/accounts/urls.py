@@ -5,7 +5,7 @@ urlpatterns = [
     path('google/login/', views.GoogleLoginView.as_view(), name='google_login'),
     path('google/callback/', views.GoogleCallbackView.as_view(),
          name='google_callback'),
-    path('google/login/finish/', views.GoogleLogin.as_view(),
+    path('google/login/finish/', views.GoogleLoginToDjango.as_view(),
          name='google_login_to_django'),
 
     path('kakao/login/', views.KakaoLoginView.as_view(), name='kakao_login'),

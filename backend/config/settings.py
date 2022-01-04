@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -120,7 +121,7 @@ LOGGING = {
         "file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": f"./logs/{log_filename}.log",
+            "filename": BASE_DIR / f"logs/{log_filename}.log",
         },
     },
     "loggers": {
@@ -154,6 +155,11 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
 SOCIALACCOUNT_PROVIDERS = {
     'kakao': {
         'APP': {
@@ -161,7 +167,12 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     },
     'google': {
+        "APP": {
+            "client_id": get_secret("GOOGLE_CLIENT_ID"),
+            "secret": get_secret("GOOGLE_CLIENT_SECRET"),
+        },
         'SCOPE': [
+            'profile',
             'email',
         ],
         'AUTH_PARAMS': {
