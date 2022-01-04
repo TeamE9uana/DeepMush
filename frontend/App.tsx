@@ -8,8 +8,6 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { Svg, Path } from "react-native-svg";
-
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
 export default function App() {
@@ -97,7 +95,7 @@ const stylesheet = StyleSheet.create({
 
   headertext: {
     paddingTop: "20%",
-    fontSize: "35%",
+    fontSize: 20,
   },
 
   body: {
@@ -135,17 +133,24 @@ const stylesheet = StyleSheet.create({
     backgroundColor: "#3498db",
   },
   fabookButton: {
-    backgroundColor: "#3b5998",
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#323F4B",
   },
   googleButton: {
-    backgroundColor: "#ff0000",
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#323F4B",
   },
   kakaoButton: {
-    backgroundColor: "#f9e000",
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#323F4B",
   },
 
   loginText: {
-    color: "white",
+    fontSize: 15,
+    color: "black",
   },
   restoreButtonContainer: {
     width: 250,
