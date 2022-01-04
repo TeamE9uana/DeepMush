@@ -70,6 +70,9 @@ class GoogleCallbackView(APIView):
         token_req_json = token_req.json()
         error = token_req_json.get("error")
         if error is not None:
+            if token_req_json.get('error') == 'invalid_request':
+                # callback API로 만료됐거나 잘못된 파라미터를 전달할 경우 다시 로그인
+                return redirect(f"{BASE_URL}accounts/google/login")
             return JsonResponse(token_req_json)
         access_token = token_req_json.get('access_token')
         """
