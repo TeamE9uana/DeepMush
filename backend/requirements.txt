@@ -21,6 +21,6 @@ hypothesis
 hypothesis[all]
 
 gunicorn
-uvicorn
 
 psycopg2-binary
+djongo

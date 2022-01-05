@@ -16,3 +16,22 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.name
+
+class Image(models.Model):
+    made_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='DeepMush')
+    created_at = models.DateTimeField(auto_now_add=True)
+    description = models.TextField()
+
+class ImageLatLng(models.Model):
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    lat = models.FloatField()
+    lng = models.FloatField()
+
+# Inference는 MongoDB로 이동.
+
+class Inference(models.Model):
+    using = 'mongodb'
+
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    result = models.JSONField()

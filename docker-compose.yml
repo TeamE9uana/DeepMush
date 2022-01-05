@@ -1,4 +1,5 @@
 version: "3.3"
+# 개발 전용! 배포에서는 패스워드등 민감 정보 환경변수화된 prod.yml 필요
 
 services:
   database:
@@ -17,6 +18,42 @@ services:
       - POSTGRES_USER=deepmush
       - POSTGRES_PASSWORD=deepmush
       - POSTGRES_DB=deepmush
+
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: deepmush@deepmush.com
+      PGADMIN_DEFAULT_PASSWORD: deepmush
+    ports:
+      - "8082:80"
+
+  mongodb:
+    container_name: mongodb
+    hostname: mongodb
+    image: mongo
+    restart: always
+    expose:
+      - "27017"
+    volumes:
+      - ./mongo-db:/data/db
+    networks:
+      - db-tier
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: deepmush
+      MONGO_INITDB_ROOT_PASSWORD: deepmush
+      MONGO_INITDB_DATABASE: deepmush
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_ADMINUSERNAME: deepmush
+      ME_CONFIG_MONGODB_ADMINPASSWORD: deepmush
 
   backend:
     depends_on:
