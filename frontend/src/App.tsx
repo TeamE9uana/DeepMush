@@ -8,9 +8,20 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import LoginButton from "./components/LoginButton";
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from "@react-native-google-signin/google-signin";
+import * as GoogleSignIn from "expo-google-sign-in";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+
 const App = () => {
+  const loginWithFacebook = () => {
+    console.log("Button pressed");
+  };
   return (
     <View style={stylesheet.container}>
       <View style={stylesheet.header}>
@@ -34,52 +45,14 @@ const App = () => {
         </View>
 
         <View style={stylesheet.logincontainer}>
-          <TouchableOpacity
-            style={[stylesheet.buttonContainer, stylesheet.fabookButton]}
-          >
-            <View style={stylesheet.socialButtonContent}>
-              <Image
-                style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/facebook/androidL/40/FFFFFF",
-                }}
-              />
-              <Text style={stylesheet.loginText}>Continue with facebook</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[stylesheet.buttonContainer, stylesheet.googleButton]}
-          >
-            <View style={stylesheet.socialButtonContent}>
-              <Image
-                style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/google/androidL/40/FFFFFF",
-                }}
-              />
-              <Text style={stylesheet.loginText}>Continue with google</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[stylesheet.buttonContainer, stylesheet.kakaoButton]}
-          >
-            <View style={stylesheet.socialButtonContent}>
-              <Image
-                style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/google/androidL/40/FFFFFF",
-                }}
-              />
-              <Text style={stylesheet.loginText}>Continue with kakao</Text>
-            </View>
-          </TouchableOpacity>
+          <LoginButton title="google" />
+          <LoginButton title="kakao" />
         </View>
       </View>
     </View>
   );
 };
+
 const stylesheet = StyleSheet.create({
   container: {
     flex: 1,
