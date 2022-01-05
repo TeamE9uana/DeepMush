@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   View,
   ViewBase,
@@ -16,44 +16,121 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { AntDesign } from "@expo/vector-icons";
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { useEffect } from "react";
 
 let DATA2 = [
   {
-    uri: "",
+    uri: "../images/mush.jpeg",
+    uri2: require("../images/mush.jpeg"),
+
     lat: "",
     long: "",
-    created_at: "2022/01/12",
+    created_at: "2022/01/1",
     description: "hi",
     id: "송이버섯",
+    percent: 100,
   },
   {
-    uri: "",
+    uri: "../images/mush2.jpeg",
+    uri2: require("../images/mush2.jpeg"),
+
     lat: "",
     long: "",
-    created_at: "2022/01/12",
+    created_at: "2022/01/2",
     description: "hi",
     id: "목이버섯",
+    percent: 80,
   },
   {
-    uri: "",
+    uri: "../images/mush3.jpeg",
+    uri2: require("../images/mush3.jpeg"),
     lat: "",
     long: "",
-    created_at: "2022/01/12",
+    created_at: "2022/01/3",
     description: "hi",
     id: "팽이버섯",
+    percent: 55,
   },
 
   {
-    uri: "",
+    uri: "../images/mush4.jpeg",
+    uri2: require("../images/mush4.jpeg"),
+
     lat: "",
     long: "",
-    created_at: "2022/01/12",
+    created_at: "2022/01/4",
+    description: "hi",
+    id: "노루궁뎅이버섯",
+    percent: 63,
+  },
+  {
+    uri: "../images/mush4.jpeg",
+    uri2: require("../images/mush4.jpeg"),
+
+    lat: "",
+    long: "",
+    created_at: "2022/01/5",
+    description: "hi",
+    id: "느타리버섯",
+    percent: 100,
+  },
+
+  {
+    uri: "../images/mush4.jpeg",
+    uri2: require("../images/mush4.jpeg"),
+
+    lat: "",
+    long: "",
+    created_at: "2022/01/6",
+    description: "hi",
+    id: "팽이버섯",
+    percent: 63,
+  },
+
+  {
+    uri: "../images/mush4.jpeg",
+    uri2: require("../images/mush4.jpeg"),
+
+    lat: "",
+    long: "",
+    created_at: "2022/01/7",
     description: "hi",
     id: "양송이버섯",
+    percent: 63,
   },
 ];
 
-export const Listpage = () => {
+/*
+function deletebutton(title:any) =() =>{
+  var le = this.state.DATA.length;
+  for (var i = 0; i < le; i++) {
+    if (this.state.DATA[i].title === title) {
+      this.state.DATA.splice(i, 1);
+      this.setState(this.state.DATA);
+
+      break;
+    }
+  }
+}
+*/
+export function Listpage() {
+  const [updatedata, setupdatedata] = useState(0);
+
+  var deletebutton = (created_at: any) => {
+    var le = DATA2.length;
+    for (var i = 0; i < le; i++) {
+      if (DATA2[i].created_at === created_at) {
+        DATA2.splice(i, 1);
+
+        setupdatedata(updatedata + 1);
+        console.log("delete button pushed");
+        console.log(created_at);
+
+        break;
+      }
+    }
+  };
   return (
     <View style={stylesheet.container}>
       <View style={stylesheet.header}>
@@ -73,65 +150,110 @@ export const Listpage = () => {
           />
         </View>
       </View>
+      <View>
+        <View
+          style={{
+            borderBottomColor: "black",
+            borderBottomWidth: 1,
+            marginBottom: 9,
+          }}
+        />
+      </View>
       <View style={stylesheet.body}>
+        <View style={{}} />
         <FlatList
           data={DATA2}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <View
               style={{
                 borderRadius: 20,
                 flexDirection: "row",
-                alignItems: "center",
+                alignItems: "flex-start",
                 justifyContent: "center",
-                marginTop: "5%",
-                height: 150,
+                marginBottom: 9,
+                height: 105,
 
-                backgroundColor: "green",
+                width: 319,
+
+                backgroundColor: index % 2 == 0 ? "#BDE39F" : "#286053",
               }}
             >
-              <View style={{ alignItems: "center", justifyContent: "center" }}>
-                <Image
-                  style={stylesheet.tinyLogo}
-                  source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }}
-                />
-                <Text
-                  style={{
-                    color: "white",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "green",
-                  }}
-                >
-                  {item.id}
-                </Text>
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 10,
+                  flex: 1,
+                }}
+              >
+                <Image style={stylesheet.tinyLogo} source={item.uri2} />
+              </View>
 
-                <Text
-                  style={{
-                    color: "white",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "green",
-                  }}
-                >
-                  {item.description}
-                </Text>
-                <Text
-                  style={{
-                    color: "white",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "green",
-                  }}
-                >
-                  {item.created_at}
-                </Text>
+              <View
+                style={{ marginLeft: 20, flexDirection: "column", flex: 1 }}
+              >
+                <View>
+                  <Text
+                    style={{
+                      color: "white",
+                      alignItems: "flex-end",
+                      marginTop: 15,
+                      marginBottom: 10,
+                    }}
+                  >
+                    {item.created_at}
+                  </Text>
+                </View>
+
+                <View style={{ flexDirection: "row" }}>
+                  <Text
+                    style={{
+                      color: "white",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 10,
+                      fontSize: 20,
+                    }}
+                  >
+                    {item.id}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "white",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 11,
+                      fontSize: 15,
+                    }}
+                  >
+                    &nbsp;{item.percent}%
+                  </Text>
+                </View>
               </View>
 
               <View
                 style={{
-                  flex: 0.9,
+                  flex: 1,
                   alignItems: "flex-end",
-                  marginLeft: "20%",
+                  justifyContent: "center",
+                  marginTop: 40,
+                }}
+              >
+                <Ionicons
+                  style={{ marginRight: 5 }}
+                  name="search"
+                  size={24}
+                  color="blue"
+                />
+                <View style={{ marginLeft: 30 }}>
+                  <Text style={{ fontSize: 10, color: "white" }}>상세보기</Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  flex: 0.5,
+                  alignItems: "flex-end",
                 }}
               >
                 <TouchableOpacity
@@ -140,18 +262,45 @@ export const Listpage = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <AntDesign name="closesquare" size={24} color="black" />
+                  <AntDesign
+                    name="closesquare"
+                    size={24}
+                    color="white"
+                    onPress={() => deletebutton(item.created_at)}
+                  />
                 </TouchableOpacity>
               </View>
             </View>
           )}
         />
       </View>
+      <View>
+        <View
+          style={{
+            borderBottomColor: "black",
+            borderBottomWidth: 1,
+          }}
+        />
+      </View>
 
-      <View style={stylesheet.footer}></View>
+      <View style={stylesheet.footer}>
+        <View>
+          <SimpleLineIcons name="folder" size={30} color="black" />
+        </View>
+        <View>
+          <SimpleLineIcons name="camera" size={30} color="black" />
+        </View>
+        <View>
+          <MaterialCommunityIcons
+            name="map-marker-outline"
+            size={30}
+            color="black"
+          />
+        </View>
+      </View>
     </View>
   );
-};
+}
 
 const stylesheet = StyleSheet.create({
   container: {
@@ -164,18 +313,23 @@ const stylesheet = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
-    backgroundColor: "green",
   },
-  body: { flex: 5, backgroundColor: "gray" },
+  body: { flex: 6, alignItems: "center" },
 
-  footer: { flex: 1, backgroundColor: "blue" },
+  footer: {
+    flex: 0.7,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
 
   logotext: {
     fontSize: 14,
   },
   tinyLogo: {
-    width: 50,
-    height: 50,
+    width: 80,
+    height: 80,
+    borderRadius: 12,
   },
 });
 
