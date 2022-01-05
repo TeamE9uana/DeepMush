@@ -75,6 +75,8 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     'corsheaders',
+
+    'storage',
 ]
 
 
