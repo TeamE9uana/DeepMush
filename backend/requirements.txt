@@ -25,6 +25,8 @@ uvicorn
 
 psycopg2-binary
 
+celery
+
 #Yolo v5 requirements.txt
 # base ----------------------------------------
 # matplotlib>=3.2.2

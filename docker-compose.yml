@@ -41,6 +41,29 @@ services:
           memory: 512M
     tty: true
 
+  worker:
+    build:
+      context: ./backend
+      dockerfile: ./build/worker/Dockerfile
+    volumes:
+      - ./backend:/backend
+    networks:
+      - db-tier
+    depends_on:
+      - database
+    environment:
+      - USE_POSTGRES=1
+      - IS_DOCKER=1
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    tty: true
+
 networks:
   db-tier:
     driver: bridge
