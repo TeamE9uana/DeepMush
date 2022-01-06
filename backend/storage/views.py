@@ -7,6 +7,7 @@ from config.serializers import SuccessSerializer
 
 from config.models import Image, ImageLatLng
 from storage.serializers import *
+from rest_framework.parsers import MultiPartParser
 from rest_framework.request import Request
 from rest_framework import status
 from GPSPhoto import gpsphoto
@@ -16,6 +17,8 @@ import tempfile
 
 
 class UploadToS3(APIView):
+    parser_classes = (MultiPartParser,)
+
     @swagger_auto_schema(
         operation_id="자신의 유저 타입 변경",
         request_body=openapi.Schema(
