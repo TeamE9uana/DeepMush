@@ -21,14 +21,20 @@ class UploadToS3(APIView):
 
     @swagger_auto_schema(
         operation_id="자신의 유저 타입 변경",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            required=['mushroom_image'],
-            properties={
-                'mushroom_image': openapi.Schema(type=openapi.TYPE_FILE),
-                'description': openapi.Schema(type=openapi.TYPE_STRING)
-            }
-        ),
+        manual_parameters=[
+            openapi.Parameter(
+                name="mushroom_image",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_FILE,
+                required=True,
+            ),
+            openapi.Parameter(
+                name="description",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=False,
+            ),
+        ],
         responses={
             status.HTTP_200_OK: SuccessSerializer,
             status.HTTP_400_BAD_REQUEST: SuccessSerializer,
