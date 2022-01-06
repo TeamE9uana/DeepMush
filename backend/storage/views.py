@@ -61,13 +61,13 @@ class UploadToS3(APIView):
         ### Saving latlng data using exif(image metadata) ###
         gps_data: dict = gpsphoto.getGPSData(temp_image_file.name)
 
-        found_latLng = False
+        found_lat_Lng = False
         if (lat := gps_data.get('Latitude')) and (lng := gps_data.get('Longitude')):
-            found_latLng = True
-            latLng = ImageLatLng.objects.create(image=image, lat=lat, lng=lng)
-            latLng.save()
+            found_lat_Lng = True
+            lat_Lng = ImageLatLng.objects.create(image=image, lat=lat, lng=lng)
+            lat_Lng.save()
 
-        not_found_comment = 'not ' if not found_latLng else ''
+        not_found_comment = 'not ' if not found_lat_Lng else ''
 
         result = {'success': True,
                   'comment': f'LatLng {not_found_comment}found'}
