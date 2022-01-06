@@ -195,7 +195,14 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'config.urls.api_info',
-    'USE_SESSION_AUTH': False
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
 }
 
 # Password validation
