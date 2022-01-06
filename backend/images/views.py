@@ -54,16 +54,17 @@ class ImageUploadView(APIView):
         if not image_file:
             return JsonResponse({'success': False, 'result': 'image not given'}, status=status.HTTP_400_BAD_REQUEST)
 
+        ### save temp image for using file by path ###
+
+        temp_image_file = tempfile.NamedTemporaryFile()
+        temp_image_file.write(image_file.read())
+
+        image_file.seek(0)
+
         ### Saving data ###
         image = Image.objects.create(
             made_by=profile, image=image_file, description=description)
         image.save()
-
-        ### save temp image for using file by path ###
-        image_file.seek(0)
-
-        temp_image_file = tempfile.NamedTemporaryFile()
-        temp_image_file.write(image_file.read())
 
         ### Saving latlng data using exif(image metadata) ###
         gps_data: dict = gpsphoto.getGPSData(temp_image_file.name)
