@@ -1,6 +1,6 @@
 import os
 import boto3
-from s3 import AWS_SECRET_KEY, AWS_ACCESS_KEY, BUCKET_NAME, APPKEY
+#from s3 import AWS_SECRET_KEY, AWS_ACCESS_KEY, BUCKET_NAME, APPKEY
 import datetime
 import re
 from pathlib import Path
@@ -11,16 +11,15 @@ from utils.datasets import LoadImages
 from utils.general import check_img_size, non_max_suppression, scale_coords, set_logging,save_one_box
 from utils.plots import colors, plot_one_box
 from utils.torch_utils import select_device
-from kakaoOcr import main
+
 
 ##s3버킷 세팅
-s3 = boto3.client('s3', aws_access_key_id = AWS_ACCESS_KEY, aws_secret_access_key = AWS_SECRET_KEY)
-resource = boto3.resource('s3', aws_access_key_id = AWS_ACCESS_KEY, aws_secret_access_key = AWS_SECRET_KEY)
-buckets = resource.Bucket(name=BUCKET_NAME)
+#s3 = boto3.client('s3', aws_access_key_id = AWS_ACCESS_KEY, aws_secret_access_key = AWS_SECRET_KEY)
+#resource = boto3.resource('s3', aws_access_key_id = AWS_ACCESS_KEY, aws_secret_access_key = AWS_SECRET_KEY)
+#buckets = resource.Bucket(name=BUCKET_NAME)
 
 ##모델 로드 부분
-weights1 = 'modelv2.0.pt'           # question/content/answer 구분 모델
-weights2 = 'choice5_bestweight.pt'  # choice 구분 모델
+weights = 'mushroomAI.pt'           # AI 모델 가중치
 
 def get_img(image):
 
@@ -35,14 +34,12 @@ def get_img(image):
     half = device.type != 'cpu'  # half precision only supported on CUDA
 
     # Load model
-    model1 = attempt_load(weights1, map_location=device)  # load FP32 model
-    model2 = attempt_load(weights2, map_location=device)  # load FP32 model
+    model = attempt_load(weights, map_location=device)  # load FP32 model
 
-    imgsz = check_img_size(imgsz, s=model1.stride.max())  # check img_size
+    imgsz = check_img_size(imgsz, s=model.stride.max())  # check img_size
 
     if half:
-        model1.half()  # to FP16
-        model2.half()
+        model.half()  # to FP16
 
 
     # Set Dataloader
@@ -51,14 +48,14 @@ def get_img(image):
     dataset = LoadImages(source, img_size=imgsz)
 
     # Get names and colors
-    names = model1.module.names if hasattr(model1, 'module') else model1.names
+    names = model.module.names if hasattr(model, 'module') else model.names
 
     # return 형식
-    dict = {"question": [], "content" :[], "answer" : []}
+    dict = {"enoki": [], "shitake" :[], "songi" : [], "yellowegg" : [], "woodear" : [] }
 
     # Run inference
     if device.type != 'cpu':
-        model1(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model1.parameters())))  # run once
+        model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model.parameters())))  # run once
     for path, img, im0s, vid_cap in dataset:
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
@@ -67,7 +64,7 @@ def get_img(image):
             img = img.unsqueeze(0)
 
         # Inference
-        pred = model1(img, augment=False)[0]
+        pred = model(img, augment=False)[0]
 
         # Apply NMS
         pred = non_max_suppression(pred, 0.5, 0.45, classes=None, agnostic=False)
@@ -123,7 +120,7 @@ def get_img(image):
                       
                         dict[names[c]].append(text)
                    
-
+                    """
                     elif names[c] == "answer":
                        
                         isAnswer=1
@@ -288,7 +285,7 @@ def get_img(image):
                                     if dataset.mode == 'image':
                                         cv2.imwrite(save_path, im02)
                                         cv2.imwrite('./result/crops/answer/choicecrop.jpg', im02)
-                                        
+                     """                   
                        
                     
             # Save results (image with detections)
@@ -297,6 +294,7 @@ def get_img(image):
                     cv2.imwrite(save_path, im0)
                    
     # content안에 answer있는 문제의 경우
+    """
     if isQuestion == 1 and isContent == 1 and isAnswer == 0 :  
         dict["answer"].append("①")
         dict["answer"].append("no exist url")
@@ -308,7 +306,7 @@ def get_img(image):
         dict["answer"].append("no exist url")
         dict["answer"].append("⑤")
         dict["answer"].append("no exist url")
-
+"""
     print(dict)
     title=dict["question"]
     choices=dict["answer"]
