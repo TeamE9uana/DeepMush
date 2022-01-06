@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import UploadToS3
+from .views import *
 
 urlpatterns = [
-    path('s3/',UploadToS3.as_view(),name='s3'),
+    path('', ImageUploadView.as_view(), name='image_upload'),
 ]

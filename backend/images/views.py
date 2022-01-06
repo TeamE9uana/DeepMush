@@ -6,7 +6,7 @@ from drf_yasg.utils import swagger_auto_schema
 from config.serializers import SuccessSerializer
 
 from config.models import Image, ImageLatLng, Profile
-from storage.serializers import *
+from images.serializers import *
 from rest_framework.parsers import MultiPartParser
 from rest_framework.request import Request
 from rest_framework import status
@@ -16,7 +16,7 @@ import tempfile
 # Create your views here.
 
 
-class UploadToS3(APIView):
+class ImageUploadView(APIView):
     parser_classes = (MultiPartParser,)
 
     @swagger_auto_schema(

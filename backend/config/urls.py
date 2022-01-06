@@ -44,5 +44,5 @@ urlpatterns = [
                                        cache_timeout=0), name='schema-redoc'),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('storage/', include('storage.urls'))
+    path('images/', include('images.urls'))
 ] + staticfiles_urlpatterns()
