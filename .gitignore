@@ -348,3 +348,6 @@ MigrationBackup/
 .ionide/
 
 db
+
+# mac stuff
+.DS_Store
