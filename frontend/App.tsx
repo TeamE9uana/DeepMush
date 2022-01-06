@@ -2,12 +2,13 @@ import React from "react";
 
 import { LoginPage } from "./src/component/LoginPage";
 import { ExpoCameraPage } from "./src/component/ExpoCameraPage";
-import { Listpage } from "./src/component/ListPage";
+import { ListPage } from "./src/component/ListPage";
+import DetailPage from "./src/component/DetailPage";
 
 export default function App() {
   return (
     <>
-      <Listpage></Listpage>
+      <DetailPage></DetailPage>
     </>
   );
 }

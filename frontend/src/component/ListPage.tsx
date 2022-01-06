@@ -18,11 +18,12 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
+import { DetailPage } from "./DetailPage";
 
 let DATA2 = [
   {
-    uri: "../images/mush.jpeg",
-    uri2: require("../images/mush.jpeg"),
+    uri: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
+    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
 
     lat: "",
     long: "",
@@ -33,7 +34,7 @@ let DATA2 = [
   },
   {
     uri: "../images/mush2.jpeg",
-    uri2: require("../images/mush2.jpeg"),
+    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
 
     lat: "",
     long: "",
@@ -44,7 +45,7 @@ let DATA2 = [
   },
   {
     uri: "../images/mush3.jpeg",
-    uri2: require("../images/mush3.jpeg"),
+    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
     lat: "",
     long: "",
     created_at: "2022/01/3",
@@ -55,7 +56,7 @@ let DATA2 = [
 
   {
     uri: "../images/mush4.jpeg",
-    uri2: require("../images/mush4.jpeg"),
+    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
 
     lat: "",
     long: "",
@@ -66,7 +67,7 @@ let DATA2 = [
   },
   {
     uri: "../images/mush4.jpeg",
-    uri2: require("../images/mush4.jpeg"),
+    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
 
     lat: "",
     long: "",
@@ -78,7 +79,7 @@ let DATA2 = [
 
   {
     uri: "../images/mush4.jpeg",
-    uri2: require("../images/mush4.jpeg"),
+    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
 
     lat: "",
     long: "",
@@ -90,7 +91,7 @@ let DATA2 = [
 
   {
     uri: "../images/mush4.jpeg",
-    uri2: require("../images/mush4.jpeg"),
+    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
 
     lat: "",
     long: "",
@@ -116,7 +117,7 @@ function deletebutton(title:any) =() =>{
 */
 
 // delete DATA2 with deletebutton
-export function Listpage() {
+export function ListPage() {
   const [updatedata, setupdatedata] = useState(DATA2);
 
   var deletebutton = (index: any) => {
@@ -182,7 +183,12 @@ export function Listpage() {
                   flex: 1,
                 }}
               >
-                <Image style={stylesheet.tinyLogo} source={item.uri2} />
+                <Image
+                  style={stylesheet.tinyLogo}
+                  source={{
+                    uri: item.uri2,
+                  }}
+                />
               </View>
 
               <View
@@ -240,6 +246,7 @@ export function Listpage() {
                   name="search"
                   size={24}
                   color="blue"
+                  onPress={() => DetailPage(index, DATA2)}
                 />
                 <View style={{ marginLeft: 30 }}>
                   <Text style={{ fontSize: 10, color: "white" }}>상세보기</Text>
@@ -328,5 +335,3 @@ const stylesheet = StyleSheet.create({
     borderRadius: 12,
   },
 });
-
-export default Listpage;
