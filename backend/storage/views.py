@@ -20,7 +20,7 @@ class UploadToS3(APIView):
     parser_classes = (MultiPartParser,)
 
     @swagger_auto_schema(
-        operation_id="자신의 유저 타입 변경",
+        operation_id="S3 버킷에 이미지 저장",
         manual_parameters=[
             openapi.Parameter(
                 name="mushroom_image",
