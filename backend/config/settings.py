@@ -256,9 +256,14 @@ AWS_S3_SIGNATURE_VERSION = get_secret("AWS_S3_SIGNATURE_VERSION")
 if IS_DOCKER:
     CELERY_BROKER_URL = 'amqp://rabbitmq:5672'
 else:
-    CELERY_BROKER_URL = 'amqp://rabbitmq:5672'
+    CELERY_BROKER_URL = 'amqp://localhost:5672'
+
 CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+
+if IS_DOCKER:
+    CELERY_RESULT_BACKEND = 'rpc://rabbitmq:5672'
+else:
+    CELERY_RESULT_BACKEND = 'rpc://localhost:5672'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Seoul'
