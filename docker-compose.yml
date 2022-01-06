@@ -64,6 +64,7 @@ services:
   backend:
     depends_on:
       - database
+      - mongodb
     build: ./backend
     ports:
       - "8000:8000"
@@ -94,6 +95,7 @@ services:
       - db-tier
     depends_on:
       - database
+      - mongodb
     environment:
       - USE_POSTGRES=1
       - IS_DOCKER=1
