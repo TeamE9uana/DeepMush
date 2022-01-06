@@ -5,7 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from config.serializers import SuccessSerializer
 
-from config.models import Image, ImageLatLng
+from config.models import Image, ImageLatLng, Profile
 from storage.serializers import *
 from rest_framework.parsers import MultiPartParser
 from rest_framework.request import Request
@@ -47,6 +47,7 @@ class UploadToS3(APIView):
         """
         ### Parsing data ###
         user = request.user  # 사용자
+        profile = Profile.objects.get(user=user.id)
         description = request.POST.get('description', '')  # 사용자의 코멘트
         image_file = request.FILES.get('mushroom_image', None)  # 버섯 이미지
 
@@ -55,7 +56,7 @@ class UploadToS3(APIView):
 
         ### Saving data ###
         image = Image.objects.create(
-            made_by=user, image=image_file, description=description)
+            made_by=profile, image=image_file, description=description)
         image.save()
 
         ### save temp image for using file by path ###
