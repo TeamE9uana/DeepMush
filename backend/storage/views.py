@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from backend.config.serializers import SuccessSerializer
+from config.serializers import SuccessSerializer
 
 from config.models import Image, ImageLatLng
 from storage.serializers import *
@@ -20,9 +20,10 @@ class UploadToS3(APIView):
         operation_id="자신의 유저 타입 변경",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
+            required=['mushroom_image'],
             properties={
                 'mushroom_image': openapi.Schema(type=openapi.TYPE_FILE),
-                'description': openapi.Schema(type=openapi.TYPE_STRING, required=False)
+                'description': openapi.Schema(type=openapi.TYPE_STRING)
             }
         ),
         responses={
