@@ -114,22 +114,17 @@ function deletebutton(title:any) =() =>{
   }
 }
 */
+
+// delete DATA2 with deletebutton
 export function Listpage() {
-  const [updatedata, setupdatedata] = useState(0);
+  const [updatedata, setupdatedata] = useState(DATA2);
 
-  var deletebutton = (created_at: any) => {
+  var deletebutton = (index: any) => {
     var le = DATA2.length;
-    for (var i = 0; i < le; i++) {
-      if (DATA2[i].created_at === created_at) {
-        DATA2.splice(i, 1);
 
-        setupdatedata(updatedata + 1);
-        console.log("delete button pushed");
-        console.log(created_at);
-
-        break;
-      }
-    }
+    setupdatedata(DATA2.splice(index, 1));
+    console.log("delete button pushed123");
+    console.log("DATA2_length" + DATA2.length);
   };
   return (
     <View style={stylesheet.container}>
@@ -163,6 +158,7 @@ export function Listpage() {
         <View style={{}} />
         <FlatList
           data={DATA2}
+          keyExtractor={(item) => String(item.created_at)}
           renderItem={({ item, index }) => (
             <View
               style={{
@@ -266,7 +262,7 @@ export function Listpage() {
                     name="closesquare"
                     size={24}
                     color="white"
-                    onPress={() => deletebutton(item.created_at)}
+                    onPress={() => deletebutton(index)}
                   />
                 </TouchableOpacity>
               </View>
