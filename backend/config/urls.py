@@ -24,7 +24,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 api_info = openapi.Info(
     title="Deepmush API",
     default_version='v2',
-    description="Deepmush API 문서입니다.",
+    description="Deepmush API 문서입니다.\n토큰 인증을 하실 때는 헤더에 'Token xxx' 형태로 액세스 토큰에 Token 접두사를 붙여주세요.",
     contact=openapi.Contact(email="optional.int@kakao.com"),
     license=openapi.License(name="MIT License"),
 )
