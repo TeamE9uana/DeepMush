@@ -14,8 +14,6 @@ from pathlib import Path
 from .environments import get_secret
 import os
 
-os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -77,6 +75,8 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     'corsheaders',
+
+    'storage',
 ]
 
 
@@ -147,6 +147,17 @@ DATABASES = {
         'PASSWORD': 'deepmush',
         'HOST': 'database',
         'PORT': 5432,
+    },
+    'mongodb': {
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': True,
+        'NAME': 'deepmush',
+        'HOST': 'mongodb',
+        'PORT': 27017,
+        'USER': 'deepmush',
+        'PASSWORD': 'deepmush',
+        'AUTH_SOURCE': 'admin',
+        'AUTH_MECHANISM': 'SCRAM-SHA-1',
     }
 } if USE_POSTGRES else {
     'default': {
@@ -219,6 +230,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATABASE_ROUTERS = ('config.dbrouters.MongoDBRouter',)
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -229,3 +242,13 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AWS Access
+AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = get_secret("AWS_STORAGE_BUCKET_NAME")
+
+# S3 Storage
+DEFAULT_FILE_STORAGE = get_secret("DEFAULT_FILE_STORAGE")
+AWS_S3_REGION_NAME = get_secret("AWS_S3_REGION_NAME")
+AWS_S3_SIGNATURE_VERSION = get_secret("AWS_S3_SIGNATURE_VERSION")

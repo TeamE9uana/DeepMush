@@ -21,7 +21,6 @@ hypothesis
 hypothesis[all]
 
 gunicorn
-uvicorn
 
 psycopg2-binary
 
@@ -43,3 +42,4 @@ cv
 # plotting ------------------------------------
 seaborn>=0.11.0
 pandas
+djongo
