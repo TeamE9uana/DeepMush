@@ -2,8 +2,11 @@ django
 djangorestframework
 PyJWT == 2.1.0
 djangorestframework-simplejwt == 4.8.0
+
 pillow
+exifread
 piexif
+
 GPSPhoto
 drf-yasg
 django-allauth
