@@ -78,7 +78,6 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'images',
-    'storage',
 ]
 
 
