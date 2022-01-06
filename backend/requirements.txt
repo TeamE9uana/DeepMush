@@ -13,6 +13,8 @@ django-allauth
 dj_rest_auth
 django-cors-headers
 gevent
+
+django-storages
 boto3
 
 celery
