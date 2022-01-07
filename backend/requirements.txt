@@ -2,12 +2,19 @@ django
 djangorestframework
 PyJWT == 2.1.0
 djangorestframework-simplejwt == 4.8.0
+
 pillow
+exifread
+piexif
+
+GPSPhoto
 drf-yasg
 django-allauth
 dj_rest_auth
 django-cors-headers
 gevent
+
+django-storages
 boto3
 
 celery
@@ -42,4 +49,6 @@ cv
 # plotting ------------------------------------
 seaborn>=0.11.0
 pandas
+
+pymongo==3.12.1
 djongo

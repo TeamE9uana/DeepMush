@@ -75,6 +75,7 @@ services:
       - IS_DOCKER=1
     networks:
       - db-tier
+      - mq-tier
     deploy:
       resources:
         limits:
@@ -85,14 +86,24 @@ services:
           memory: 512M
     tty: true
 
+  rabbitmq:
+    hostname: rabbitmq
+    container_name: rabbitmq
+    image: rabbitmq:3
+    networks:
+      - mq-tier
+    expose:
+      - "5672"
+
   worker:
     build:
       context: ./backend
-      dockerfile: ./build/worker/Dockerfile
+      dockerfile: ../build/worker/Dockerfile
     volumes:
       - ./backend:/backend
     networks:
       - db-tier
+      - mq-tier
     depends_on:
       - database
       - mongodb
@@ -111,4 +122,6 @@ services:
 
 networks:
   db-tier:
+    driver: bridge
+  mq-tier:
     driver: bridge

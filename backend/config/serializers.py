@@ -6,3 +6,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+
+
+class SuccessSerializer(serializers.Serializer):
+    success = serializers.BooleanField()
+    comment = serializers.CharField()
+
+
+class SuccessWithoutCommentSerializer(serializers.Serializer):
+    success = serializers.BooleanField()

@@ -35,7 +35,7 @@ def wrapped_run(**kwargs):
         None. makes image file as side effect.
 
     Fixed Parameters: couldn't be overrided.
-        weights = ./mushroomAI.pt:         model.pt path(s)
+        weights = ./mushroomAI.pt:    model.pt path(s)
         imgsz = (416, 416):           inference size (height, width)
     """
 

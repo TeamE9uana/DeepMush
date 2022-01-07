@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework.authtoken',
 
@@ -76,19 +77,23 @@ INSTALLED_APPS = [
 
     'corsheaders',
 
-    'storage',
+    'images',
 ]
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'config.urls'
 
@@ -171,6 +176,16 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+# JWT
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
 SOCIALACCOUNT_PROVIDERS = {
     'kakao': {
         'APP': {
@@ -195,7 +210,14 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'config.urls.api_info',
-    'USE_SESSION_AUTH': False
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
 }
 
 # Password validation
@@ -252,3 +274,18 @@ AWS_STORAGE_BUCKET_NAME = get_secret("AWS_STORAGE_BUCKET_NAME")
 DEFAULT_FILE_STORAGE = get_secret("DEFAULT_FILE_STORAGE")
 AWS_S3_REGION_NAME = get_secret("AWS_S3_REGION_NAME")
 AWS_S3_SIGNATURE_VERSION = get_secret("AWS_S3_SIGNATURE_VERSION")
+
+if IS_DOCKER:
+    CELERY_BROKER_URL = 'amqp://rabbitmq:5672'
+else:
+    CELERY_BROKER_URL = 'amqp://localhost:5672'
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+
+if IS_DOCKER:
+    CELERY_RESULT_BACKEND = 'rpc://rabbitmq:5672'
+else:
+    CELERY_RESULT_BACKEND = 'rpc://localhost:5672'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'
