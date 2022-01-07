@@ -52,3 +52,6 @@ pandas
 
 pymongo==3.12.1
 djongo
+
+hypothesis
+hypothesis[all]
