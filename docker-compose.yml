@@ -86,6 +86,30 @@ services:
           memory: 512M
     tty: true
 
+  migrate:
+    depends_on:
+      - database
+      - mongodb
+    build: ./backend
+    volumes:
+      - ./backend:/backend
+    environment:
+      - USE_POSTGRES=1
+      - IS_DOCKER=1
+    networks:
+      - db-tier
+      - mq-tier
+    entrypoint: "/bin/sh -c 'cd /backend ; while :; do python manage.py makemigrations ; python manage.py migrate ; sleep 15s ; done;'"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    tty: true
+
   rabbitmq:
     hostname: rabbitmq
     container_name: rabbitmq
