@@ -1,8 +1,10 @@
-from .detection_raw import run as run_yolov5, ROOT
+from .lib.detection_raw import run as run_yolov5, ROOT
+from config.celery import app
 
 
-def wrapped_run(**kwargs):
-    """wrapper function of yolov5.
+@app.task
+def run_inference(**kwargs) -> None:
+    """celery task function of yolov5.
 
     Args:
         kwargs: optional parameters of run.
@@ -35,11 +37,11 @@ def wrapped_run(**kwargs):
         None. makes image file as side effect.
 
     Fixed Parameters: couldn't be overrided.
-        weights = ./mushroomAI.pt:    model.pt path(s)
+        weights = ./lib/mushroomAI.pt:    model.pt path(s)
         imgsz = (416, 416):           inference size (height, width)
     """
 
     arguments = kwargs | {'weights': ROOT /
-                          'mushroomAI.pt', 'imgsz': (416, 416)}
+                          'lib/mushroomAI.pt', 'imgsz': (416, 416)}
 
     run_yolov5(**arguments)
