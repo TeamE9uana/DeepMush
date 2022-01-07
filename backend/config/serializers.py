@@ -13,5 +13,9 @@ class SuccessSerializer(serializers.Serializer):
     comment = serializers.CharField()
 
 
+class InferenceSuccessSerializer(SuccessSerializer):
+    inference = serializers.CharField()
+
+
 class SuccessWithoutCommentSerializer(serializers.Serializer):
     success = serializers.BooleanField()

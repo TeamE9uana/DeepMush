@@ -42,7 +42,7 @@ class ImageUploadView(APIView):
     def post(self, request: Request):
         """
         'Content-Type': 'multipart/form-data'
-        image와 json을 동시에 받아서 Image 모델에 저장
+        image와 json을 동시에 받아서 Image 모델에 저장하고 추론 결과를 반환한다.
         이때 이미지는 S3 저장소에 바로 저장된다.
         """
         ### Parsing data ###
