@@ -16,7 +16,7 @@ import uuid
 
 
 class MockRequestMixin():
-    def mock_request(self: TestCase, user: UserModel, token: Token, *, params: dict = {}, data: dict = {}, view_name: str = 'users_info_view', view: Optional[Type[APIView]] = None, mode: str = 'post'):
+    def mock_request(self: TestCase, user: UserModel, token: Token, *, params: dict = {}, data: dict = {}, view_name: str = 'images_view', view: Optional[Type[APIView]] = None, mode: str = 'post'):
         self.assertIsNotNone(view)
 
         url = reverse(view_name, kwargs=params)
