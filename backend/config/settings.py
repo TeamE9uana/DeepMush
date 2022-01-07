@@ -157,12 +157,14 @@ DATABASES = {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': True,
         'NAME': 'deepmush',
-        'HOST': 'mongodb',
-        'PORT': 27017,
-        'USER': 'deepmush',
-        'PASSWORD': 'deepmush',
-        'AUTH_SOURCE': 'admin',
-        'AUTH_MECHANISM': 'SCRAM-SHA-1',
+        'CLIENT': {
+            'host': 'mongodb',
+            'port': 27017,
+            'username': 'deepmush',
+            'password': 'deepmush',
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
+        }
     }
 } if USE_POSTGRES else {
     'default': {
