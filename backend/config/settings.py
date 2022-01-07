@@ -152,6 +152,9 @@ DATABASES = {
         'PASSWORD': 'deepmush',
         'HOST': 'database',
         'PORT': 5432,
+        'OPTIONS': {
+            'connect_timeout': 50000
+        }
     },
     'mongodb': {
         'ENGINE': 'djongo',
