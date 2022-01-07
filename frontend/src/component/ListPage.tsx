@@ -11,6 +11,10 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 import { Svg, Path } from "react-native-svg";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -28,7 +32,9 @@ let DATA2 = [
     lat: "",
     long: "",
     created_at: "2022/01/1",
-    description: "hi",
+    description:
+      "식감 자체는 생각보다 평범하다. 새송이버섯을 썰어서 입에 넣었을 때 느껴지는 아작아작함을 생각하면 된다. 양송이버섯이나 새송이버섯은 송이버섯의 양산형이 아니라 아예 다른 종이다. 자세한 것은 양송이버섯과 새송이버섯 문서 참조. 갓 부분은 평범한 버섯의 식감이며, 익히면 말캉말캉해진다. 하지만 향의 차원으로 넘어가면 다른 버섯과는 비교를 불허한다. 신선한 송이는 익히지 않은 상태에서도 특유의 송이향을 느낄 수 있다. 송이 향은 곧 솔 향이다.",
+
     id: "송이버섯",
     percent: 100,
   },
@@ -117,7 +123,7 @@ function deletebutton(title:any) =() =>{
 */
 
 // delete DATA2 with deletebutton
-export function ListPage() {
+export function ListPage({ navigation }) {
   const [updatedata, setupdatedata] = useState(DATA2);
 
   var deletebutton = (index: any) => {
@@ -246,7 +252,12 @@ export function ListPage() {
                   name="search"
                   size={24}
                   color="blue"
-                  onPress={() => DetailPage(index, DATA2)}
+                  onPress={() =>
+                    navigation.navigate("DetailPage", {
+                      index: index,
+                      DATA2: DATA2,
+                    })
+                  }
                 />
                 <View style={{ marginLeft: 30 }}>
                   <Text style={{ fontSize: 10, color: "white" }}>상세보기</Text>
@@ -291,7 +302,12 @@ export function ListPage() {
           <SimpleLineIcons name="folder" size={30} color="black" />
         </View>
         <View>
-          <SimpleLineIcons name="camera" size={30} color="black" />
+          <SimpleLineIcons
+            name="camera"
+            size={30}
+            color="black"
+            onPress={() => navigation.navigate("ExpoCameraPage")}
+          />
         </View>
         <View>
           <MaterialCommunityIcons

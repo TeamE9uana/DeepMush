@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native-stack": "^6.2.5",
     "expo": "~44.0.0",
     "expo-camera": "~12.1.0",
     "expo-image-manipulator": "~10.2.0",
