@@ -10,13 +10,8 @@ import {
 } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import LoginButton from "./components/LoginButton";
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from "@react-native-google-signin/google-signin";
-import * as GoogleSignIn from "expo-google-sign-in";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native";
+import StackNavigation from "./navigations/Stack";
 
 const App = () => {
   const loginWithFacebook = () => {
@@ -103,21 +98,6 @@ const stylesheet = StyleSheet.create({
   },
   loginButton: {
     backgroundColor: "#3498db",
-  },
-  fabookButton: {
-    backgroundColor: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#323F4B",
-  },
-  googleButton: {
-    backgroundColor: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#323F4B",
-  },
-  kakaoButton: {
-    backgroundColor: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#323F4B",
   },
 
   loginText: {

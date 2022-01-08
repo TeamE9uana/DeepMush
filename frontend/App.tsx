@@ -1,3 +1,4 @@
 import App from "./src/App";
+import MainPage from "./src/MainPage";
 
-export default App;
+export default MainPage;
