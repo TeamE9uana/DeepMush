@@ -1,6 +1,7 @@
 from . import settings
 from django.db import models
 from django.contrib.auth.models import User
+from djongo import models as mongoModels
 
 
 # 프로필 테이블
@@ -36,5 +37,5 @@ class Inference(models.Model):
     using = 'mongodb'
 
     image = models.ForeignKey(Image, on_delete=models.CASCADE)
-    result = models.JSONField()
+    result = mongoModels.JSONField()
     result_image = models.ImageField(upload_to='DeepMush')
