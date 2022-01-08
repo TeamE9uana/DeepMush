@@ -3,15 +3,18 @@ from rest_framework.views import APIView
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from config.serializers import ImagesResponseSerializer, SuccessSerializer
+from inference.tasks import expect_image_task
+from config.serializers import ImagesResponseSerializer, SuccessSerializer, SuccessWithInferenceSerializer
 
-from config.models import Image, ImageLatLng, Profile
+from config.models import Image, ImageLatLng, Inference, Profile
 from images.serializers import *
 from rest_framework.parsers import MultiPartParser
 from rest_framework.request import Request
 from rest_framework import status
 from GPSPhoto import gpsphoto
 import tempfile
+from django.core.files.base import ContentFile
+from uuid import uuid4
 
 # Create your views here.
 
@@ -52,7 +55,7 @@ class ImagesView(APIView):
             ),
         ],
         responses={
-            status.HTTP_200_OK: SuccessSerializer,
+            status.HTTP_200_OK: SuccessWithInferenceSerializer,
             status.HTTP_400_BAD_REQUEST: SuccessSerializer,
         })
     def post(self, request: Request):
@@ -63,7 +66,7 @@ class ImagesView(APIView):
         """
         ### Parsing data ###
         user = request.user  # 사용자
-        profile = Profile.objects.get(user=user)
+        profile = Profile.objects.get(user=user.id)
         description = request.POST.get('description', '')  # 사용자의 코멘트
         image_file = request.FILES.get('mushroom_image', None)  # 버섯 이미지
 
@@ -78,7 +81,7 @@ class ImagesView(APIView):
         image_file.seek(0)
 
         ### Saving data ###
-        image = Image.objects.create(
+        image: Image = Image.objects.create(
             made_by=profile, image=image_file, description=description)
         image.save()
 
@@ -93,7 +96,39 @@ class ImagesView(APIView):
 
         not_found_comment = 'not ' if not found_lat_Lng else ''
 
+        inference, path = expect_image_task.delay(image.image.url).get()
+
+        for idx, elem in enumerate(inference):
+            x, y, w, h, prob, label, label_name = elem
+
+            inference[idx] = {
+                'x': x,
+                'y': y,
+                'w': w,
+                'h': h,
+                'prob': prob,
+                'label': label,
+                'label_name': label_name
+            }
+
+        with open(path, 'rb') as inference_img:
+            data = inference_img.read()
+
+        inference_obj = Inference()
+
+        inference_obj.image = image
+        inference_obj.result = inference
+
+        uid = str(uuid4())
+
+        filename = f"{uid}.png"
+        inference_obj.result_image.save(filename, ContentFile(data))
+
+        inference_obj.save()
+
         result = {'success': True,
-                  'comment': f'LatLng {not_found_comment}found'}
+                  'comment': f'LatLng {not_found_comment}found',
+                  'result': inference,
+                  'result_image': inference_obj.result_image.url}
 
         return JsonResponse(result, status=status.HTTP_200_OK)

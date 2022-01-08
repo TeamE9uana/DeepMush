@@ -23,11 +23,35 @@ class SuccessWithoutCommentSerializer(serializers.Serializer):
     success = serializers.BooleanField()
 
 
+class BoundingBoxSerializer(serializers.ListSerializer):
+    class BoundingBoxElementSerializer(serializers.Serializer):
+        x = serializers.FloatField()
+        y = serializers.FloatField()
+        w = serializers.FloatField()
+        h = serializers.FloatField()
+        prob = serializers.FloatField()
+        label = serializers.IntegerField()
+        label_name = serializers.CharField()
+    child = BoundingBoxElementSerializer()
+
+
 class InferenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Inference
-        fields = ['result', 'result_image']
+        fields = ['id', 'result', 'result_image']
+
+    result = serializers.SerializerMethodField()
+
+    # string으로 출력되는 것 방지
+    @swagger_serializer_method(serializer_or_field=BoundingBoxSerializer())
+    def get_result(self, obj):
+        return obj.result
+
+
+class SuccessWithInferenceSerializer(SuccessSerializer):
+    result = BoundingBoxSerializer()
+    result_image = serializers.CharField()
 
 
 class ImageSerializer(serializers.ModelSerializer):
