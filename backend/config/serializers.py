@@ -42,7 +42,7 @@ class ImageSerializer(serializers.ModelSerializer):
         try:
             image_lat_lng = ImageLatLng.objects.get(image=obj)
         except ImageLatLng.DoesNotExist:
-            pass
+            return None
 
         return image_lat_lng.lat
 
@@ -53,7 +53,7 @@ class ImageSerializer(serializers.ModelSerializer):
         try:
             image_lat_lng = ImageLatLng.objects.get(image=obj)
         except ImageLatLng.DoesNotExist:
-            pass
+            return None
 
         return image_lat_lng.lng
 
