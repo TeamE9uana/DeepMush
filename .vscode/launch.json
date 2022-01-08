@@ -8,9 +8,23 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/backend/manage.py",
+            "cwd": "${workspaceFolder}/backend",
+            "program": "manage.py",
             "args": [
                 "runserver",
+            ],
+            "django": true
+        },
+        {
+            "name": "Python: Test",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "program": "manage.py",
+            "args": [
+                "test",
+                "--nomigrations",
+                "--noinput"
             ],
             "django": true
         },
