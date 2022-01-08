@@ -35,6 +35,8 @@ class ImageSerializer(serializers.ModelSerializer):
     lng = serializers.SerializerMethodField()
     inference = serializers.SerializerMethodField()
 
+    # N+1 문제 추후에 수정 필요
+
     @ swagger_serializer_method(serializer_or_field=serializers.FloatField(allow_null=True))
     def get_lat(self, obj: Image):
         image_lat_lng: Optional[ImageLatLng] = None
