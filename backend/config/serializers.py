@@ -30,6 +30,11 @@ class ImagesSerializer(serializers.ListSerializer):
     pass
 
 
+class ImagesResponseSerializer(serializers.ListField):
+    success = serializers.BooleanField()
+    images = ImagesSerializer
+
+
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image

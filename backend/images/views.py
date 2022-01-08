@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from config.serializers import ImagesSerializer, SuccessSerializer
+from config.serializers import ImagesResponseSerializer, SuccessSerializer
 
 from config.models import Image, ImageLatLng, Profile
 from images.serializers import *
@@ -22,15 +22,17 @@ class ImagesView(APIView):
     @swagger_auto_schema(
         operation_id="자신의 이미지 목록 조회",
         responses={
-            status.HTTP_200_OK: ImagesSerializer
+            status.HTTP_200_OK: ImagesResponseSerializer
         })
     def get(self, request: Request):
         user = request.user
         profile = Profile.objects.get(user=user.id)
 
-        images = Image.objects.filter(made_by=profile)
+        images = Image.objects.filter(made_by=profile).order_by('-id')
 
-        result = ImagesSerializer(images).data
+        result = ImagesResponseSerializer(
+            {'success': True, 'images': images}).data
+
         return JsonResponse(result, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
