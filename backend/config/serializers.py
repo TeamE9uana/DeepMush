@@ -26,20 +26,10 @@ class InferenceSerializer(serializers.ModelSerializer):
         fields = ['result', 'result_image']
 
 
-class ImagesSerializer(serializers.ListSerializer):
-    pass
-
-
-class ImagesResponseSerializer(serializers.ListField):
-    success = serializers.BooleanField()
-    images = ImagesSerializer
-
-
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = '__all__'
-        list_serializer_class = ImagesSerializer
 
     lat = serializers.SerializerMethodField()
     lng = serializers.SerializerMethodField()
@@ -74,6 +64,15 @@ class ImageSerializer(serializers.ModelSerializer):
         try:
             inference = Inference.objects.get(image=obj)
         except Inference.DoesNotExist:
-            pass
+            return None
 
-        return inference
+        return InferenceSerializer(inference).data
+
+
+class ImagesSerializer(serializers.ListSerializer):
+    child = ImageSerializer()
+
+
+class ImagesResponseSerializer(serializers.Serializer):
+    success = serializers.BooleanField()
+    images = ImagesSerializer()

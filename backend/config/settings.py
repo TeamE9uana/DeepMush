@@ -140,6 +140,11 @@ LOGGING = {
     },
 }
 
+# enable stdout during test
+
+NOSE_ARGS = ['--nocapture',
+             '--nologcapture', ]
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

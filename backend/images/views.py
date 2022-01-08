@@ -63,7 +63,7 @@ class ImagesView(APIView):
         """
         ### Parsing data ###
         user = request.user  # 사용자
-        profile = Profile.objects.get(user=user.id)
+        profile = Profile.objects.get(user=user)
         description = request.POST.get('description', '')  # 사용자의 코멘트
         image_file = request.FILES.get('mushroom_image', None)  # 버섯 이미지
 

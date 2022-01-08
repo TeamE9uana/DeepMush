@@ -1,9 +1,10 @@
 
 import json
+import tempfile
 from django.http.response import JsonResponse
-from django.test.testcases import TransactionTestCase
 from hypothesis.core import given
-from hypothesis.extra.django import TestCase, from_model
+from hypothesis.extra.django import TestCase, TransactionTestCase
+from hypothesis.strategies._internal.strategies import SearchStrategy
 from config.models import User
 from rest_framework import status
 from rest_framework.serializers import Serializer
@@ -66,3 +67,26 @@ class MockRequestBaseTestCase(TestCase, MockRequestMixin):
 
 class MockRequestBaseTransactionTestCase(TransactionTestCase, MockRequestMixin):
     pass
+
+
+class ImageStrategy(SearchStrategy):
+    def __init__(self, url="images/example/mushroom.jpg"):
+        super().__init__()
+        self.url = url
+
+    def __code__(self):
+        return super().__code__()
+
+    @staticmethod
+    def generate_image(url=""):
+        temp_image_file = tempfile.NamedTemporaryFile()
+
+        with open(url, 'rb') as image_file:
+            temp_image_file.write(image_file.read())
+
+        temp_image_file.seek(0)
+
+        return temp_image_file
+
+    def do_draw(self, data):
+        return self.generate_image(self.url)
