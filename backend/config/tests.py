@@ -4,7 +4,7 @@ from django.http.response import JsonResponse
 from django.test.testcases import TransactionTestCase
 from hypothesis.core import given
 from hypothesis.extra.django import TestCase, from_model
-from config.models import UserModel, User
+from config.models import User
 from rest_framework import status
 from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
@@ -16,7 +16,7 @@ import uuid
 
 
 class MockRequestMixin():
-    def mock_request(self: TestCase, user: UserModel, token: Token, *, params: dict = {}, data: dict = {}, view_name: str = 'images_view', view: Optional[Type[APIView]] = None, mode: str = 'post'):
+    def mock_request(self: TestCase, user: User, token: Token, *, params: dict = {}, data: dict = {}, view_name: str = 'images_view', view: Optional[Type[APIView]] = None, mode: str = 'post'):
         self.assertIsNotNone(view)
 
         url = reverse(view_name, kwargs=params)
@@ -32,7 +32,7 @@ class MockRequestMixin():
 
         return response
 
-    def get_token(self, user: UserModel, *, key: Optional[str] = None) -> Token:
+    def get_token(self, user: User, *, key: Optional[str] = None) -> Token:
         if not key:
             key = str(uuid.uuid4())
 

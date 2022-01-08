@@ -78,6 +78,8 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'images',
+
+    'test_without_migrations',
 ]
 
 
@@ -152,6 +154,9 @@ DATABASES = {
         'PASSWORD': 'deepmush',
         'HOST': 'database',
         'PORT': 5432,
+        'TEST': {
+            'NAME': 'test_deepmush',
+        },
         'OPTIONS': {
             'connect_timeout': 50000
         }
@@ -167,7 +172,10 @@ DATABASES = {
             'password': 'deepmush',
             'authSource': 'admin',
             'authMechanism': 'SCRAM-SHA-1',
-        }
+        },
+        'TEST': {
+            'NAME': 'test_deepmush',
+        },
     }
 } if USE_POSTGRES else {
     'default': {
