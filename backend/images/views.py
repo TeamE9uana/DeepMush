@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from config.serializers import SuccessSerializer
+from config.serializers import ImagesResponseSerializer, SuccessSerializer
 
 from config.models import Image, ImageLatLng, Profile
 from images.serializers import *
@@ -16,8 +16,24 @@ import tempfile
 # Create your views here.
 
 
-class ImageUploadView(APIView):
+class ImagesView(APIView):
     parser_classes = (MultiPartParser,)
+
+    @swagger_auto_schema(
+        operation_id="자신의 이미지 목록 조회",
+        responses={
+            status.HTTP_200_OK: ImagesResponseSerializer
+        })
+    def get(self, request: Request):
+        user = request.user
+        profile = Profile.objects.get(user=user.id)
+
+        images = Image.objects.filter(made_by=profile).order_by('-id')
+
+        result = ImagesResponseSerializer(
+            {'success': True, 'images': images}).data
+
+        return JsonResponse(result, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
         operation_id="S3 버킷에 이미지 저장",
@@ -47,7 +63,7 @@ class ImageUploadView(APIView):
         """
         ### Parsing data ###
         user = request.user  # 사용자
-        profile = Profile.objects.get(user=user.id)
+        profile = Profile.objects.get(user=user)
         description = request.POST.get('description', '')  # 사용자의 코멘트
         image_file = request.FILES.get('mushroom_image', None)  # 버섯 이미지
 

@@ -10,7 +10,11 @@ ENV PYTHONUNBUFFERED 1
 
 RUN sed -i 's|archive.ubuntu.com|mirror.kakao.com|g' /etc/apt/sources.list
 
+<<<<<<< HEAD
 RUN apt update -y && apt install -y build-essential libpq-dev sudo
+=======
+RUN apt update -y && apt install -y build-essential libpq-dev ffmpeg libsm6 libxext6
+>>>>>>> 04fb703fb9eae55a1a46ad81c98db88c6f8b5915
 
 RUN mkdir -p ~/.pip && echo "[global]\n\
     index-url=http://mirror.kakao.com/pypi/simple\n\

@@ -70,6 +70,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/backend
+      - ../scripts:/scripts:ro
     environment:
       - USE_POSTGRES=1
       - IS_DOCKER=1
@@ -122,9 +123,9 @@ services:
   worker:
     build:
       context: ./backend
-      dockerfile: ../build/worker/Dockerfile
     volumes:
       - ./backend:/backend
+    entrypoint: "/bin/sh ./run-celery.sh"
     networks:
       - db-tier
       - mq-tier
