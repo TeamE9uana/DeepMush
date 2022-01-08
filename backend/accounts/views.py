@@ -84,7 +84,7 @@ class GoogleCallbackView(APIView):
             f"https://www.googleapis.com/oauth2/v1/userinfo", params={'alt': 'json', 'access_token': access_token})
         email_req_status = email_req.status_code
         if email_req_status != 200:
-            return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'error': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
         email_req_json = email_req.json()
         email = email_req_json.get('email')
         """
@@ -95,12 +95,15 @@ class GoogleCallbackView(APIView):
             user: User = User.objects.get(email=email)
             # 기존에 가입된 유저의 Provider가 google이 아니면 에러 발생, 맞으면 로그인
             # 다른 SNS로 가입된 유저
-            social_user: Optional[SocialAccount] = SocialAccount.objects.get(
-                user=user)
+            try:
+                social_user: Optional[SocialAccount] = SocialAccount.objects.get(
+                    user=user)
+            except SocialAccount.DoesNotExist:
+                return JsonResponse({'error': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
             if social_user is None:
-                return JsonResponse({'err_msg': 'email exists but not social user'}, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'error': 'email exists but not social user'}, status=status.HTTP_400_BAD_REQUEST)
             if social_user.provider != 'google':
-                return JsonResponse({'err_msg': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'error': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
             is_sign_in = True
         except User.DoesNotExist:
             is_sign_in = False
@@ -111,7 +114,7 @@ class GoogleCallbackView(APIView):
         accept_status = accept.status_code
         sign_type = 'signin' if is_sign_in else 'signup'
         if accept_status != 200:
-            return JsonResponse({'err_msg': f'failed to {sign_type}'}, status=accept_status)
+            return JsonResponse({'error': f'failed to {sign_type}'}, status=accept_status)
 
         # accept의 Response body는 DRF 미들웨어 authtoken 값을 담고 있다.
         # DB에 자동으로 저장되는 변수이고, Request에서 Authorization 헤더에 Token으로 보내면 되는 값임.
@@ -209,12 +212,15 @@ class KakaoCallbackView(APIView):
             user: User = User.objects.get(email=email)
             # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
             # 다른 SNS로 가입된 유저
-            social_user: Optional[SocialAccount] = SocialAccount.objects.get(
-                user=user)
+            try:
+                social_user: Optional[SocialAccount] = SocialAccount.objects.get(
+                    user=user)
+            except SocialAccount.DoesNotExist:
+                return JsonResponse({'error': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
             if social_user is None:
-                return JsonResponse({'err_msg': 'email exists but not social user'}, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'error': 'email exists but not social user'}, status=status.HTTP_400_BAD_REQUEST)
             if social_user.provider != 'kakao':
-                return JsonResponse({'err_msg': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'error': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
             is_sign_in = True
         except User.DoesNotExist:
             is_sign_in = False
@@ -225,7 +231,7 @@ class KakaoCallbackView(APIView):
         accept_status = accept.status_code
         sign_type = 'signin' if is_sign_in else 'signup'
         if accept_status != 200:
-            return JsonResponse({'err_msg': f'failed to {sign_type}'}, status=accept_status)
+            return JsonResponse({'error': f'failed to {sign_type}'}, status=accept_status)
 
         # accept의 Response body는 DRF 미들웨어 authtoken 값을 담고 있다.
         # DB에 자동으로 저장되는 변수이고, Request에서 Authorization 헤더에 Token으로 보내면 되는 값임.
