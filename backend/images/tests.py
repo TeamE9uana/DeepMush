@@ -12,7 +12,7 @@ import json
 # Create your tests here.
 
 
-class ValidationTestCase(MockRequestBaseTestCase):
+class ImagesTestCase(MockRequestBaseTestCase):
     @given(from_model(Profile, user=from_model(User)), lists(from_model(Image)))
     def test_images_get_api(self, profile: Profile, images: List[Image]):
         profile.save()
