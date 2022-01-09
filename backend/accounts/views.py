@@ -1,6 +1,3 @@
-from json.decoder import JSONDecodeError
-
-from django.http import HttpResponse
 from config.settings import DEBUG
 from typing import Optional
 from django.contrib.auth.models import User
@@ -19,6 +16,7 @@ from config.environments import get_secret
 from config.models import Profile
 from config.serializers import ProfileSerializer
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import AllowAny
 # Data class for shorthand notation
 
 
@@ -35,6 +33,8 @@ class Constants:
 
 
 class GoogleLoginView(APIView):
+    permission_classes = [AllowAny]
+
     @swagger_auto_schema(operation_id="구글 로그인")
     def get(self, request):
         CLIENT_ID = Constants.GOOGLE_CLIENT_ID
@@ -47,6 +47,8 @@ class GoogleLoginView(APIView):
 # https://medium.com/chanjongs-programming-diary/django-rest-framework%EB%A1%9C-%EC%86%8C%EC%85%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-api-%EA%B5%AC%ED%98%84%ED%95%B4%EB%B3%B4%EA%B8%B0-google-kakao-github-2ccc4d49a781
 # 로그인 성공 시, Callback 함수로 Code 값 전달받음
 class GoogleCallbackView(APIView):
+    permission_classes = [AllowAny]
+
     @swagger_auto_schema(operation_id="구글 로그인 콜백")
     def get(self, request):
         GOOGLE_CLIENT_ID = Constants.GOOGLE_CLIENT_ID
@@ -140,12 +142,16 @@ class GoogleCallbackView(APIView):
 
 
 class GoogleLoginToDjango(SocialLoginView):
+    permission_classes = [AllowAny]
+
     adapter_class = google_view.GoogleOAuth2Adapter
     callback_url = Constants.GOOGLE_CALLBACK_URI
     client_class = OAuth2Client
 
 
 class KakaoLoginView(APIView):
+    permission_classes = [AllowAny]
+
     @swagger_auto_schema(operation_id="카카오 로그인")
     def get(self, request):
         return redirect(
@@ -157,6 +163,8 @@ class KakaoLoginView(APIView):
 # access token으로 Kakao에 email 값을 request
 # 전달받은 Email, Access Token, Code를 바탕으로 회원가입/로그인 진행
 class KakaoCallbackView(APIView):
+    permission_classes = [AllowAny]
+
     @swagger_auto_schema(operation_id="카카오 로그인 콜백")
     def get(self, request):
         code = request.GET.get("code")
@@ -249,6 +257,8 @@ class KakaoCallbackView(APIView):
 
 
 class KakaoLoginToDjango(SocialLoginView):
+    permission_classes = [AllowAny]
+
     adapter_class = kakao_view.KakaoOAuth2Adapter
     client_class = OAuth2Client
     callback_url = Constants.KAKAO_CALLBACK_URI
