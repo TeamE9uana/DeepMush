@@ -160,6 +160,7 @@ services:
       - ./backend/logs:/var/log/backend
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       # - /var/run/docker.sock:/var/run/docker.sock:ro
+    entrypoint: "/bin/sh -c 'sleep 60s && filebeat setup && filebeat -e && filebeat'"
     depends_on:
       - nginx
       - backend
