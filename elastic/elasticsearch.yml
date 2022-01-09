@@ -1,0 +1,4 @@
+network.host: 0.0.0.0
+discovery.zen.ping.unicast.hosts: ["elk"]
+discovery.type: single-node
+bootstrap.memory_lock: true

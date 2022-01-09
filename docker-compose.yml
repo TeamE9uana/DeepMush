@@ -3,8 +3,6 @@ version: "3.3"
 
 services:
   database:
-    container_name: database
-    hostname: database
     user: ubuntu
     build: ./build/postgres
     expose:
@@ -20,8 +18,6 @@ services:
       - POSTGRES_DB=deepmush
 
   pgadmin:
-    hostname: pgadmin
-    container_name: pgadmin
     image: dpage/pgadmin4
     restart: always
     networks:
@@ -35,8 +31,6 @@ services:
       - "8082"
 
   mongodb:
-    container_name: mongodb
-    hostname: mongodb
     image: mongo
     restart: always
     expose:
@@ -51,8 +45,6 @@ services:
       MONGO_INITDB_DATABASE: deepmush
 
   mongo-express:
-    hostname: mongo-express
-    container_name: mongo-express
     image: mongo-express
     restart: always
     depends_on:
@@ -68,8 +60,6 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: deepmush
 
   backend:
-    container_name: backend
-    hostname: backend
     depends_on:
       - database
       - mongodb
@@ -122,8 +112,6 @@ services:
     tty: true
 
   rabbitmq:
-    hostname: rabbitmq
-    container_name: rabbitmq
     image: rabbitmq:3
     networks:
       - mq-tier
@@ -158,8 +146,9 @@ services:
     volumes:
       - ./data/elk-data:/var/lib/elasticsearch
       - ./logstash/input.local.conf:/etc/logstash/conf.d/03-input.conf
+      - ./elastic/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml
     environment:
-      ELASTIC_PASSWORD: deepmush
+      - ELASTIC_PASSWORD=deepmush
 
   filebeat:
     build: ./filebeat
@@ -196,7 +185,6 @@ services:
         condition: on-failure
 
   prometheus:
-    container_name: prometheus
     image: prom/prometheus
     volumes:
       - ./prometheus/:/etc/prometheus/
@@ -212,10 +200,7 @@ services:
       - "5005:9090"
 
   grafana:
-    container_name: grafana
     image: grafana/grafana
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
     links:
       - prometheus:prometheus
     networks:

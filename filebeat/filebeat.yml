@@ -25,9 +25,9 @@ output:
   elasticsearch:
     hosts: 'elk:9200'
     username: 'elastic'
-    password: 'elk'
+    password: 'deepmush'
 
 setup.kibana:
   host: "elk:5601"
   username: "elastic"
-  password: "elk"
+  password: "deepmush"
