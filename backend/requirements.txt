@@ -61,5 +61,6 @@ hypothesis
 hypothesis[all]
 
 django-test-without-migrations
+django-request-logging
 
 requests

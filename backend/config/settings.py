@@ -92,6 +92,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'request_logging.middleware.LoggingMiddleware',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -121,6 +122,8 @@ IS_DOCKER = os.environ.get('IS_DOCKER')
 
 log_filename = "django" if IS_DOCKER else "django.debug"
 
+REQUEST_LOGGING_ENABLE_COLORIZE = False
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -133,6 +136,11 @@ LOGGING = {
     },
     "loggers": {
         "django": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "django.request": {
             "handlers": ["file"],
             "level": "DEBUG",
             "propagate": True,
