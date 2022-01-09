@@ -20,16 +20,19 @@ services:
       - POSTGRES_DB=deepmush
 
   pgadmin:
-    container_name: pgadmin4
+    hostname: pgadmin
+    container_name: pgadmin
     image: dpage/pgadmin4
     restart: always
     networks:
       - db-tier
+      - nginx-tier
     environment:
       PGADMIN_DEFAULT_EMAIL: deepmush@deepmush.com
       PGADMIN_DEFAULT_PASSWORD: deepmush
-    ports:
-      - "8082:80"
+      PGADMIN_LISTEN_PORT: 8082
+    expose:
+      - "8082"
 
   mongodb:
     container_name: mongodb
@@ -48,26 +51,64 @@ services:
       MONGO_INITDB_DATABASE: deepmush
 
   mongo-express:
+    hostname: mongo-express
+    container_name: mongo-express
     image: mongo-express
     restart: always
     depends_on:
       - mongodb
     networks:
       - db-tier
-    ports:
-      - 8081:8081
+      - nginx-tier
+    expose:
+      - "8081"
     environment:
       ME_CONFIG_MONGODB_SERVER: mongodb
       ME_CONFIG_MONGODB_ADMINUSERNAME: deepmush
       ME_CONFIG_MONGODB_ADMINPASSWORD: deepmush
 
   backend:
+    container_name: backend
+    hostname: backend
     depends_on:
       - database
       - mongodb
     build: ./backend
+    expose:
+      - "8000"
+    volumes:
+      - ./backend:/backend
+      - ../scripts:/scripts:ro
+    environment:
+      - USE_POSTGRES=1
+      - IS_DOCKER=1
+    networks:
+      - db-tier
+      - mq-tier
+      - nginx-tier
+    tty: true
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/config:/etc/nginx/conf.d:ro
+      - ./nginx/logs:/var/log/nginx/
     ports:
       - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+    networks:
+      - nginx-tier
+    depends_on:
+      - backend
+      - pgadmin
+      - mongo-express
+
+  migrate:
+    depends_on:
+      - database
+      - mongodb
+    build: ./backend
     volumes:
       - ./backend:/backend
     environment:
@@ -76,14 +117,7 @@ services:
     networks:
       - db-tier
       - mq-tier
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: 2G
-        reservations:
-          cpus: "0.5"
-          memory: 512M
+    entrypoint: "/bin/sh -c 'cd /backend ; while :; do python manage.py makemigrations ; python manage.py migrate ; sleep 15s ; done;'"
     tty: true
 
   rabbitmq:
@@ -98,9 +132,9 @@ services:
   worker:
     build:
       context: ./backend
-      dockerfile: ../build/worker/Dockerfile
     volumes:
       - ./backend:/backend
+    entrypoint: "/bin/sh ./run-celery.sh"
     networks:
       - db-tier
       - mq-tier
@@ -110,18 +144,12 @@ services:
     environment:
       - USE_POSTGRES=1
       - IS_DOCKER=1
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: 2G
-        reservations:
-          cpus: "0.5"
-          memory: 512M
     tty: true
 
 networks:
   db-tier:
     driver: bridge
   mq-tier:
+    driver: bridge
+  nginx-tier:
     driver: bridge

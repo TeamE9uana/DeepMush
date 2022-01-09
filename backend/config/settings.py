@@ -78,6 +78,8 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'images',
+
+    'test_without_migrations',
 ]
 
 
@@ -90,6 +92,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'request_logging.middleware.LoggingMiddleware',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -119,6 +122,8 @@ IS_DOCKER = os.environ.get('IS_DOCKER')
 
 log_filename = "django" if IS_DOCKER else "django.debug"
 
+REQUEST_LOGGING_ENABLE_COLORIZE = False
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -135,8 +140,18 @@ LOGGING = {
             "level": "DEBUG",
             "propagate": True,
         },
+        "django.request": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
     },
 }
+
+# enable stdout during test
+
+NOSE_ARGS = ['--nocapture',
+             '--nologcapture', ]
 
 
 # Database
@@ -152,17 +167,28 @@ DATABASES = {
         'PASSWORD': 'deepmush',
         'HOST': 'database',
         'PORT': 5432,
+        'TEST': {
+            'NAME': 'test_deepmush',
+        },
+        'OPTIONS': {
+            'connect_timeout': 50000
+        }
     },
     'mongodb': {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': True,
         'NAME': 'deepmush',
-        'HOST': 'mongodb',
-        'PORT': 27017,
-        'USER': 'deepmush',
-        'PASSWORD': 'deepmush',
-        'AUTH_SOURCE': 'admin',
-        'AUTH_MECHANISM': 'SCRAM-SHA-1',
+        'CLIENT': {
+            'host': 'mongodb',
+            'port': 27017,
+            'username': 'deepmush',
+            'password': 'deepmush',
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
+        },
+        'TEST': {
+            'NAME': 'test_deepmush',
+        },
     }
 } if USE_POSTGRES else {
     'default': {

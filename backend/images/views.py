@@ -3,21 +3,40 @@ from rest_framework.views import APIView
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from config.serializers import SuccessSerializer
+from inference.tasks import expect_image_task
+from config.serializers import ImagesResponseSerializer, SuccessSerializer, SuccessWithInferenceSerializer
 
-from config.models import Image, ImageLatLng, Profile
+from config.models import Image, ImageLatLng, Inference, Profile
 from images.serializers import *
 from rest_framework.parsers import MultiPartParser
 from rest_framework.request import Request
 from rest_framework import status
 from GPSPhoto import gpsphoto
 import tempfile
+from django.core.files.base import ContentFile
+from uuid import uuid4
 
 # Create your views here.
 
 
-class ImageUploadView(APIView):
+class ImagesView(APIView):
     parser_classes = (MultiPartParser,)
+
+    @swagger_auto_schema(
+        operation_id="자신의 이미지 목록 조회",
+        responses={
+            status.HTTP_200_OK: ImagesResponseSerializer
+        })
+    def get(self, request: Request):
+        user = request.user
+        profile = Profile.objects.get(user=user.id)
+
+        images = Image.objects.filter(made_by=profile).order_by('-id')
+
+        result = ImagesResponseSerializer(
+            {'success': True, 'images': images}).data
+
+        return JsonResponse(result, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
         operation_id="S3 버킷에 이미지 저장",
@@ -36,13 +55,13 @@ class ImageUploadView(APIView):
             ),
         ],
         responses={
-            status.HTTP_200_OK: SuccessSerializer,
+            status.HTTP_200_OK: SuccessWithInferenceSerializer,
             status.HTTP_400_BAD_REQUEST: SuccessSerializer,
         })
     def post(self, request: Request):
         """
         'Content-Type': 'multipart/form-data'
-        image와 json을 동시에 받아서 Image 모델에 저장
+        image와 json을 동시에 받아서 Image 모델에 저장하고 추론 결과를 반환한다.
         이때 이미지는 S3 저장소에 바로 저장된다.
         """
         ### Parsing data ###
@@ -62,7 +81,7 @@ class ImageUploadView(APIView):
         image_file.seek(0)
 
         ### Saving data ###
-        image = Image.objects.create(
+        image: Image = Image.objects.create(
             made_by=profile, image=image_file, description=description)
         image.save()
 
@@ -77,7 +96,39 @@ class ImageUploadView(APIView):
 
         not_found_comment = 'not ' if not found_lat_Lng else ''
 
+        inference, path = expect_image_task.delay(image.image.url).get()
+
+        for idx, elem in enumerate(inference):
+            x, y, w, h, prob, label, label_name = elem
+
+            inference[idx] = {
+                'x': x,
+                'y': y,
+                'w': w,
+                'h': h,
+                'prob': prob,
+                'label': label,
+                'label_name': label_name
+            }
+
+        with open(path, 'rb') as inference_img:
+            data = inference_img.read()
+
+        inference_obj = Inference()
+
+        inference_obj.image = image
+        inference_obj.result = inference
+
+        uid = str(uuid4())
+
+        filename = f"{uid}.png"
+        inference_obj.result_image.save(filename, ContentFile(data))
+
+        inference_obj.save()
+
         result = {'success': True,
-                  'comment': f'LatLng {not_found_comment}found'}
+                  'comment': f'LatLng {not_found_comment}found',
+                  'result': inference,
+                  'result_image': inference_obj.result_image.url}
 
         return JsonResponse(result, status=status.HTTP_200_OK)
