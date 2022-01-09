@@ -1,0 +1,32 @@
+global:
+  scrape_interval: 30s
+  scrape_timeout: 10s
+
+rule_files:
+  - alert.yml
+
+scrape_configs:
+  - job_name: backend
+    static_configs:
+      - targets:
+        - 'backend:8000'
+  - job_name: nginx
+    static_configs:
+      - targets:
+        - 'nginx:8000'
+  - job_name: rabbitmq
+    static_configs:
+      - targets:
+        - 'rabbitmq:5672'
+  - job_name: database
+    static_configs:
+      - targets:
+        - 'database:5432'
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+  - job_name: 'node-exporter'
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['node-exporter:9100']

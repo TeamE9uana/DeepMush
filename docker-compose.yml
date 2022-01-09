@@ -86,6 +86,7 @@ services:
       - db-tier
       - mq-tier
       - nginx-tier
+      - prometheus-tier
     tty: true
 
   nginx:
@@ -145,11 +146,115 @@ services:
       - USE_POSTGRES=1
       - IS_DOCKER=1
     tty: true
+  
+  elk:
+    image: sebp/elk
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
+    networks:
+      - elk-tier
+    volumes:
+      - ./data/elk-data:/var/lib/elasticsearch
+      - ./logstash/input.local.conf:/etc/logstash/conf.d/03-input.conf
+    environment:
+      ELASTIC_PASSWORD: deepmush
 
+  filebeat:
+    build: ./filebeat
+    networks:
+      - elk-tier
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./nginx/logs:/var/log/nginx
+      - ./backend/logs:/var/log/backend
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - nginx
+      - backend
+      - elk
+    links: 
+      - elk
+  
+  cadvisor:
+    image: google/cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - 8080:8080
+    networks:
+      - prometheus-tier
+    restart: always
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - ./data/prometheus:/prometheus
+    networks:
+      - db-tier
+      - prometheus-tier
+      - nginx-tier
+      - mq-tier
+    expose:
+      - "9090"
+    ports:
+      - "5005:9090"
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    links:
+      - prometheus:prometheus
+    networks:
+      - prometheus-tier
+    ports:
+      - "5000:3000"
+    environment:
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+      - ./data/grafana/grafana:/var/lib/grafana
+      - ./data/grafana/provisioning:/etc/grafana/provisioning
+
+  node-exporter:
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    expose:
+      - "9100"
+    restart: always
+    networks:
+      - prometheus-tier
+    deploy:
+      mode: global
+  
 networks:
   db-tier:
     driver: bridge
   mq-tier:
     driver: bridge
   nginx-tier:
+    driver: bridge
+  elk-tier:
+    driver: bridge
+  prometheus-tier:
     driver: bridge
