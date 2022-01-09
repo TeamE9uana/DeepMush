@@ -1,5 +1,5 @@
 from typing import Optional
-from config.models import Image, ImageLatLng, Inference, Profile
+from config.models import Image, ImageLatLng, Inference, Profile, User
 from rest_framework import serializers
 from drf_yasg.utils import swagger_serializer_method
 
@@ -7,7 +7,13 @@ from drf_yasg.utils import swagger_serializer_method
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ['id', 'name', 'email']
+
+    email = serializers.SerializerMethodField()
+
+    @swagger_serializer_method(serializer_or_field=serializers.CharField())
+    def get_email(self, obj):
+        return obj.user.email
 
 
 class SuccessSerializer(serializers.Serializer):

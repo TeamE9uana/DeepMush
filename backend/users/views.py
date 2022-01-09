@@ -1,26 +1,32 @@
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
+from config.serializers import ProfileSerializer, SuccessSerializer
 from config.models import Profile
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 
+
 class MyProfileView(APIView):
-    @swagger_auto_schema(operation_id="Profiel 모델에서 사용자 정보 검색")
-    def get(self,request):
+    @swagger_auto_schema(operation_id="자신의 정보 조회",
+                         responses={
+                             status.HTTP_200_OK: ProfileSerializer,
+                             status.HTTP_400_BAD_REQUEST: SuccessSerializer,
+                         })
+    def get(self, request):
         """
-        Profile Model의 특정 사용자 검색
+        자신의 Profile 조회
         """
         ### Parsing Data ###
-        user = request.GET.get('user')
-        result = None
-        status_code = None
+        user = request.user
 
         ### Checking User Existence ###
-        if Profile.objects.get(user=user).exists():
+        try:
             result = Profile.objects.get(user=user)
+            result = ProfileSerializer(result).data
+
             status_code = status.HTTP_200_OK
-        else :
-            result = {'errMsg':'No User'}
+        except Profile.DoesNotExist:
+            result = {'error': 'no user found'}
             status_code = status.HTTP_404_NOT_FOUND
 
-        return JsonResponse(result,status=status_code)
+        return JsonResponse(result, status=status_code)
