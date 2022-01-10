@@ -107,7 +107,8 @@ services:
     networks:
       - db-tier
       - mq-tier
-    entrypoint: "/bin/sh -c 'cd /backend ; while :; do python manage.py makemigrations ; python manage.py migrate ; sleep 15s ; done;'"
+    entrypoint: "/bin/sh -c 'cd /backend ; while :; do python manage.py
+      makemigrations ; python manage.py migrate ; sleep 15s ; done;'"
     tty: true
 
   rabbitmq:
@@ -133,7 +134,7 @@ services:
       - USE_POSTGRES=1
       - IS_DOCKER=1
     tty: true
-  
+
   elk:
     image: sebp/elk
     ports:
@@ -164,9 +165,9 @@ services:
       - nginx
       - backend
       - elk
-    links: 
+    links:
       - elk
-  
+
   cadvisor:
     image: google/cadvisor
     volumes:
@@ -224,7 +225,9 @@ services:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - --collector.filesystem.ignored-mount-points
-      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/l\
+        ib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)(\
+        $$|/)"
     expose:
       - "9100"
     restart: always
@@ -232,7 +235,7 @@ services:
       - prometheus-tier
     deploy:
       mode: global
-  
+
 networks:
   db-tier:
     driver: bridge

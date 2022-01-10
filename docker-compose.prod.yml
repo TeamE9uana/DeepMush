@@ -5,37 +5,32 @@ version: "3.3"
 
 services:
   database:
-    image: $DEEPMUSH_REGISTRY/deepmush_postgres:latest
+    image: deepmush_postgres:latest
     build: {}
-    environment:
-      - POSTGRES_USER=$DEEPMUSH_POSTGRES_USER
-      - POSTGRES_PASSWORD=$DEEPMUSH_POSTGRES_PASSWORD
-      - POSTGRES_DB=$DEEPMUSH_POSTGRES_DB
+    env_file:
+      - ./production/env.env
 
   pgadmin:
     expose:
       - "80"
+    env_file:
+      - ./production/env.env
     environment:
-      PGADMIN_DEFAULT_EMAIL: $DEEPMUSH_PGADMIN_EMAIL
-      PGADMIN_DEFAULT_PASSWORD: $DEEPMUSH_PGADMIN_PASSWORD
       PGADMIN_LISTEN_PORT: 80
       VIRTUAL_HOST: pgadmin.deepmush.io
 
   mongodb:
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: $DEEPMUSH_MONGODB_USERNAME
-      MONGO_INITDB_ROOT_PASSWORD: $DEEPMUSH_MONGODB_PASSWORD
-      MONGO_INITDB_DATABASE: $DEEPMUSH_MONGODB_DB
+    env_file:
+      - ./production/env.env
 
   mongo-express:
+    env_file:
+      - ./production/env.env
     environment:
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      ME_CONFIG_MONGODB_ADMINUSERNAME: $DEEPMUSH_MONGOEXPRESS_ADMIN_USERNAME
-      ME_CONFIG_MONGODB_ADMINPASSWORD: $DEEPMUSH_MONGOEXPRESS_ADMIN_PASSWORD
       VIRTUAL_HOST: mongo-express.deepmush.io
 
   backend:
-    image: $DEEPMUSH_REGISTRY/deepmush_backend:latest
+    image: deepmush_backend:latest
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
       - ./runs:/backend/runs
@@ -54,13 +49,13 @@ services:
 
   migrate:
     depends_on: []
-    image: $DEEPMUSH_REGISTRY/deepmush_backend:latest
+    image: deepmush_backend:latest
     build: {}
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
 
   worker:
-    image: $DEEPMUSH_REGISTRY/deepmush_backend:latest
+    image: deepmush_backend:latest
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
       - ./runs:/backend/runs
@@ -73,21 +68,28 @@ services:
     ports: []
     networks:
       - elk-tier
+    env_file:
+      - ./production/env.env
     environment:
-      - ELASTIC_PASSWORD=$DEEPMUSH_ELASTIC_PASSWORD
       - VIRTUAL_HOST=kibana.deepmush.io
       - VIRTUAL_PORT=5601
 
+  filebeat:
+    image: deepmush_filebeat:latest
+    build: {}
+    volumes:
+      - ./filebeat/filebeat.prod.yml:/usr/share/filebeat/filebeat.yml
+      - ./nginx/logs:/var/log/nginx
+      - ./backend/logs:/var/log/backend
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+
   cadvisor:
+    ports: []
     expose:
       - "8080"
-    environment:
-      - VIRTUAL_HOST=cadvisor.deepmush.io
 
   prometheus:
     ports: []
-    environment:
-      - VIRTUAL_HOST=prometheus.deepmush.io
 
   grafana:
     ports: []
