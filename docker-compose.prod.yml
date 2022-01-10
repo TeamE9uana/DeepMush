@@ -102,7 +102,7 @@ services:
       - mq-tier
     entrypoint: "/bin/sh -c 'cd /backend ; while :; do sleep 60s ; python manage.py
       makemigrations ; python manage.py migrate --run-syncdb ; python manage.py
-      migrate --run-syncdb --database=mongodb done;'"
+      migrate --run-syncdb --database=mongodb; done;'"
     tty: true
 
   rabbitmq:
