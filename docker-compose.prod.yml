@@ -38,6 +38,7 @@ services:
     image: $DEEPMUSH_REGISTRY/deepmush_backend:latest
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
+      - ./runs:/backend/runs
     environment:
       - USE_POSTGRES=1
       - IS_DOCKER=1
@@ -62,6 +63,7 @@ services:
     image: $DEEPMUSH_REGISTRY/deepmush_backend:latest
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
+      - ./runs:/backend/runs
 
   elk:
     expose:
