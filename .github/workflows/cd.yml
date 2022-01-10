@@ -35,7 +35,7 @@ jobs:
       - name: Run tests
         run: docker-compose build --parallel && docker-compose run --rm --entrypoint="bash /backend/scripts/run-test.sh" backend 
   docker-build:
-    needs: duplicate_guard
+    needs: test
     if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     steps:
