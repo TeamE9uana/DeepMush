@@ -207,7 +207,7 @@ services:
     networks:
       - prometheus-tier
     ports:
-      - "5000:3000"
+      - "5001:3000"
     environment:
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
     volumes:
