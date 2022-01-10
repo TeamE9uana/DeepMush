@@ -1,16 +1,31 @@
 version: "3.3"
 # 배포 전용 yml
 # https://docs.docker.com/compose/extends/ 참고
-# docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# docker-compose docker-compose.prod.yml up -d
+#
+# https://github.com/docker/compose/issues/3729 문제로 오버라이드하지 않고 새롭게 작성
 
 services:
   database:
-    image: deepmush_postgres:latest
-    build: {}
+    user: ubuntu
+    image: a891/deepmush_postgres:latest
+    expose:
+      - "5432"
+    volumes:
+      - ./db:/var/lib/postgresql/data
+      - ./scripts:/scripts:ro
+    networks:
+      - db-tier
     env_file:
       - ./production/env.env
+    tty: true
 
   pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    networks:
+      - db-tier
+      - nginx-tier
     expose:
       - "80"
     env_file:
@@ -18,19 +33,44 @@ services:
     environment:
       PGADMIN_LISTEN_PORT: 80
       VIRTUAL_HOST: pgadmin.deepmush.io
+    tty: true
 
   mongodb:
+    image: mongo
+    restart: always
+    expose:
+      - "27017"
+    volumes:
+      - ./mongo-db:/data/db
+    networks:
+      - db-tier
     env_file:
       - ./production/env.env
+    tty: true
 
   mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on:
+      - mongodb
+    networks:
+      - db-tier
+      - nginx-tier
+    expose:
+      - "8081"
     env_file:
       - ./production/env.env
     environment:
       VIRTUAL_HOST: mongo-express.deepmush.io
+    tty: true
 
   backend:
-    image: deepmush_backend:latest
+    depends_on:
+      - database
+      - mongodb
+    image: a891/deepmush_backend:latest
+    expose:
+      - "8000"
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
       - ./runs:/backend/runs
@@ -38,34 +78,64 @@ services:
       - USE_POSTGRES=1
       - IS_DOCKER=1
       - VIRTUAL_HOST=backend.deepmush.io
-
-  # 아무것도 하지 않는 이미지로 변경
-  # 실질적인 기능은 nginx-proxy가 대체함
-  nginx:
-    image: ubuntu:latest
-    ports: []
-    networks: []
-    depends_on: []
+    env_file:
+      - ./production/env.env
+    networks:
+      - db-tier
+      - mq-tier
+      - nginx-tier
+      - prometheus-tier
+    tty: true
 
   migrate:
-    depends_on: []
-    image: deepmush_backend:latest
-    build: {}
+    image: a891/deepmush_backend:latest
+    depends_on:
+      - database
+      - mongodb
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
+    environment:
+      - USE_POSTGRES=1
+      - IS_DOCKER=1
+    networks:
+      - db-tier
+      - mq-tier
+    entrypoint: "/bin/sh -c 'cd /backend ; while :; do sleep 60s ; python manage.py
+      makemigrations ; python manage.py migrate --run-syncdb ; python manage.py
+      migrate --run-syncdb --database=mongodb done;'"
+    tty: true
+
+  rabbitmq:
+    image: rabbitmq:3
+    networks:
+      - mq-tier
+    expose:
+      - "5672"
+    tty: true
 
   worker:
-    image: deepmush_backend:latest
+    image: a891/deepmush_backend:latest
+    entrypoint: "/bin/sh ./run-celery.sh"
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
       - ./runs:/backend/runs
+    networks:
+      - db-tier
+      - mq-tier
+    depends_on:
+      - database
+      - mongodb
+    environment:
+      - USE_POSTGRES=1
+      - IS_DOCKER=1
+    tty: true
 
   elk:
+    image: sebp/elk
     expose:
       - "5601"
       - "9200"
       - "5044"
-    ports: []
     networks:
       - elk-tier
     env_file:
@@ -77,26 +147,64 @@ services:
     environment:
       - VIRTUAL_HOST=kibana.deepmush.io
       - VIRTUAL_PORT=5601
+    tty: true
 
   filebeat:
-    image: deepmush_filebeat:latest
-    build: {}
+    image: a891/deepmush_filebeat:latest
+    networks:
+      - elk-tier
     volumes:
       - ./filebeat/filebeat.prod.yml:/usr/share/filebeat/filebeat.yml
       - ./nginx/logs:/var/log/nginx
       - ./backend/logs:/var/log/backend
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+    entrypoint: "/bin/sh -c 'sleep 60s && filebeat setup && filebeat -e && filebeat'"
+    depends_on:
+      - backend
+      - elk
+    links:
+      - elk
+    tty: true
 
   cadvisor:
-    ports: []
+    image: google/cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
     expose:
       - "8080"
+    networks:
+      - prometheus-tier
+    restart: always
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    tty: true
 
   prometheus:
-    ports: []
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - ./data/prometheus:/prometheus
+    networks:
+      - db-tier
+      - prometheus-tier
+      - nginx-tier
+      - mq-tier
+    expose:
+      - "9090"
+    tty: true
 
   grafana:
-    ports: []
+    image: grafana/grafana
+    links:
+      - prometheus:prometheus
+    networks:
+      - prometheus-tier
     expose:
       - "3000"
     volumes:
@@ -104,8 +212,40 @@ services:
       - ./data/grafana/grafana:/var/lib/grafana
       - ./data/grafana/provisioning:/etc/grafana/provisioning
     environment:
-      - VIRTUAL_HOST=grafana.deepmush.io
+      VIRTUAL_HOST: grafana.deepmush.io
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
+    tty: true
 
   node-exporter:
-    environment:
-      - VIRTUAL_HOST=node-exporter.deepmush.io
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/l\
+        ib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)(\
+        $$|/)"
+    expose:
+      - "9100"
+    networks:
+      - prometheus-tier
+    restart: always
+    deploy:
+      mode: global
+    tty: true
+
+networks:
+  db-tier:
+    driver: bridge
+  mq-tier:
+    driver: bridge
+  nginx-tier:
+    driver: bridge
+  elk-tier:
+    driver: bridge
+  prometheus-tier:
+    driver: bridge
