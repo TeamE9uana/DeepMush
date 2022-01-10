@@ -68,7 +68,6 @@ services:
       - "8000"
     volumes:
       - ./backend:/backend
-      - ../scripts:/scripts:ro
     environment:
       - USE_POSTGRES=1
       - IS_DOCKER=1
@@ -211,6 +210,7 @@ services:
     environment:
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
     volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./data/grafana/grafana:/var/lib/grafana
       - ./data/grafana/provisioning:/etc/grafana/provisioning
 
