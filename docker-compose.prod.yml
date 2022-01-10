@@ -70,6 +70,10 @@ services:
       - elk-tier
     env_file:
       - ./production/env.env
+    volumes:
+      - ./data/elk-data:/var/lib/elasticsearch
+      - ./logstash/input.local.conf:/etc/logstash/conf.d/03-input.conf
+      - ./elastic/elasticsearch.prod.yml:/etc/elasticsearch/elasticsearch.yml
     environment:
       - VIRTUAL_HOST=kibana.deepmush.io
       - VIRTUAL_PORT=5601
