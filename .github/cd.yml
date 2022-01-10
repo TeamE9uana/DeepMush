@@ -72,3 +72,14 @@ test:
           tags: a891/deepmush_postgres:latest
       - name: postgres Image digest
         run: echo ${{ steps.docker_build_everytime.outputs.digest }}
+
+
+      - name: Build and push filebeat
+        id: docker_build_filebeat
+        uses: docker/build-push-action@v2
+        with:
+          context: ./filebeat
+          push: true
+          tags: a891/deepmush_filebeat:latest
+      - name: postgres Image digest
+        run: echo ${{ steps.docker_build_everytime.outputs.digest }}
