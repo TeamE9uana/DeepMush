@@ -35,7 +35,7 @@ jobs:
       - name: Run tests
         run: |
           echo $SECRETS_BASE64_ENCODED | base64 -d | sudo tee ./secrets.json > /dev/null
-          docker-compose build backend && docker-compose run --rm -v $(pwd):/backend --entrypoint="bash /backend/scripts/run-test.sh" backend 
+          docker-compose build backend && docker-compose run --rm -v $(pwd):/backend --entrypoint="bash /backend/scripts/run-test-python.sh" backend 
         env:
           SECRETS_BASE64_ENCODED: ${{ secrets.SECRETS_BASE64_ENCODED }}
   docker-build:
