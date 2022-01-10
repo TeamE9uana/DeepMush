@@ -24,11 +24,8 @@ jobs:
   test:
     needs: duplicate_guard
     if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-      - name: init git lfs
-        run: |
-            sudo apt update -y && sudo apt install git-lfs
       - name: checkout
         uses: actions/checkout@v2
       - name: Set up QEMU
