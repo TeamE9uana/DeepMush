@@ -21,25 +21,25 @@ jobs:
           skip_after_successful_duplicate: "true"
           paths_ignore: '["**/README.md", "**/docs/**"]'
           do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
-  test:
-    needs: duplicate_guard
-    if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Run tests
-        run: |
-          echo -e "$SECRETS_BASE64_ENCODED" | base64 -d | sudo tee ./backend/secrets.json > /dev/null
-          docker-compose build && docker-compose up -d && sleep 120s && cd ./backend/scripts && ./run-test.sh ; docker-compose down
-        env:
-          SECRETS_BASE64_ENCODED: ${{ secrets.SECRETS_BASE64_ENCODED }}
+  # test:
+  #   needs: duplicate_guard
+  #   if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v2
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v1
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v1
+  #     - name: Run tests
+  #       run: |
+  #         echo -e "$SECRETS_BASE64_ENCODED" | base64 -d | sudo tee ./backend/secrets.json > /dev/null
+  #         docker-compose build && docker-compose up -d && sleep 120s && cd ./backend/scripts && ./run-test.sh ; docker-compose down
+  #       env:
+  #         SECRETS_BASE64_ENCODED: ${{ secrets.SECRETS_BASE64_ENCODED }}
   docker-build:
-    needs: test
+    # needs: test
     if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     steps:
