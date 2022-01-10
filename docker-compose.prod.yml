@@ -1,5 +1,7 @@
 version: "3.3"
-# 개발 전용! 배포에서는 패스워드등 민감 정보 환경변수화된 prod.yml 필요
+# 배포 전용 yml
+# https://docs.docker.com/compose/extends/ 참고
+# docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 services:
   database:
