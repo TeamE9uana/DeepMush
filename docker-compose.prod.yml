@@ -6,7 +6,7 @@ version: "3.3"
 services:
   database:
     image: $DEEPMUSH_REGISTRY/deepmush_postgres:latest
-    build:
+    build: {}
     environment:
       - POSTGRES_USER=$DEEPMUSH_POSTGRES_USER
       - POSTGRES_PASSWORD=$DEEPMUSH_POSTGRES_PASSWORD
@@ -47,14 +47,14 @@ services:
   # 실질적인 기능은 nginx-proxy가 대체함
   nginx:
     image: scratch
-    ports:
-    networks:
-    depends_on:
+    ports: []
+    networks: []
+    depends_on: []
 
   migrate:
-    depends_on:
+    depends_on: []
     image: $DEEPMUSH_REGISTRY/deepmush_backend:latest
-    build:
+    build: {}
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
 
@@ -68,7 +68,7 @@ services:
       - "5601"
       - "9200"
       - "5044"
-    ports:
+    ports: []
     networks:
       - elk-tier
     environment:
@@ -83,12 +83,12 @@ services:
       - VIRTUAL_HOST=cadvisor.deepmush.io
 
   prometheus:
-    ports:
+    ports: []
     environment:
       - VIRTUAL_HOST=prometheus.deepmush.io
 
   grafana:
-    ports:
+    ports: []
     expose:
       - "3000"
     volumes:
