@@ -33,7 +33,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Run tests
-        run: docker-compose build --parallel && docker-compose run --rm --entrypoint="bash /backend/scripts/run-test.sh" backend 
+        run: |
+          echo $SECRETS_BASE64_ENCODED | base64 -d | sudo tee ./secrets.json > /dev/null
+          docker-compose build backend && docker-compose run --rm --entrypoint="bash /backend/scripts/run-test.sh" backend 
+        env:
+          SECRETS_BASE64_ENCODED: ${{ secrets.SECRETS_BASE64_ENCODED }}
   docker-build:
     needs: test
     if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
