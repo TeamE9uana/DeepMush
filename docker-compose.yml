@@ -133,15 +133,6 @@ services:
     environment:
       - USE_POSTGRES=1
       - IS_DOCKER=1
-    deploy:
-      resources:
-        reservations:
-          cpus: '2'
-          memory: 4G
-          devices:
-          - driver: nvidia
-            count: 'all'
-            capabilities: [gpu]
     tty: true
   
   elk:
