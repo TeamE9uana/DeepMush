@@ -22,21 +22,21 @@ jobs:
           paths_ignore: '["**/README.md", "**/docs/**"]'
           do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
   test:
-      needs: duplicate_guard
-      if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
-      runs-on: self-hosted
-      steps:
-        - name: init git lfs
-          run: |
-              sudo apt update -y && sudo apt install git-lfs
-        - name: checkout
-          uses: actions/checkout@v2
-        - name: Set up QEMU
-          uses: docker/setup-qemu-action@v1
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v1
-        - name: Run tests
-          run: docker-compose build --parallel && docker-compose run --rm --entrypoint="bash /backend/scripts/run-test.sh" backend 
+    needs: duplicate_guard
+    if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
+    runs-on: self-hosted
+    steps:
+      - name: init git lfs
+        run: |
+            sudo apt update -y && sudo apt install git-lfs
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Run tests
+        run: docker-compose build --parallel && docker-compose run --rm --entrypoint="bash /backend/scripts/run-test.sh" backend 
   docker-build:
     needs: duplicate_guard
     if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
