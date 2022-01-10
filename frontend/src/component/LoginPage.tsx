@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,9 +9,16 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Svg, Path } from "react-native-svg";
+import axios from "axios";
 
 import { getStatusBarHeight } from "react-native-status-bar-height";
-export const LoginPage = () => {
+import { GoogleLogin } from "react-google-login";
+import { ListPage } from "./ListPage";
+
+export const LoginPage = ({ navigation }) => {
+  const ResponseGoogle = (response: any) => {
+    console.log(response);
+  };
   return (
     <View style={stylesheet.container}>
       <View style={stylesheet.header}>
@@ -36,21 +43,12 @@ export const LoginPage = () => {
 
         <View style={stylesheet.logincontainer}>
           <TouchableOpacity
-            style={[stylesheet.buttonContainer, stylesheet.fabookButton]}
-          >
-            <View style={stylesheet.socialButtonContent}>
-              <Image
-                style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/facebook/androidL/40/FFFFFF",
-                }}
-              />
-              <Text style={stylesheet.loginText}>Continue with facebook</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
             style={[stylesheet.buttonContainer, stylesheet.googleButton]}
+            onPress={() =>
+              navigation.navigate("Websee", {
+                url: "http://192.168.1.82:8000/accounts/google/login/",
+              })
+            }
           >
             <View style={stylesheet.socialButtonContent}>
               <Image
@@ -65,6 +63,11 @@ export const LoginPage = () => {
 
           <TouchableOpacity
             style={[stylesheet.buttonContainer, stylesheet.kakaoButton]}
+            onPress={() =>
+              navigation.navigate("Websee", {
+                url: "http://192.168.1.82:8000/accounts/kakao/login/",
+              })
+            }
           >
             <View style={stylesheet.socialButtonContent}>
               <Image
