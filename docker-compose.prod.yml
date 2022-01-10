@@ -42,7 +42,7 @@ services:
   # 아무것도 하지 않는 이미지로 변경
   # 실질적인 기능은 nginx-proxy가 대체함
   nginx:
-    image: scratch
+    image: ubuntu:latest
     ports: []
     networks: []
     depends_on: []
