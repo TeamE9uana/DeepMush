@@ -40,6 +40,7 @@ jobs:
   #         SECRETS_BASE64_ENCODED: ${{ secrets.SECRETS_BASE64_ENCODED }}
   docker-build:
     # needs: test
+    needs: duplicate-guard
     if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     steps:
