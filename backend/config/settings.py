@@ -54,11 +54,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
 
     'rest_framework',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
     'rest_framework.authtoken',
 
     'config',
@@ -74,6 +72,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
 
     'drf_yasg',
+    'django.contrib.staticfiles',  # required for serving swagger ui's css/js files
 
     'corsheaders',
 
@@ -162,9 +161,9 @@ USE_POSTGRES = os.environ.get('USE_POSTGRES')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'deepmush',
-        'USER': 'deepmush',
-        'PASSWORD': 'deepmush',
+        'NAME': get_secret('POSTGRES_DB', 'deepmush'),
+        'USER': get_secret('POSTGRES_USER', 'deepmush'),
+        'PASSWORD': get_secret('POSTGRES_PASSWORD', 'deepmush'),
         'HOST': 'database',
         'PORT': 5432,
         'TEST': {
@@ -177,12 +176,12 @@ DATABASES = {
     'mongodb': {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': True,
-        'NAME': 'deepmush',
+        'NAME': get_secret('MONGODB_DB', 'deepmush'),
         'CLIENT': {
             'host': 'mongodb',
             'port': 27017,
-            'username': 'deepmush',
-            'password': 'deepmush',
+            'username': get_secret('MONGODB_USERNAME', 'deepmush'),
+            'password': get_secret('MONGODB_PASSWORD', 'deepmush'),
             'authSource': 'admin',
             'authMechanism': 'SCRAM-SHA-1',
         },
@@ -190,10 +189,26 @@ DATABASES = {
             'NAME': 'test_deepmush',
         },
     }
-} if USE_POSTGRES else {
+} if IS_DOCKER else {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': DB_DIR / 'db.sqlite3',
+    },
+    'mongodb': {
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': True,
+        'NAME': get_secret('MONGODB_DB', 'deepmush'),
+        'CLIENT': {
+            'host': 'localhost',
+            'port': 27017,
+            'username': get_secret('MONGODB_USERNAME', 'deepmush'),
+            'password': get_secret('MONGODB_PASSWORD', 'deepmush'),
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
+        },
+        'TEST': {
+            'NAME': 'test_deepmush',
+        },
     }
 }
 
@@ -284,7 +299,10 @@ DATABASE_ROUTERS = ('config.dbrouters.MongoDBRouter',)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+STATIC_URL = '/static-files/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

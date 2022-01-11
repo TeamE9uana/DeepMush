@@ -1,0 +1,86 @@
+name: CD
+on:
+  push:
+    branches:
+      - main
+      - feat-deployment
+
+jobs:
+  duplicate_guard:
+    # continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          # All of these options are optional, so you can remove them if you are happy with the defaults
+          concurrent_skipping: "never"
+          skip_after_successful_duplicate: "true"
+          paths_ignore: '["**/README.md", "**/docs/**"]'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+  # test:
+  #   needs: duplicate_guard
+  #   if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v2
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v1
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v1
+  #     - name: Run tests
+  #       run: |
+  #         echo -e "$SECRETS_BASE64_ENCODED" | base64 -d | sudo tee ./backend/secrets.json > /dev/null
+  #         docker-compose build && docker-compose up -d && sleep 120s && cd ./backend/scripts && ./run-test.sh ; docker-compose down
+  #       env:
+  #         SECRETS_BASE64_ENCODED: ${{ secrets.SECRETS_BASE64_ENCODED }}
+  docker-build:
+    # needs: test
+    needs: duplicate_guard
+    if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push backend
+        id: docker_build_backend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend
+          push: true
+          tags: a891/deepmush_backend:latest
+      - name: backend Image digest
+        run: echo ${{ steps.docker_build_backend.outputs.digest }}
+
+      - name: Build and push postgres
+        id: docker_build_postgres
+        uses: docker/build-push-action@v2
+        with:
+          context: ./build/postgres
+          push: true
+          tags: a891/deepmush_postgres:latest
+      - name: postgres Image digest
+        run: echo ${{ steps.docker_build_everytime.outputs.digest }}
+
+      - name: Build and push filebeat
+        id: docker_build_filebeat
+        uses: docker/build-push-action@v2
+        with:
+          context: ./filebeat
+          push: true
+          tags: a891/deepmush_filebeat:latest
+      - name: postgres Image digest
+        run: echo ${{ steps.docker_build_everytime.outputs.digest }}

@@ -14,10 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.static import serve
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from config import settings
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
@@ -46,4 +48,12 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('images/', include('images.urls')),
     path('users/', include('users.urls'))
-] + staticfiles_urlpatterns()
+]
+
+static_urlpatterns = [
+    re_path(r"^static-files/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
+]
+
+urlpatterns += [
+    path("", include(static_urlpatterns)),
+]
