@@ -100,11 +100,15 @@ export function DetailPage({ route, navigation }) {
               justifyContent: "center",
             }}
           >
-            <MaterialCommunityIcons
-              name="map-marker-outline"
-              size={30}
-              color="black"
-            />
+            <TouchableOpacity
+              onPress={() => navigation.navigate("DetailMapPage")}
+            >
+              <MaterialCommunityIcons
+                name="map-marker-outline"
+                size={30}
+                color="black"
+              />
+            </TouchableOpacity>
           </View>
         </View>
 

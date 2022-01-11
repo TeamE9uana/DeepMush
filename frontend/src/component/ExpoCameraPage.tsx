@@ -13,9 +13,14 @@ import { Camera } from "expo-camera";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import axios from "axios";
+import "localstorage-polyfill";
 
 let cameraFace = "back";
-export const ExpoCameraPage = () => {
+
+export const ExpoCameraPage = ({ navigation }) => {
+  var token = localStorage.getItem("access_token");
+
   let camera: Camera;
   const [startCamera, setStartCamera] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -54,6 +59,16 @@ export const ExpoCameraPage = () => {
       setCapturedImage(null);
       setStartCamera(false);
       console.log(newUri);
+
+      fetch("http://backend.deepmush.io/images/", {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Token 07640134ef48c0c2b063bbb329c81b5e2fc99081",
+        },
+      }).then(function (myJson) {
+        console.log("response");
+        console.log(JSON.stringify(myJson));
+      });
     } catch (err) {
       throw new Error("File could not be saved.");
     }
@@ -63,7 +78,6 @@ export const ExpoCameraPage = () => {
   const handleRetakeImage = () => {
     setCapturedImage(null);
     setPreviewVisible(false);
-    handleStartCamera();
   };
 
   // Change flash on or off
@@ -97,99 +111,112 @@ export const ExpoCameraPage = () => {
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      //setImage(result.uri);
+      // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
+
+      const body = new FormData();
+      body.append("mushroom_image", result.uri);
+      body.append("description", "hi");
+
+      fetch("http://backend.deepmush.io/images/", {
+        credentials: "include",
+        body,
+        headers: {
+          Accept: "application/json",
+          Authorization: `Token ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        method: "POST",
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data));
     }
   };
 
   return (
     <View style={styles.container}>
-      {startCamera ? (
-        <View style={styles.cameraContainer}>
-          {previewVisible && capturedImage ? (
-            <CameraPreview
-              photo={capturedImage}
-              saveImage={handleSaveImage}
-              retakeImage={handleRetakeImage}
-            />
-          ) : (
-            <Camera
-              type={cameraType}
-              flashMode={flashMode}
-              style={{ flex: 1 }}
-              autoFocus="on"
-              ref={(ref) => {
-                camera = ref;
-              }}
-            >
-              <View style={styles.cameraHeader}>
-                <View style={{ marginTop: 0 }}>
-                  <Text style={styles.flashText}>{fMode}</Text>
+      <View style={styles.cameraContainer}>
+        {previewVisible && capturedImage ? (
+          <CameraPreview
+            photo={capturedImage}
+            saveImage={handleSaveImage}
+            retakeImage={handleRetakeImage}
+          />
+        ) : (
+          <Camera
+            type={cameraType}
+            flashMode={flashMode}
+            style={{ flex: 1 }}
+            autoFocus="on"
+            ref={(ref) => {
+              camera = ref;
+            }}
+          >
+            <View style={styles.cameraHeader}>
+              <View style={{ marginTop: 0 }}>
+                <Text style={styles.flashText}>{fMode}</Text>
 
-                  <TouchableOpacity
-                    onPress={handleFlashMode}
-                    style={styles.flashStyles}
-                  >
-                    <Text style={{ fontSize: 15 }}>⚡️</Text>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 20,
-                      marginLeft: 70,
-                      marginRight: 70,
-                    }}
-                  >
-                    deepmush
-                  </Text>
-                </View>
-
-                <View>
-                  <Text style={{ color: "white", fontSize: 20 }}>✖</Text>
-                </View>
+                <TouchableOpacity
+                  onPress={handleFlashMode}
+                  style={styles.flashStyles}
+                >
+                  <Text style={{ fontSize: 15 }}>⚡️</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 20,
+                    marginLeft: 70,
+                    marginRight: 70,
+                  }}
+                >
+                  deepmush
+                </Text>
               </View>
 
-              <View style={styles.cameraBtnContainer}>
-                <View style={styles.pictureBtnContainer}>
-                  <View style={styles.pictureBtnWrapper}>
-                    <View>
-                      <TouchableOpacity
-                        onPress={() => pickImage()}
-                        style={previewStyles.albumContainer}
-                      >
-                        <Text style={previewStyles.btnText}>앨범</Text>
-                      </TouchableOpacity>
-                    </View>
+              <View>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <Text style={{ color: "white", fontSize: 20 }}>✖</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-                    <View>
-                      <TouchableOpacity
-                        onPress={handleTakePicture}
-                        style={styles.pictureBtn}
-                      />
-                    </View>
+            <View style={styles.cameraBtnContainer}>
+              <View style={styles.pictureBtnContainer}>
+                <View style={styles.pictureBtnWrapper}>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => pickImage()}
+                      style={previewStyles.albumContainer}
+                    >
+                      <Text style={previewStyles.btnText}>앨범</Text>
+                    </TouchableOpacity>
+                  </View>
 
-                    <View style={{ marginBottom: 10 }}>
-                      <TouchableOpacity
-                        onPress={handleSwitchCamera}
-                        style={styles.switchStyles}
-                      >
-                        <Text style={{ fontSize: 20 }}>↺</Text>
-                      </TouchableOpacity>
-                    </View>
+                  <View>
+                    <TouchableOpacity
+                      onPress={handleTakePicture}
+                      style={styles.pictureBtn}
+                    />
+                  </View>
+
+                  <View style={{ marginBottom: 10 }}>
+                    <TouchableOpacity
+                      onPress={handleSwitchCamera}
+                      style={styles.switchStyles}
+                    >
+                      <Text style={{ fontSize: 20 }}>↺</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
-            </Camera>
-          )}
-        </View>
-      ) : (
-        <View style={styles.frontBtnContainer}>
-          <TouchableOpacity onPress={handleStartCamera} style={styles.frontBtn}>
-            <Text style={styles.frontBtnText}>Take Picture</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+            </View>
+          </Camera>
+        )}
+      </View>
+
       <StatusBar style="auto" />
     </View>
   );
@@ -372,6 +399,3 @@ const previewStyles = StyleSheet.create({
     fontSize: 15,
   },
 });
-function useEffect(arg0: () => void, arg1: never[]) {
-  throw new Error("Function not implemented.");
-}
