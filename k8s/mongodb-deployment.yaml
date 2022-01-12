@@ -114,6 +114,6 @@ spec:
       restartPolicy: Always
       volumes:
         - hostPath:
-            path: $PROJECT_ROOT/mongo-db
+            path: /var/local/deepmush/mongo-db
           name: mongodb-db
 status: {}
