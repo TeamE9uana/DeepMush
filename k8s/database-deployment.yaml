@@ -26,7 +26,7 @@ spec:
         io.kompose.service: database
     spec:
       containers:
-          - env:
+        - env:
             - name: ELASTIC_PASSWORD
               valueFrom:
                 configMapKeyRef:
