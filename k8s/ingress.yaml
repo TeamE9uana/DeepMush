@@ -8,12 +8,8 @@ metadata:
 spec:
   tls:
   - hosts:
-    - pgadmin.deepmush.io
-    - mongo-express.deepmush.io
-    - backend.deepmush.io
-    - kibana.deepmush.io
-    - grafana.deepmush.io
-    secretName: deepmush.io-inspekt-tls
+    - "*.deepmush.io"
+    secretName: letsencrypt-account-key
   rules:
   - host: pgadmin.deepmush.io
     http:

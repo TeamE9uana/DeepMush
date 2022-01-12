@@ -16,8 +16,10 @@ spec:
     # Add a single challenge solver, HTTP01 using nginx
     solvers:
     - dns01:
-        cloudflare:
-          email: jh001007@gmail.com
-          apiKeySecretRef:
-            name: cloudflare-api-key-secret
+        route53:
+          region: ap-northeast-2
+          hostedZoneID: Z034625926P0HUTT0YKW7
+          accessKeyID: AKIAQ3K7L5MKPWIWVZCA
+          secretAccessKeySecretRef:
+            name: aws-route53-creds
             key: api-key
