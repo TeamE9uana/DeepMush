@@ -13,9 +13,16 @@ import { Camera } from "expo-camera";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import axios from "axios";
+import "localstorage-polyfill";
+
+import { string } from "yargs";
 
 let cameraFace = "back";
-export const ExpoCameraPage = () => {
+
+export const ExpoCameraPage = ({ navigation }) => {
+  var token = localStorage.getItem("access_token");
+
   let camera: Camera;
   const [startCamera, setStartCamera] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -54,6 +61,34 @@ export const ExpoCameraPage = () => {
       setCapturedImage(null);
       setStartCamera(false);
       console.log(newUri);
+
+      var myHeaders = new Headers();
+      myHeaders.append(
+        "Authorization",
+        "Token 02c4754e194d80edd0608ce299f48d4a1d1cb2bc"
+      );
+      myHeaders.append("Content-Type", "multipart/form-data");
+
+      var formdata = new FormData();
+      console.log(newUri);
+
+      formdata.append("mushroom_image", {
+        name: "mush01.jpg",
+        type: "image/jpeg",
+        uri: newUri,
+      });
+
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
+
+      fetch("http://localhost:8000/images/", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
     } catch (err) {
       throw new Error("File could not be saved.");
     }
@@ -63,7 +98,6 @@ export const ExpoCameraPage = () => {
   const handleRetakeImage = () => {
     setCapturedImage(null);
     setPreviewVisible(false);
-    handleStartCamera();
   };
 
   // Change flash on or off
@@ -94,102 +128,127 @@ export const ExpoCameraPage = () => {
       allowEditing: true,
       aspect: [1, 1],
       quality: 1,
+      exif: true,
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      //setImage(result.uri);
+      // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
+
+      var myHeaders = new Headers();
+      myHeaders.append(
+        "Authorization",
+        "Token 067591542340c75372618c4f88cc28e683ad9f90"
+      );
+      myHeaders.append("Content-Type", "multipart/form-data");
+
+      var formdata = new FormData();
+      console.log(result.uri);
+
+      formdata.append("mushroom_image", {
+        name: "mush.jpg",
+        type: "image/jpg",
+        // uri: result.uri,
+        uri: "/Users/gimjunhyeong/expo-practice/DeepMush/frontend/src/images/mush.jpeg", //local images 폴더안에 있는 경로 , expo로 모바일상의 경로는 file:// 로 시작한다 . 따라서 에러가 발생했었음 현재 서버가 쿠버네틱스로 옮겨지고 있기에 localhost에서는 테스트 불가능 ,
+      });
+
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
+
+      fetch("http://127.0.0.1:8000/images/", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
     }
   };
-
   return (
     <View style={styles.container}>
-      {startCamera ? (
-        <View style={styles.cameraContainer}>
-          {previewVisible && capturedImage ? (
-            <CameraPreview
-              photo={capturedImage}
-              saveImage={handleSaveImage}
-              retakeImage={handleRetakeImage}
-            />
-          ) : (
-            <Camera
-              type={cameraType}
-              flashMode={flashMode}
-              style={{ flex: 1 }}
-              autoFocus="on"
-              ref={(ref) => {
-                camera = ref;
-              }}
-            >
-              <View style={styles.cameraHeader}>
-                <View style={{ marginTop: 0 }}>
-                  <Text style={styles.flashText}>{fMode}</Text>
+      <View style={styles.cameraContainer}>
+        {previewVisible && capturedImage ? (
+          <CameraPreview
+            photo={capturedImage}
+            saveImage={handleSaveImage}
+            retakeImage={handleRetakeImage}
+          />
+        ) : (
+          <Camera
+            type={cameraType}
+            flashMode={flashMode}
+            style={{ flex: 1 }}
+            autoFocus="on"
+            ref={(ref) => {
+              camera = ref;
+            }}
+          >
+            <View style={styles.cameraHeader}>
+              <View style={{ marginTop: 0 }}>
+                <Text style={styles.flashText}>{fMode}</Text>
 
-                  <TouchableOpacity
-                    onPress={handleFlashMode}
-                    style={styles.flashStyles}
-                  >
-                    <Text style={{ fontSize: 15 }}>⚡️</Text>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 20,
-                      marginLeft: 70,
-                      marginRight: 70,
-                    }}
-                  >
-                    deepmush
-                  </Text>
-                </View>
-
-                <View>
-                  <Text style={{ color: "white", fontSize: 20 }}>✖</Text>
-                </View>
+                <TouchableOpacity
+                  onPress={handleFlashMode}
+                  style={styles.flashStyles}
+                >
+                  <Text style={{ fontSize: 15 }}>⚡️</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 20,
+                    marginLeft: 70,
+                    marginRight: 70,
+                  }}
+                >
+                  deepmush
+                </Text>
               </View>
 
-              <View style={styles.cameraBtnContainer}>
-                <View style={styles.pictureBtnContainer}>
-                  <View style={styles.pictureBtnWrapper}>
-                    <View>
-                      <TouchableOpacity
-                        onPress={() => pickImage()}
-                        style={previewStyles.albumContainer}
-                      >
-                        <Text style={previewStyles.btnText}>앨범</Text>
-                      </TouchableOpacity>
-                    </View>
+              <View>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <Text style={{ color: "white", fontSize: 20 }}>✖</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-                    <View>
-                      <TouchableOpacity
-                        onPress={handleTakePicture}
-                        style={styles.pictureBtn}
-                      />
-                    </View>
+            <View style={styles.cameraBtnContainer}>
+              <View style={styles.pictureBtnContainer}>
+                <View style={styles.pictureBtnWrapper}>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => pickImage()}
+                      style={previewStyles.albumContainer}
+                    >
+                      <Text style={previewStyles.btnText}>앨범</Text>
+                    </TouchableOpacity>
+                  </View>
 
-                    <View style={{ marginBottom: 10 }}>
-                      <TouchableOpacity
-                        onPress={handleSwitchCamera}
-                        style={styles.switchStyles}
-                      >
-                        <Text style={{ fontSize: 20 }}>↺</Text>
-                      </TouchableOpacity>
-                    </View>
+                  <View>
+                    <TouchableOpacity
+                      onPress={handleTakePicture}
+                      style={styles.pictureBtn}
+                    />
+                  </View>
+
+                  <View style={{ marginBottom: 10 }}>
+                    <TouchableOpacity
+                      onPress={handleSwitchCamera}
+                      style={styles.switchStyles}
+                    >
+                      <Text style={{ fontSize: 20 }}>↺</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
-            </Camera>
-          )}
-        </View>
-      ) : (
-        <View style={styles.frontBtnContainer}>
-          <TouchableOpacity onPress={handleStartCamera} style={styles.frontBtn}>
-            <Text style={styles.frontBtnText}>Take Picture</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+            </View>
+          </Camera>
+        )}
+      </View>
+
       <StatusBar style="auto" />
     </View>
   );
@@ -372,6 +431,3 @@ const previewStyles = StyleSheet.create({
     fontSize: 15,
   },
 });
-function useEffect(arg0: () => void, arg1: never[]) {
-  throw new Error("Function not implemented.");
-}

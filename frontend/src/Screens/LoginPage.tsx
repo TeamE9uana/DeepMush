@@ -46,7 +46,7 @@ export const LoginPage = ({ navigation }) => {
             style={[stylesheet.buttonContainer, stylesheet.googleButton]}
             onPress={() =>
               navigation.navigate("Websee", {
-                url: "http://192.168.1.82:8000/accounts/google/login/",
+                url: "https://backend.deepmush.io/accounts/google/login/",
               })
             }
           >
@@ -65,7 +65,7 @@ export const LoginPage = ({ navigation }) => {
             style={[stylesheet.buttonContainer, stylesheet.kakaoButton]}
             onPress={() =>
               navigation.navigate("Websee", {
-                url: "http://192.168.1.82:8000/accounts/kakao/login/",
+                url: "https://localhost:8000/accounts/kakao/login/",
               })
             }
           >

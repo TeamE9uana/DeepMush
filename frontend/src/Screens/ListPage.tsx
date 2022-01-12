@@ -299,7 +299,7 @@ export function ListPage({ navigation }) {
 
       <View style={stylesheet.footer}>
         <View>
-          <SimpleLineIcons name="folder" size={30} color="black" />
+          <SimpleLineIcons name="folder" size={30} color="blue" />
         </View>
         <View>
           <SimpleLineIcons
@@ -314,6 +314,7 @@ export function ListPage({ navigation }) {
             name="map-marker-outline"
             size={30}
             color="black"
+            onPress={() => navigation.navigate("MapPage")}
           />
         </View>
       </View>
