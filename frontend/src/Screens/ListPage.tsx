@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  Touchable,
 } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -24,6 +25,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { DetailPage } from "./DetailPage";
 
+/*
 let DATA2 = [
   {
     uri: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
@@ -107,6 +109,35 @@ let DATA2 = [
     percent: 63,
   },
 ];
+*/
+
+let DATA2 = {
+  success: true,
+  images: [
+    {
+      id: 31,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:00",
+      description: "",
+      made_by: 1,
+    },
+    {
+      id: 32,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:00",
+      description: "",
+      made_by: 2,
+    },
+  ],
+};
 
 /*
 function deletebutton(title:any) =() =>{
@@ -122,6 +153,8 @@ function deletebutton(title:any) =() =>{
 }
 */
 
+let im = {};
+
 // delete DATA2 with deletebutton
 export function ListPage({ navigation }) {
   const [updatedata, setupdatedata] = useState(DATA2);
@@ -133,6 +166,37 @@ export function ListPage({ navigation }) {
     console.log("delete button pushed123");
     console.log("DATA2_length" + DATA2.length);
   };
+
+  useEffect(() => {
+    // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
+
+    async function fetchAndSetList() {
+      var myHeaders = await new Headers();
+      await myHeaders.append(
+        "Authorization",
+        "Token 067591542340c75372618c4f88cc28e683ad9f90"
+      );
+      await myHeaders.append("Content-Type", "multipart/form-data");
+
+      var requestOptions = await {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      await fetch("http://localhost:8000/images/", requestOptions)
+        .then((response) => response.json())
+        .then((result) => (im = result.images))
+        .catch((error) => console.log("error", error));
+
+      await setupdatedata(im);
+
+      await console.log("DATA2.images !!!!!!! " + DATA2.images[0].id);
+      await console.log("DATA2.images !!!!!!!" + DATA2.images[0].image);
+    }
+    fetchAndSetList();
+  }, []);
+
   return (
     <View style={stylesheet.container}>
       <View style={stylesheet.header}>
@@ -164,7 +228,7 @@ export function ListPage({ navigation }) {
       <View style={stylesheet.body}>
         <View style={{}} />
         <FlatList
-          data={DATA2}
+          data={im}
           keyExtractor={(item) => String(item.created_at)}
           renderItem={({ item, index }) => (
             <View
@@ -192,7 +256,7 @@ export function ListPage({ navigation }) {
                 <Image
                   style={stylesheet.tinyLogo}
                   source={{
-                    uri: item.uri2,
+                    uri: item.image,
                   }}
                 />
               </View>
@@ -255,7 +319,7 @@ export function ListPage({ navigation }) {
                   onPress={() =>
                     navigation.navigate("DetailPage", {
                       index: index,
-                      DATA2: DATA2,
+                      DATA2: im,
                     })
                   }
                 />
