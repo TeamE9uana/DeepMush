@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-stage
+  namespace: cert-manager
+spec:
+  secretName: cert-stage-wildcard
+  issuerRef:
+    name: le-wildcard-issuer
+    kind: ClusterIssuer
+  commonName: '*.deepmush.io'
+  dnsNames:
+  - deepmush.io
+  - '*.deepmush.io'

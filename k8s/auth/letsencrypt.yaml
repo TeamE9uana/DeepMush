@@ -2,6 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt
+  namespace: cert-manager
 spec:
   acme:
     # You must replace this email address with your own.
@@ -14,6 +15,9 @@ spec:
       name: letsencrypt-account-key
     # Add a single challenge solver, HTTP01 using nginx
     solvers:
-    - http01:
-        ingress:
-          class: nginx
+    - dns01:
+        cloudflare:
+          email: jh001007@gmail.com
+          apiKeySecretRef:
+            name: cloudflare-api-key-secret
+            key: api-key
