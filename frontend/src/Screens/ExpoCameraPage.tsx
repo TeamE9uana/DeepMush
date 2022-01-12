@@ -16,6 +16,8 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import axios from "axios";
 import "localstorage-polyfill";
 
+import { string } from "yargs";
+
 let cameraFace = "back";
 
 export const ExpoCameraPage = ({ navigation }) => {
@@ -60,15 +62,33 @@ export const ExpoCameraPage = ({ navigation }) => {
       setStartCamera(false);
       console.log(newUri);
 
-      fetch("http://backend.deepmush.io/images/", {
-        headers: {
-          Accept: "application/json",
-          Authorization: "Token 07640134ef48c0c2b063bbb329c81b5e2fc99081",
-        },
-      }).then(function (myJson) {
-        console.log("response");
-        console.log(JSON.stringify(myJson));
+      var myHeaders = new Headers();
+      myHeaders.append(
+        "Authorization",
+        "Token 02c4754e194d80edd0608ce299f48d4a1d1cb2bc"
+      );
+      myHeaders.append("Content-Type", "multipart/form-data");
+
+      var formdata = new FormData();
+      console.log(newUri);
+
+      formdata.append("mushroom_image", {
+        name: "mush01.jpg",
+        type: "image/jpeg",
+        uri: newUri,
       });
+
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
+
+      fetch("http://localhost:8000/images/", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
     } catch (err) {
       throw new Error("File could not be saved.");
     }
@@ -108,31 +128,43 @@ export const ExpoCameraPage = ({ navigation }) => {
       allowEditing: true,
       aspect: [1, 1],
       quality: 1,
+      exif: true,
     });
 
     if (!result.cancelled) {
       //setImage(result.uri);
       // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
 
-      const body = new FormData();
-      body.append("mushroom_image", result.uri);
-      body.append("description", "hi");
+      var myHeaders = new Headers();
+      myHeaders.append(
+        "Authorization",
+        "Token 067591542340c75372618c4f88cc28e683ad9f90"
+      );
+      myHeaders.append("Content-Type", "multipart/form-data");
 
-      fetch("http://backend.deepmush.io/images/", {
-        credentials: "include",
-        body,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Token ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+      var formdata = new FormData();
+      console.log(result.uri);
+
+      formdata.append("mushroom_image", {
+        name: "mush.jpg",
+        type: "image/jpg",
+        // uri: result.uri,
+        uri: "/Users/gimjunhyeong/expo-practice/DeepMush/frontend/src/images/mush.jpeg", //local images 폴더안에 있는 경로 , expo로 모바일상의 경로는 file:// 로 시작한다 . 따라서 에러가 발생했었음 현재 서버가 쿠버네틱스로 옮겨지고 있기에 localhost에서는 테스트 불가능 ,
+      });
+
+      var requestOptions = {
         method: "POST",
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data));
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
+
+      fetch("http://127.0.0.1:8000/images/", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
     }
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.cameraContainer}>

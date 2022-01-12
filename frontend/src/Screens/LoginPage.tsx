@@ -65,7 +65,7 @@ export const LoginPage = ({ navigation }) => {
             style={[stylesheet.buttonContainer, stylesheet.kakaoButton]}
             onPress={() =>
               navigation.navigate("Websee", {
-                url: "https://backend.deepmush.io/accounts/kakao/login/",
+                url: "https://localhost:8000/accounts/kakao/login/",
               })
             }
           >
