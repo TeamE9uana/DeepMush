@@ -46,8 +46,8 @@ spec:
       volumes:
         - hostPath:
             path: /var/local/deepmush/filebeat/filebeat.prod.yml
+            type: FileOrCreate
           name: filebeat-yml
-          type: file
         - hostPath:
             path: /var/local/deepmush/nginx/logs
           name: filebeat-nginx
