@@ -42,9 +42,9 @@ spec:
       restartPolicy: Always
       volumes:
         - hostPath:
-            path: $PROJECT_ROOT/prometheus
+            path: /var/local/deepmush/prometheus
           name: prometheus-etc
         - hostPath:
-            path: $PROJECT_ROOT/data/prometheus
+            path: /var/local/deepmush/data/prometheus
           name: prometheus-dir
 status: {}

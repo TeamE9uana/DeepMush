@@ -114,8 +114,10 @@ spec:
             - mountPath: /var/lib/elasticsearch
               name: elk-lib
             - mountPath: /etc/logstash/conf.d/03-input.conf
+              subPath: 03-input.conf
               name: elk-conf
             - mountPath: /etc/elasticsearch/elasticsearch.yml
+              subPath: elasticsearch.yml
               name: elk-yml
       restartPolicy: Always
       volumes:

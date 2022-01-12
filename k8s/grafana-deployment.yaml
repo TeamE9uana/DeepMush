@@ -37,6 +37,7 @@ spec:
           tty: true
           volumeMounts:
             - mountPath: /etc/grafana/grafana.ini
+              subPath: secrets.json
               name: grafana-ini
             - mountPath: /var/lib/grafana
               name: grafana-lib
@@ -45,12 +46,12 @@ spec:
       restartPolicy: Always
       volumes:
         - hostPath:
-            path: $PROJECT_ROOT/grafana/grafana.prod.ini
+            path: /var/local/deepmush/grafana/grafana.prod.ini
           name: grafana-ini
         - hostPath:
-            path: $PROJECT_ROOT/data/grafana/grafana
+            path: /var/local/deepmush/data/grafana/grafana
           name: grafana-lib
         - hostPath:
-            path: $PROJECT_ROOT/data/grafana/provisioning
+            path: /var/local/deepmush/data/grafana/provisioning
           name: grafana-provisioning
 status: {}

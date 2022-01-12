@@ -42,6 +42,7 @@ spec:
           volumeMounts:
             - mountPath: /backend/secrets.json
               name: worker-secrets-json
+              subPath: secrets.json
             - mountPath: /backend/runs
               name: worker-runs
       restartPolicy: Always
