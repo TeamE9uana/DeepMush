@@ -26,7 +26,13 @@ spec:
         io.kompose.service: database
     spec:
       containers:
-        - env:
+        - command:
+          - /bin/sh
+          - -c
+          - >
+              sleep 20s;
+              postgres
+          env:
             - name: ELASTIC_PASSWORD
               valueFrom:
                 configMapKeyRef:
@@ -111,9 +117,15 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: database-data
+          volumeMounts:
+            - mountPath: /scripts
+              name: database-scripts
       restartPolicy: Always
       volumes:
         - hostPath:
             path: /var/local/deepmush/db
           name: database-data
+        - hostPath:
+            path: /var/local/deepmush/scripts
+          name: database-scripts
 status: {}

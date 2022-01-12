@@ -28,7 +28,16 @@ spec:
     spec:
       containers:
         - command:
-            - /bin/sh -c 'cd /backend ; while :; do sleep 60s ; python manage.py makemigrations ; python manage.py migrate --run-syncdb ; python manage.py migrate --run-syncdb --database=mongodb; done;'
+            - /bin/sh
+            - -c
+            - >
+                cd /backend ;
+                while :; do
+                  sleep 60s ;
+                  python manage.py makemigrations ;
+                  python manage.py migrate --run-syncdb ;
+                  python manage.py migrate --run-syncdb --database=mongodb ;
+                  done
           env:
             - name: IS_DOCKER
               value: "1"
