@@ -10,7 +10,7 @@ metadata:
   name: mongo-express
 spec:
   ports:
-    - name: "8081"
+    - name: http
       port: 8081
       targetPort: 8081
   selector:

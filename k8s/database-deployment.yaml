@@ -26,13 +26,7 @@ spec:
         io.kompose.service: database
     spec:
       containers:
-        - command:
-          - /bin/sh
-          - -c
-          - >
-              sleep 20s;
-              postgres
-          env:
+        - env:
             - name: ELASTIC_PASSWORD
               valueFrom:
                 configMapKeyRef:
@@ -108,7 +102,7 @@ spec:
                 configMapKeyRef:
                   key: POSTGRES_USER
                   name: production-env-env
-          image: a891/deepmush_postgres:latest
+          image: bitnami/postgresql:latest
           name: database
           ports:
             - containerPort: 5432
@@ -117,15 +111,9 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: database-data
-          volumeMounts:
-            - mountPath: /scripts
-              name: database-scripts
       restartPolicy: Always
       volumes:
         - hostPath:
             path: /var/local/deepmush/db
           name: database-data
-        - hostPath:
-            path: /var/local/deepmush/scripts
-          name: database-scripts
 status: {}

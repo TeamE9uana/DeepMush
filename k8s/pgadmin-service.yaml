@@ -10,7 +10,7 @@ metadata:
   name: pgadmin
 spec:
   ports:
-    - name: "80"
+    - name: http
       port: 80
       targetPort: 80
   selector:

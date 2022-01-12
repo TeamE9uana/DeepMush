@@ -3,8 +3,9 @@ kind: Ingress
 metadata:
   name: inspekt
   annotations:
-    kubernetes.io/ingress.class: "traefik"
-    cert-manager.io/cluster-issuer: "letsencrypt"
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt
+  creationTimestamp: null
 spec:
   tls:
   - hosts:
@@ -20,7 +21,7 @@ spec:
           service:
             name: pgadmin
             port:
-              number: 80
+              name: http
   - host: mongo-express.deepmush.io
     http:
       paths:
@@ -30,7 +31,7 @@ spec:
           service:
             name: mongo-express
             port:
-              number: 8081
+              name: http
   - host: backend.deepmush.io
     http:
       paths:
@@ -40,7 +41,7 @@ spec:
           service:
             name: backend
             port:
-              number: 8000
+              name: http
   - host: kibana.deepmush.io
     http:
       paths:
@@ -50,7 +51,7 @@ spec:
           service:
             name: elk
             port:
-              number: 5601
+              name: http
   - host: grafana.deepmush.io
     http:
       paths:
@@ -60,4 +61,4 @@ spec:
           service:
             name: grafana
             port:
-              number: 3000
+              name: http
