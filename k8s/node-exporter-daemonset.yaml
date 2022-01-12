@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: node-exporter
+  name: node-exporter
+spec:
+  selector: null
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.network/prometheus-tier: "true"
+        io.kompose.service: node-exporter
+    spec:
+      containers:
+        - args:
+            - --path.procfs=/host/proc
+            - --path.sysfs=/host/sys
+            - --collector.filesystem.ignored-mount-points
+            - ^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($|/)
+          image: prom/node-exporter
+          name: node-exporter
+          ports:
+            - containerPort: 9100
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /host/proc
+              name: node-exporter-claim0
+              readOnly: true
+            - mountPath: /host/sys
+              name: node-exporter-claim1
+              readOnly: true
+            - mountPath: /rootfs
+              name: node-exporter-claim2
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: node-exporter-claim0
+          persistentVolumeClaim:
+            claimName: node-exporter-claim0
+            readOnly: true
+        - name: node-exporter-claim1
+          persistentVolumeClaim:
+            claimName: node-exporter-claim1
+            readOnly: true
+        - name: node-exporter-claim2
+          persistentVolumeClaim:
+            claimName: node-exporter-claim2
+            readOnly: true
+  updateStrategy: {}
+status:
+  currentNumberScheduled: 0
+  desiredNumberScheduled: 0
+  numberMisscheduled: 0
+  numberReady: 0

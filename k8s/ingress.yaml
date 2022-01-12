@@ -1,0 +1,70 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: inspekt
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  tls:
+  - hosts:
+    - pgadmin.deepmush.io
+    secretName: pgadmin.deepmush.io-inspekt-tls
+  - hosts:
+    - mongo-express.deepmush.io
+    secretName: mongo-express.deepmush.io-inspekt-tls
+  - hosts:
+    - backend.deepmush.io
+    secretName: backend.deepmush.io-inspekt-tls
+  - hosts:
+    - kibana.deepmush.io
+    secretName: kibana.deepmush.io-inspekt-tls
+  - hosts:
+    - grafana.deepmush.io
+    secretName: grafana.deepmush.io-inspekt-tls
+  rules:
+  - host: pgadmin.deepmush.io
+    http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: pgadmin
+            port:
+              number: 8082
+  - host: mongo-express.deepmush.io
+    http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: mongo-express
+            port:
+              number: 8081
+  - host: backend.deepmush.io
+    http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: backend
+            port:
+              number: 8000
+  - host: kibana.deepmush.io
+    http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: elk
+            port:
+              number: 5601
+  - host: grafana.deepmush.io
+    http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 5001

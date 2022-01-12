@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: filebeat
+  name: filebeat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: filebeat
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/elk-tier: "true"
+        io.kompose.service: filebeat
+    spec:
+      containers:
+        - command:
+            - sleep 60s
+            - filebeat setup
+            - filebeat -e
+            - filebeat
+          image: a891/deepmush_filebeat:latest
+          name: filebeat
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /usr/share/filebeat/filebeat.yml
+              name: filebeat-yml
+            - mountPath: /var/log/nginx
+              name: filebeat-nginx
+            - mountPath: /var/log/backend
+              name: filebeat-backend
+      restartPolicy: Always
+      volumes:
+        - hostPath:
+            path: /var/local/deepmush/filebeat/filebeat.prod.yml
+          name: filebeat-yml
+        - hostPath:
+            path: /var/local/deepmush/nginx/logs
+          name: filebeat-nginx
+        - hostPath:
+            path: /var/local/deepmush/backend/logs
+          name: filebeat-backend
+status: {}
