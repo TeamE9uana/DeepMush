@@ -26,11 +26,7 @@ spec:
         io.kompose.service: database
     spec:
       containers:
-        - command:
-          - sudo chmod -R 700 /var/lib/postgresql/data
-          - sudo chown -R $(whoami) /var/lib/postgresql/data
-          - postgres
-          env:
+          - env:
             - name: ELASTIC_PASSWORD
               valueFrom:
                 configMapKeyRef:
