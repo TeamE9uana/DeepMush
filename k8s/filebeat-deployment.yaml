@@ -27,10 +27,7 @@ spec:
     spec:
       containers:
         - command:
-            - sleep 60s
-            - filebeat setup
-            - filebeat -e
-            - filebeat
+            - /bin/sh -c 'sleep 60s && filebeat setup && filebeat -e && filebeat'
           image: a891/deepmush_filebeat:latest
           name: filebeat
           resources: {}

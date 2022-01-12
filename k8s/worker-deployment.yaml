@@ -28,8 +28,7 @@ spec:
     spec:
       containers:
         - command:
-            - /bin/sh
-            - ./run-celery.sh
+            - /bin/sh ./run-celery.sh
           env:
             - name: IS_DOCKER
               value: "1"
