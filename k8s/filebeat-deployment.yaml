@@ -38,7 +38,6 @@ spec:
           volumeMounts:
             - mountPath: /usr/share/filebeat/filebeat.yml
               name: filebeat-yml
-              subPath: filebeat.yml
             - mountPath: /var/log/nginx
               name: filebeat-nginx
             - mountPath: /var/log/backend
@@ -48,6 +47,7 @@ spec:
         - hostPath:
             path: /var/local/deepmush/filebeat/filebeat.prod.yml
           name: filebeat-yml
+          type: file
         - hostPath:
             path: /var/local/deepmush/nginx/logs
           name: filebeat-nginx

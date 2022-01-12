@@ -43,11 +43,11 @@ spec:
           volumeMounts:
             - mountPath: /backend/secrets.json
               name: migrate-secrets-json
-              subPath: secrets.json
               readOnly: true
       restartPolicy: Always
       volumes:
         - hostPath:
             path: /var/local/deepmush/production/secrets.json
+            type: FileOrCreate
           name: migrate-secrets-json
 status: {}

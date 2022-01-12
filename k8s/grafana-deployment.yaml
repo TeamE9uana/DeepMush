@@ -37,7 +37,6 @@ spec:
           tty: true
           volumeMounts:
             - mountPath: /etc/grafana/grafana.ini
-              subPath: secrets.json
               name: grafana-ini
             - mountPath: /var/lib/grafana
               name: grafana-lib
@@ -47,6 +46,7 @@ spec:
       volumes:
         - hostPath:
             path: /var/local/deepmush/grafana/grafana.prod.ini
+            type: FileOrCreate
           name: grafana-ini
         - hostPath:
             path: /var/local/deepmush/data/grafana/grafana

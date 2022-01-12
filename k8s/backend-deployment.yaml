@@ -124,7 +124,7 @@ spec:
       volumes:
         - hostPath:
             path: /var/local/deepmush/production/secrets.json
-            subPath: secrets.json
+            type: FileOrCreate
           name: backend-secrets-json
         - hostPath:
             path: /var/local/deepmush/backend/runs

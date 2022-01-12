@@ -42,13 +42,13 @@ spec:
           volumeMounts:
             - mountPath: /backend/secrets.json
               name: worker-secrets-json
-              subPath: secrets.json
             - mountPath: /backend/runs
               name: worker-runs
       restartPolicy: Always
       volumes:
         - hostPath:
             path: /var/local/deepmush/production/secrets.json
+            type: FileOrCreate
           name: worker-secrets-json
         - hostPath:
             path: /var/local/deepmush/backend/runs

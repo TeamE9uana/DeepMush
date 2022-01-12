@@ -9,11 +9,14 @@ metadata:
     io.kompose.service: node-exporter
   name: node-exporter
 spec:
-  selector: null
+  selector:
+    matchLabels:
+      name: node-exporter
   template:
     metadata:
       creationTimestamp: null
       labels:
+        name: node-exporter
         io.kompose.network/prometheus-tier: "true"
         io.kompose.service: node-exporter
     spec:
