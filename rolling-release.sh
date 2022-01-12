@@ -1,3 +1,4 @@
 #!/bin/bash
 
-kubectl rollout restart -f ./k8s
+cd k8s
+kubectl rollout restart backend filebeat migrate worker

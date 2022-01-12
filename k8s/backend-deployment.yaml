@@ -9,7 +9,7 @@ metadata:
     io.kompose.service: backend
   name: backend
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       io.kompose.service: backend
