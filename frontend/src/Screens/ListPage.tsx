@@ -301,13 +301,14 @@ export function ListPage({ navigation }: any) {
 
   const [filterText, SetfilterText] = useState(filterText);
 
-  function searchData() {
-    console.log("searchbutton pushed !!!");
-    var imlength = Object.keys(DATA2.images).length;
+  async function searchData() {
+    await console.log("searchbutton pushed !!!");
+    var imlength = await Object.keys(DATA2.images).length;
 
     //console.log("imlength : " + imlength + "\n");
     //console.log("filterText : " + filterText + "\n");
 
+    var check = 0;
     for (let i = 0; i < imlength; i++) {
       //console.log(DATA2.images[i].id + " " + typeof DATA2.images[i].id);
       //console.log(typeof DATA2.images[i].id.toString());
@@ -316,13 +317,18 @@ export function ListPage({ navigation }: any) {
         im2.push(DATA2.images[i]);
         //console.log("searchmatchd!!");
         im = im2;
+        check++;
       }
     }
-
+    if (check == 0) {
+      im = [];
+    }
     im2 = [];
     console.log(im);
 
     setupdatedata(im);
+
+    check = 0;
   }
 
   return (
