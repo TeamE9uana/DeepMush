@@ -16,27 +16,59 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { SimpleLineIcons } from "@expo/vector-icons";
 
-type Markers = {
-  name: string;
+type Coordinate = {
   latitude: number;
   longitude: number;
 };
 
-const sample2 = {
-  latitude: 37.366730031441506,
-  longitude: -122.03164481984454,
+type MapMarker = Coordinate & {
+  name: string;
 };
-const sample1 = {
-  latitude: 37.36957273223395,
-  longitude: -122.02391041565818,
+
+const sampleData: MapMarker[] = [
+  {
+    name: "sample1",
+    latitude: 37.36957273223395,
+    longitude: -122.02391041565818,
+  },
+  {
+    name: "sample2",
+    latitude: 37.366730031441506,
+    longitude: -122.03164481984454,
+  },
+  {
+    name: "sample3",
+    latitude: 37.367875874475885,
+    longitude: -122.03762870058752,
+  },
+];
+
+const [location, setLocation] = useState<MapMarker[]>(sampleData);
+
+const getMidLatitude = (sampleData: MapMarker[]): number => {
+  const sum: number =
+    sampleData.reduce((cur, next) => cur + next.latitude, 0) /
+    sampleData.length;
+  return sum;
 };
-const myhouse = {
-  latitude: 37.367875874475885,
-  longitude: -122.03762870058752,
+
+const getLocation = (sampleData: MapMarker[]): Coordinate => {
+  return sampleData.reduce(
+    (cur, next) => {
+      return {
+        latitude: cur.latitude + next.latitude,
+        longitude: cur.longitude + next.longitude,
+      };
+    },
+    { latitude: 0, longitude: 0 }
+  );
 };
-const initialregion = {
-  latitude: (sample1.latitude + sample2.latitude + myhouse.latitude) / 3,
-  longitude: (sample1.longitude + sample2.longitude + myhouse.longitude) / 3,
+
+const initiaLocation = getLocation(sampleData);
+
+const midLocation: Coordinate = {
+  latitude: initiaLocation.latitude,
+  longitude: initiaLocation.longitude,
 };
 
 export const MapPage = ({ navigation }) => {
@@ -54,24 +86,7 @@ export const MapPage = ({ navigation }) => {
     });
   });
   const [clicked, setClicked] = useState(false);
-  const dataSet = [
-    {
-      name: "sample1",
-      latitude: 37.3667300314415,
-      longitude: -122.03164481984454,
-    },
-    {
-      name: "sample2",
-      latitude: 37.36957273223395,
-      longitude: -122.02391041565818,
-    },
-    {
-      name: "sample3",
-      latitude: 37.367875874475885,
-      longitude: -122.03762870058752,
-    },
-  ];
-  const [markers, setMarkers] = useState(dataSet);
+  const [markers, setMarkers] = useState(sampleData);
 
   return (
     <View style={styles.container}>
@@ -79,15 +94,13 @@ export const MapPage = ({ navigation }) => {
         style={styles.map}
         provider={"google"}
         initialRegion={{
-          latitude:
-            (sample1.latitude + sample2.latitude + myhouse.latitude) / 3,
-          longitude:
-            (sample1.longitude + sample2.longitude + myhouse.longitude) / 3,
+          latitude: midLocation.latitude,
+          longitude: midLocation.longitude,
           latitudeDelta: 0.03,
           longitudeDelta: 0.04,
         }}
       >
-        {markers.map((props: Markers, index) => (
+        {markers.map((props: MapMarker, index) => (
           <>
             <Marker
               key={index}
