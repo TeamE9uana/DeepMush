@@ -109,5 +109,9 @@ spec:
             - containerPort: 80
           resources: {}
           tty: true
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
       restartPolicy: Always
 status: {}

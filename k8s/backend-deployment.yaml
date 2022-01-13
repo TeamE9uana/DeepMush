@@ -120,7 +120,13 @@ spec:
               readOnly: true
             - mountPath: /backend/runs
               name: backend-runs
+            - mountPath: /backend/logs
+              name: backend-logs
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
       volumes:
         - hostPath:
             path: /var/local/deepmush/production/secrets.json
@@ -129,4 +135,7 @@ spec:
         - hostPath:
             path: /var/local/deepmush/backend/runs
           name: backend-runs
+        - hostPath:
+            path: /var/local/deepmush/backend/logs
+          name: backend-logs
 status: {}

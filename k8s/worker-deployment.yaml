@@ -56,4 +56,8 @@ spec:
         - hostPath:
             path: /var/local/deepmush/backend/runs
           name: worker-runs
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
 status: {}

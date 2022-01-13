@@ -112,6 +112,10 @@ spec:
             - mountPath: /var/lib/postgresql/data
               name: database-data
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
       volumes:
         - hostPath:
             path: /var/local/deepmush/db

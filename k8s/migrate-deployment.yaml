@@ -52,6 +52,10 @@ spec:
               name: migrate-secrets-json
               readOnly: true
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
       volumes:
         - hostPath:
             path: /var/local/deepmush/production/secrets.json

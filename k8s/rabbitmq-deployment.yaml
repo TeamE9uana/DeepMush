@@ -32,4 +32,8 @@ spec:
           resources: {}
           tty: true
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
 status: {}

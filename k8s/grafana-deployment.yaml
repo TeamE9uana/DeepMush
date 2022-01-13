@@ -43,6 +43,10 @@ spec:
             - mountPath: /etc/grafana/provisioning
               name: grafana-provisioning
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
       volumes:
         - hostPath:
             path: /var/local/deepmush/grafana/grafana.prod.ini

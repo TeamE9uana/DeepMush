@@ -40,6 +40,10 @@ spec:
             - mountPath: /prometheus
               name: prometheus-dir
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
       volumes:
         - hostPath:
             path: /var/local/deepmush/prometheus

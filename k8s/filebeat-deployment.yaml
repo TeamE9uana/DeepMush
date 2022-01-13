@@ -46,6 +46,10 @@ spec:
             - mountPath: /var/log/backend
               name: filebeat-backend
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
       volumes:
         - hostPath:
             path: /var/local/deepmush/filebeat/filebeat.prod.yml

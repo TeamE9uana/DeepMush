@@ -112,6 +112,10 @@ spec:
             - mountPath: /data/db
               name: mongodb-db
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
       volumes:
         - hostPath:
             path: /var/local/deepmush/mongo-db
