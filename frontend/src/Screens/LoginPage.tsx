@@ -15,7 +15,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { GoogleLogin } from "react-google-login";
 import { ListPage } from "./ListPage";
 
-export const LoginPage = ({ navigation }) => {
+export const LoginPage = ({ navigation }: any) => {
   const ResponseGoogle = (response: any) => {
     console.log(response);
   };
@@ -65,7 +65,7 @@ export const LoginPage = ({ navigation }) => {
             style={[stylesheet.buttonContainer, stylesheet.kakaoButton]}
             onPress={() =>
               navigation.navigate("Websee", {
-                url: "https://localhost:8000/accounts/kakao/login/",
+                url: "https://backend.deepmush.io/accounts/kakao/login/",
               })
             }
           >

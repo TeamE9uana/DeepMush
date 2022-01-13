@@ -25,7 +25,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import "localstorage-polyfill";
 
-export function WebSee({ route, navigation }) {
+export function WebSee({ route, navigation }: any) {
   //const [Title, setTitle] = useState("");
 
   const { url } = route.params;

@@ -133,7 +133,112 @@ let DATA2 = {
       inference: null,
       image:
         "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:00",
+      created_at: "2022-01-12T17:50:29.215370+09:02",
+      description: "",
+      made_by: 2,
+    },
+
+    {
+      id: 33,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:01",
+      description: "",
+      made_by: 2,
+    },
+
+    {
+      id: 33,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:03",
+      description: "",
+      made_by: 2,
+    },
+
+    {
+      id: 33,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:06",
+      description: "",
+      made_by: 2,
+    },
+
+    {
+      id: 33,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:05",
+      description: "",
+      made_by: 2,
+    },
+    {
+      id: 33,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:07",
+      description: "",
+      made_by: 2,
+    },
+    {
+      id: 33,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:08",
+      description: "",
+      made_by: 2,
+    },
+
+    {
+      id: 32,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:06",
+      description: "",
+      made_by: 2,
+    },
+
+    {
+      id: 32,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:05",
+      description: "",
+      made_by: 2,
+    },
+    {
+      id: 32,
+      lat: null,
+      lng: null,
+      inference: null,
+      image:
+        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
+      created_at: "2022-01-12T17:50:29.215370+09:07",
       description: "",
       made_by: 2,
     },
@@ -154,11 +259,13 @@ function deletebutton(title:any) =() =>{
 }
 */
 
-let im = {};
+let im = [];
+let im2 = [];
 
 // delete DATA2 with deletebutton
-export function ListPage({ navigation }) {
-  const [updatedata, setupdatedata] = useState(DATA2);
+export function ListPage({ navigation }: any) {
+  const [updatedata, setupdatedata] = useState(im);
+  var token = localStorage.getItem("access_token");
 
   var deletebutton = (index: any) => {
     var le = DATA2.length;
@@ -173,10 +280,7 @@ export function ListPage({ navigation }) {
 
     async function fetchAndSetList() {
       var myHeaders = await new Headers();
-      await myHeaders.append(
-        "Authorization",
-        "Token 067591542340c75372618c4f88cc28e683ad9f90"
-      );
+      await myHeaders.append("Authorization", `Token ${token}`);
       await myHeaders.append("Content-Type", "multipart/form-data");
 
       var requestOptions = await {
@@ -185,7 +289,7 @@ export function ListPage({ navigation }) {
         redirect: "follow",
       };
 
-      await fetch("http://localhost:8000/images/", requestOptions)
+      await fetch("http://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.json())
         .then((result) => (im = result.images))
         .catch((error) => console.log("error", error));
@@ -196,6 +300,30 @@ export function ListPage({ navigation }) {
   }, []);
 
   const [filterText, SetfilterText] = useState(filterText);
+
+  function searchData() {
+    console.log("searchbutton pushed !!!");
+    var imlength = Object.keys(DATA2.images).length;
+
+    //console.log("imlength : " + imlength + "\n");
+    //console.log("filterText : " + filterText + "\n");
+
+    for (let i = 0; i < imlength; i++) {
+      //console.log(DATA2.images[i].id + " " + typeof DATA2.images[i].id);
+      //console.log(typeof DATA2.images[i].id.toString());
+
+      if (filterText === DATA2.images[i].id.toString()) {
+        im2.push(DATA2.images[i]);
+        //console.log("searchmatchd!!");
+        im = im2;
+      }
+    }
+
+    im2 = [];
+    console.log(im);
+
+    setupdatedata(im);
+  }
 
   return (
     <View style={stylesheet.container}>
@@ -235,7 +363,7 @@ export function ListPage({ navigation }) {
           cancelIconColor="#c6c6c6"
           placeholder="Search here"
           onChangeText={(text) => SetfilterText(text)}
-          onSearchPress={() => console.log("Search Icon is pressed")}
+          onSearchPress={() => searchData()}
           onClearPress={() => SetfilterText("")}
         />
       </View>
