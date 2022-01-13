@@ -132,3 +132,43 @@ class ImagesView(APIView):
                   'result_image': inference_obj.result_image.url}
 
         return JsonResponse(result, status=status.HTTP_200_OK)
+
+class ImageDeleteView(APIView):
+    @swagger_auto_schema(
+        operation_id="S3 버킷에서 특정 이미지 삭제",
+        manual_parameters=[
+            openapi.Parameter(
+                name="image_id",
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_INTEGER,
+                required=True,
+            )
+        ])
+    def get(self,request):
+        """
+        URL에 포함된 ID값으로 이미지 삭제
+        """
+        id = request.GET.get("image_id")
+
+        try:
+            record_img = Image.objects.get(id=id)
+            
+            ### 아직 inference table과 latlng table에 데이터가 없기 때문에 주석 처리함 ###
+            # record_inf = Inference.objects.get(image=record_img)
+            # record_latlng = ImageLatLng.objects.get(image=record_img)
+            
+            ### 지우는 순서 주의! ###
+            # record_inf.delete()
+            # record_latlng.delete()
+            record_img.delete()
+
+            result = {'success': True,
+                      'comment':'image found'}
+
+            return JsonResponse(result, status=status.HTTP_200_OK)
+
+        except:
+            result = {'success': False,
+                      'comment':'image not found'}
+
+            return JsonResponse(result, status=status.HTTP_404_NOT_FOUND)
