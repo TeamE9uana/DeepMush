@@ -63,10 +63,7 @@ export const ExpoCameraPage = ({ navigation }) => {
       console.log(newUri);
 
       var myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        "Token 02c4754e194d80edd0608ce299f48d4a1d1cb2bc"
-      );
+      myHeaders.append("Authorization", `Token ${token}`);
       myHeaders.append("Content-Type", "multipart/form-data");
 
       var formdata = new FormData();
@@ -85,7 +82,7 @@ export const ExpoCameraPage = ({ navigation }) => {
         redirect: "follow",
       };
 
-      fetch("http://localhost:8000/images/", requestOptions)
+      fetch("http://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
@@ -136,10 +133,7 @@ export const ExpoCameraPage = ({ navigation }) => {
       // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
 
       var myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        "Token 067591542340c75372618c4f88cc28e683ad9f90"
-      );
+      myHeaders.append("Authorization", `Token ${token}`);
       myHeaders.append("Content-Type", "multipart/form-data");
 
       var formdata = new FormData();
@@ -148,8 +142,8 @@ export const ExpoCameraPage = ({ navigation }) => {
       formdata.append("mushroom_image", {
         name: "mush.jpg",
         type: "image/jpg",
-        // uri: result.uri,
-        uri: "/Users/gimjunhyeong/expo-practice/DeepMush/frontend/src/images/mush.jpeg", //local images 폴더안에 있는 경로 , expo로 모바일상의 경로는 file:// 로 시작한다 . 따라서 에러가 발생했었음 현재 서버가 쿠버네틱스로 옮겨지고 있기에 localhost에서는 테스트 불가능 ,
+        uri: result.uri,
+        //uri: "/Users/gimjunhyeong/expo-practice/DeepMush/frontend/src/images/mush.jpeg", //local images 폴더안에 있는 경로 , expo로 모바일상의 경로는 file:// 로 시작한다 . 따라서 에러가 발생했었음 현재 서버가 쿠버네틱스로 옮겨지고 있기에 localhost에서는 테스트 불가능 ,
       });
 
       var requestOptions = {
@@ -159,7 +153,7 @@ export const ExpoCameraPage = ({ navigation }) => {
         redirect: "follow",
       };
 
-      fetch("http://127.0.0.1:8000/images/", requestOptions)
+      fetch("http://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
