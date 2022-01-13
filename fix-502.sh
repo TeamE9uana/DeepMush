@@ -1,3 +1,2 @@
-sudo firewall-cmd --permanent --zone=public --add-rich-rule="rule family=ipv4 source address=10.61.0.0/16 accept"
-sudo firewall-cmd --permanent --zone=public --add-rich-rule="rule family=ipv4 source address=10.62.0.0/16 accept"
+sudo firewall-cmd --permanent --direct --delete-rule ipv4 filter FORWARD 1 -s 10.61.0.0/16 -d 10.61.0.0/16 -m state --state NEW -j ACCEPT
 sudo firewall-cmd --reload
