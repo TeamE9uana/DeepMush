@@ -24,6 +24,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { DetailPage } from "./DetailPage";
+import SearchBar from "react-native-dynamic-search-bar";
 
 /*
 let DATA2 = [
@@ -190,12 +191,11 @@ export function ListPage({ navigation }) {
         .catch((error) => console.log("error", error));
 
       await setupdatedata(im);
-
-      await console.log("DATA2.images !!!!!!! " + DATA2.images[0].id);
-      await console.log("DATA2.images !!!!!!!" + DATA2.images[0].image);
     }
     fetchAndSetList();
   }, []);
+
+  const [filterText, SetfilterText] = useState(filterText);
 
   return (
     <View style={stylesheet.container}>
@@ -216,6 +216,7 @@ export function ListPage({ navigation }) {
           />
         </View>
       </View>
+
       <View>
         <View
           style={{
@@ -223,6 +224,19 @@ export function ListPage({ navigation }) {
             borderBottomWidth: 1,
             marginBottom: 9,
           }}
+        />
+        <SearchBar
+          style={{
+            marginBottom: 9,
+          }}
+          fontColor="#c6c6c6"
+          iconColor="#c6c6c6"
+          shadowColor="#282828"
+          cancelIconColor="#c6c6c6"
+          placeholder="Search here"
+          onChangeText={(text) => SetfilterText(text)}
+          onSearchPress={() => console.log("Search Icon is pressed")}
+          onClearPress={() => SetfilterText("")}
         />
       </View>
       <View style={stylesheet.body}>
