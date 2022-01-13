@@ -1,2 +1,1 @@
-sudo firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 1 -s 10.61.0.0/16 -d 10.61.0.0/16 -m state --state NEW -j ACCEPT
-sudo firewall-cmd --reload
+sudo ufw allow in on cni0 from 10.61.0.0/16 comment "K3s rule : https://github.com/rancher/k3s/issues/24#issuecomment-469759329"
