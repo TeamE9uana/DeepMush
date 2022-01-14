@@ -67,7 +67,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
     lat = serializers.SerializerMethodField()
     lng = serializers.SerializerMethodField()
-    inference = serializers.SerializerMethodField()
+    inferences = serializers.SerializerMethodField()
 
     # N+1 문제 추후에 수정 필요
 
@@ -93,16 +93,11 @@ class ImageSerializer(serializers.ModelSerializer):
 
         return image_lat_lng.lng
 
-    @ swagger_serializer_method(serializer_or_field=InferenceSerializer(allow_null=True))
-    def get_inference(self, obj: Image):
-        inference: Optional[ImageLatLng] = None
+    @ swagger_serializer_method(serializer_or_field=InferenceSerializer(many=True))
+    def get_inferences(self, obj: Image):
+        inferences = Inference.objects.filter(image=obj)
 
-        try:
-            inference = Inference.objects.get(image=obj)
-        except Inference.DoesNotExist:
-            return None
-
-        return InferenceSerializer(inference).data
+        return InferenceSerializer(inferences, many=True).data
 
 
 class ImagesSerializer(serializers.ListSerializer):
@@ -112,3 +107,8 @@ class ImagesSerializer(serializers.ListSerializer):
 class ImagesResponseSerializer(serializers.Serializer):
     success = serializers.BooleanField()
     images = ImagesSerializer()
+
+
+class ImageResponseSerializer(serializers.Serializer):
+    success = serializers.BooleanField()
+    image = ImageSerializer()

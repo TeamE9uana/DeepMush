@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from inference.tasks import expect_image_task
-from config.serializers import ImagesResponseSerializer, SuccessSerializer, SuccessWithInferenceSerializer
+from config.serializers import ImageResponseSerializer, ImagesResponseSerializer, SuccessSerializer, SuccessWithInferenceSerializer
 
 from config.models import Image, ImageLatLng, Inference, Profile
 from images.serializers import *
@@ -133,8 +133,66 @@ class ImagesView(APIView):
 
         return JsonResponse(result, status=status.HTTP_200_OK)
 
-class ImageDeleteView(APIView):
+
+class ImageView(APIView):
+    parser_classes = (MultiPartParser,)
+
     @swagger_auto_schema(
+        operation_id="이미지 조회",
+        responses={
+            status.HTTP_200_OK: ImagesResponseSerializer,
+            status.HTTP_404_NOT_FOUND: SuccessSerializer
+        })
+    def get(self, request: Request, image: int):
+        user = request.user
+        profile = Profile.objects.get(user=user.id)
+
+        try:
+            image = Image.objects.get(id=image, made_by=profile)
+        except Image.DoesNotExist:
+            result = SuccessSerializer(
+                {'success': False, 'comment': 'not found'}).data
+            return JsonResponse(result, status=status.HTTP_404_NOT_FOUND)
+
+        result = ImageResponseSerializer(
+            {'success': True, 'image': image}).data
+
+        return JsonResponse(result, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_id="S3 버킷에서 특정 이미지 삭제",
+        responses={
+            status.HTTP_200_OK: SuccessSerializer,
+            status.HTTP_404_NOT_FOUND: SuccessSerializer
+        }
+    )
+    def delete(self, request, image: int):
+        """
+        URL에 포함된 ID값으로 이미지 삭제
+        """
+        user = request.user
+        profile = Profile.objects.get(user=user.id)
+
+        try:
+            image = Image.objects.get(id=image, made_by=profile)
+            image_id = image.id
+        except Image.DoesNotExist:
+            result = {'success': False,
+                      'comment': 'image not found'}
+
+            return JsonResponse(result, status=status.HTTP_404_NOT_FOUND)
+
+        # CASCADE FK 제약조건에 의해서 image에 의존하는 테이블의 튜플들은 자동으로 삭제됨.
+        image.delete()
+
+        result = {'success': True,
+                  'comment': f'deleted image {image_id}'}
+
+        return JsonResponse(result, status=status.HTTP_200_OK)
+
+
+class ImageDeleteView(APIView):
+    @ swagger_auto_schema(
         operation_id="S3 버킷에서 특정 이미지 삭제",
         manual_parameters=[
             openapi.Parameter(
@@ -144,7 +202,7 @@ class ImageDeleteView(APIView):
                 required=True,
             )
         ])
-    def get(self,request):
+    def delete(self, request):
         """
         URL에 포함된 ID값으로 이미지 삭제
         """
@@ -154,19 +212,19 @@ class ImageDeleteView(APIView):
             record_img = Image.objects.get(id=id)
 #             record_inf = Inference.objects.get(image=record_img)
 #             record_latlng = ImageLatLng.objects.get(image=record_img)
-            
+
 #             ### 지우는 순서 주의! ###
 #             record_inf.delete()
 #             record_latlng.delete()
             record_img.delete()
 
             result = {'success': True,
-                      'comment':'image found'}
+                      'comment': 'image found'}
 
             return JsonResponse(result, status=status.HTTP_200_OK)
 
         except:
             result = {'success': False,
-                      'comment':'image not found'}
+                      'comment': 'image not found'}
 
             return JsonResponse(result, status=status.HTTP_404_NOT_FOUND)
