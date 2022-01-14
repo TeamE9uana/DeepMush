@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ImagesView
+from .views import ImagesView, ImageDeleteView
 
 urlpatterns = [
     path('', ImagesView.as_view(), name='images_view'),
