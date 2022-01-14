@@ -3,7 +3,6 @@ version: "3.3"
 
 services:
   database:
-    user: ubuntu
     image: bitnami/postgresql:latest
     expose:
       - "5432"
