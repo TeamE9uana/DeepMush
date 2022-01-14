@@ -67,7 +67,7 @@ class ImagesView(APIView):
         ### Parsing data ###
         user = request.user  # 사용자
         profile = Profile.objects.get(user=user.id)
-        description = request.POST.get('description', '')  # 사용자의 코멘트
+        # description = request.POST.get('description', '')  # 사용자의 코멘트
         image_file = request.FILES.get('mushroom_image', None)  # 버섯 이미지
 
         if not image_file:
@@ -126,6 +126,35 @@ class ImagesView(APIView):
 
         inference_obj.save()
 
+        ### Find Max Prob ###
+        max_prob = 0
+        max_label_name = ''
+        for value in inference.values():
+            if value['prob'] > max_prob:
+                max_prob = value['prob']
+                max_label_name = value['label_name']
+
+        if max_label_name == '영지버섯':
+            description = "여름철 활엽수에서 돋아나는 불로초과 1년생 버섯. 영지초, 지초, 불로초라고 부르기도 한다."
+        elif max_label_name == '노루궁뎅이 버섯':
+            description = "영미권에서는 Lion's mane (사자갈기) 라고 불리는, 산호침버섯속 노루궁뎅이과에 속하는 버섯으로, 정식 명칭은 노루궁뎅이이다. "
+        elif max_label_name == '능이버섯':
+            description = "사마귀버섯목 능이버섯과 능이버섯속의 식용 버섯."
+        elif max_label_name == '송이버섯':
+            description = "균계 담자균문 담자균강 주름버섯목 송이과 송이속의 식용 버섯."
+        elif max_label_name == '목이버섯':
+            description = "담자균강 목이목의 버섯. 해외에선 식용으로 인기가 없었기 때문에 중국을 통해 알려졌다."
+        elif max_label_name == '표고버섯':
+            description = "봄부터 가을에 걸쳐 밤나무, 떡갈나무 등 주로 활엽수의 죽은 나무 줄기에서 자란다."
+        elif max_label_name == '노란달걀버섯':
+            description = "달걀버섯과 비슷하지만 색깔이 노란색이다. 자주 독버섯과 헷갈린다. 애초에 보호종이기 때문에 손도 대지 말자."
+        else:
+            description = "ERROR"
+
+        updated_image = Image.objects.get(made_by=profile)
+        updated_image.description = description
+        updated_image.save()
+
         result = {'success': True,
                   'comment': f'LatLng {not_found_comment}found',
                   'result': inference,
@@ -152,12 +181,12 @@ class ImageDeleteView(APIView):
 
         try:
             record_img = Image.objects.get(id=id)
-#             record_inf = Inference.objects.get(image=record_img)
-#             record_latlng = ImageLatLng.objects.get(image=record_img)
+            # record_inf = Inference.objects.get(image=record_img)
+            # record_latlng = ImageLatLng.objects.get(image=record_img)
             
-#             ### 지우는 순서 주의! ###
-#             record_inf.delete()
-#             record_latlng.delete()
+            # ### 지우는 순서 주의! ###
+            # record_inf.delete()
+            # record_latlng.delete()
             record_img.delete()
 
             result = {'success': True,
