@@ -39,7 +39,9 @@ const initialregion = {
   longitude: (sample1.longitude + sample2.longitude + myhouse.longitude) / 3,
 };
 
-export const MapPage = ({ navigation }: any) => {
+export const MapPage = (route, { navigation }: any) => {
+  const im = route.params;
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitleVisivle: false,

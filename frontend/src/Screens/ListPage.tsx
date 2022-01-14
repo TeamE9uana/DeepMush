@@ -259,14 +259,26 @@ function deletebutton(title:any) =() =>{
 }
 */
 
+// 메인 flatlist에 사용 되는 json
 let im = [];
+
+// 검색에 활용되는 임시 json
 let im2 = [];
 
-// delete DATA2 with deletebutton
-export function ListPage({ navigation }: any) {
-  const [updatedata, setupdatedata] = useState(im);
+export function ListPage(props, { navigation }) {
+  //login access_token from localstorage
   var token = localStorage.getItem("access_token");
 
+  //props from expocamerapage's didupload
+  const didupload = props.didupload;
+
+  //image json update state
+  const [updatedata, setupdatedata] = useState(im);
+
+  // text 변경 확인 state
+  const [filterText, SetfilterText] = useState(filterText);
+
+  // not completed - deletebutton , 삭제 api 연동 필요
   var deletebutton = (index: any) => {
     var le = DATA2.length;
 
@@ -275,9 +287,44 @@ export function ListPage({ navigation }: any) {
     console.log("DATA2_length" + DATA2.length);
   };
 
-  useEffect(() => {
-    // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
+  // 텍스트 검색 state 서버 작업 완료시 로컬 데이터인 DATA2에서 im으로 변경필요
+  async function searchData() {
+    await console.log("searchbutton pushed !!!");
+    var imlength = await Object.keys(DATA2.images).length;
 
+    //console.log("imlength : " + imlength + "\n");
+    //console.log("filterText : " + filterText + "\n");
+
+    var check = 0;
+
+    // 리스트에 들어있는 값만큼 filltertext와 비교해서 imagelist에 검색된 값을 넣어준다
+
+    for (let i = 0; i < imlength; i++) {
+      //console.log(DATA2.images[i].id + " " + typeof DATA2.images[i].id);
+      //console.log(typeof DATA2.images[i].id.toString());
+
+      //데이터 검색 if 문
+      if (filterText === DATA2.images[i].id.toString()) {
+        im2.push(DATA2.images[i]);
+        //console.log("searchmatchd!!");
+        im = im2;
+        check++;
+      }
+    }
+    if (check == 0) {
+      im = [];
+    }
+    im2 = [];
+    console.log(im);
+
+    setupdatedata(im);
+
+    check = 0;
+  }
+
+  // listpage 동작시 useEffect 작동 -> get Method 실행해서 이미지 리스트들을 받아오고 im state에 결과값을 저장한다
+  useEffect(() => {
+    //get method - fetch
     async function fetchAndSetList() {
       var myHeaders = await new Headers();
       await myHeaders.append("Authorization", `Token ${token}`);
@@ -297,33 +344,7 @@ export function ListPage({ navigation }: any) {
       await setupdatedata(im);
     }
     fetchAndSetList();
-  }, []);
-
-  const [filterText, SetfilterText] = useState(filterText);
-
-  function searchData() {
-    console.log("searchbutton pushed !!!");
-    var imlength = Object.keys(DATA2.images).length;
-
-    //console.log("imlength : " + imlength + "\n");
-    //console.log("filterText : " + filterText + "\n");
-
-    for (let i = 0; i < imlength; i++) {
-      //console.log(DATA2.images[i].id + " " + typeof DATA2.images[i].id);
-      //console.log(typeof DATA2.images[i].id.toString());
-
-      if (filterText === DATA2.images[i].id.toString()) {
-        im2.push(DATA2.images[i]);
-        //console.log("searchmatchd!!");
-        im = im2;
-      }
-    }
-
-    im2 = [];
-    console.log(im);
-
-    setupdatedata(im);
-  }
+  }, [didupload]);
 
   return (
     <View style={stylesheet.container}>
@@ -353,6 +374,7 @@ export function ListPage({ navigation }: any) {
             marginBottom: 9,
           }}
         />
+
         <SearchBar
           style={{
             marginBottom: 9,
@@ -384,7 +406,7 @@ export function ListPage({ navigation }: any) {
 
                 width: 319,
 
-                backgroundColor: index % 2 == 0 ? "#BDE39F" : "#286053",
+                backgroundColor: index % 2 == 0 ? "#BDE39F" : "#",
               }}
             >
               <View
@@ -520,7 +542,7 @@ export function ListPage({ navigation }: any) {
             name="map-marker-outline"
             size={30}
             color="black"
-            onPress={() => navigation.navigate("MapPage")}
+            onPress={() => navigation.navigate("MapPage", { im: im })}
           />
         </View>
       </View>

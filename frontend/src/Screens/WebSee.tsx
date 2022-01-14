@@ -28,58 +28,16 @@ import "localstorage-polyfill";
 export function WebSee({ route, navigation }: any) {
   //const [Title, setTitle] = useState("");
 
+  //url params from LoginPage
   const { url } = route.params;
 
+  // webview 실행시 바로 실행될 자바스크립트 html의 pre에 들어있는 json(token,id,email) 값을 불러온다
   const INJECTED_JAVASCRIPT =
     '(function() {if(window.document.getElementsByTagName("pre").length>0){window.document.getElementsByTagName("pre")[0].style.display = "none";window.ReactNativeWebView.postMessage((window.document.getElementsByTagName("pre")[0].innerHTML));}})();';
-  /*
-    const runFirst = `
 
-  var pre = document.getElementsByTagName('body');
-  window.ReactNativeWebView.postMessage(JSON.stringify(window.location));
-
-
-  document.body.style.backgroundColor = 'red';
-
-
-
-  setTimeout(function() { window.alert('hi') }, 2000);
-  true; // note: this is required, or you'll sometimes get silent failures
-`;
-*/
-  /*
-  var webview: WebView<{
-    style: { flex: number; marginTop: number };
-    userAgent: "Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko; googleweblight) Chrome/38.0.1025.166 Mobile Safari/535.19";
-    source: { uri: string };
-    ref: unknown;
-    onNavigationStateChange: (newNavState: { url: any }) => void;
-    sharedCookiesEnabled: true;
-    thirdPartyCookiesEnabled: true;
-  }> | null = null;
-*/
-  /*
-  var handleWebViewNavigationStateChange = (newNavState: { url: any }) => {
-    // newNavState looks something like this:
-    // {
-    //   url?: string;
-    //   title?: string;
-    //   loading?: boolean;
-    //   canGoBack?: boolean;
-    //   canGoForward?: boolean;
-    // }
-    const { url } = newNavState;
-    if (!url) return;
-
-    // handle certain doctypes
-    if (url.includes("scope=email+profile")) {
-      Alert.alert("hellothisisworld");
-      console.log(url);
-    }
-  };
-*/
   let result;
 
+  //웹뷰에 삽입한 자바스크립트 실행시 실행되는 handlemessage 펑션 받아온 토큰을 로컬스토리지에 저장하고 목록화면으로 이동한다
   const _handleMessage = async (event: any) => {
     result = await JSON.parse(event.nativeEvent.data);
     await console.log("testing " + url);
