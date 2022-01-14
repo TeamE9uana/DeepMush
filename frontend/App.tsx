@@ -20,6 +20,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="LoginPage"
+          component={LoginPage}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
           name="ListPage"
           component={ListPage}
           options={{ headerShown: false }}
