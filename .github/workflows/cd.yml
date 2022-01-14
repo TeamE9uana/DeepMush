@@ -78,7 +78,7 @@ jobs:
 
       - name: Config kubectl & Trigger deployments & Do rolling update for existing deployments
         run: |
-            echo -e "$CONFIG_YAML_BASE64" | base64 -d - | sudo tee ~/k3s.yaml
+            echo -e "$CONFIG_YAML_BASE64" | base64 -d - | tee ~/k3s.yaml
             export KUBECONFIG=$HOME/k3s.yaml:$KUBECONFIG
             echo -e "$ENV_CONFIG_BASE64" | base64 -d - > ./k8s/production-env-env-configmap.yaml
             kubectl config use-context tpu-k8s
