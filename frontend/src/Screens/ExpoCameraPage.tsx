@@ -17,10 +17,11 @@ import axios from "axios";
 import "localstorage-polyfill";
 
 import { string } from "yargs";
+import { ListPage } from "./ListPage";
 
 let cameraFace = "back";
 
-export const ExpoCameraPage = ({ navigation }) => {
+export const ExpoCameraPage = ({ navigation }: any) => {
   var token = localStorage.getItem("access_token");
 
   let camera: Camera;
@@ -30,6 +31,8 @@ export const ExpoCameraPage = ({ navigation }) => {
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   const [fMode, setFMode] = useState("off");
+
+  const [didupload, setDidupload] = useState(false);
 
   // Gets permission from user to use camera
   const handleStartCamera = async () => {
@@ -85,7 +88,11 @@ export const ExpoCameraPage = ({ navigation }) => {
       fetch("http://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
+        .then(void setDidupload(true))
+        .then(void console.log("upload success!!"))
         .catch((error) => console.log("error", error));
+
+      return <ListPage didupload={didupload}> </ListPage>;
     } catch (err) {
       throw new Error("File could not be saved.");
     }
@@ -158,6 +165,7 @@ export const ExpoCameraPage = ({ navigation }) => {
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
     }
+    return <ListPage didupload={didupload}> </ListPage>;
   };
   return (
     <View style={styles.container}>

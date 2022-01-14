@@ -19,22 +19,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 
-/*
-function deletebutton(title:any) =() =>{
-  var le = this.state.DATA.length;
-  for (var i = 0; i < le; i++) {
-    if (this.state.DATA[i].title === title) {
-      this.state.DATA.splice(i, 1);
-      this.setState(this.state.DATA);
-
-      break;
-    }
-  }
-}
-*/
-
-// delete DATA2 with deletebutton
 export function DetailPage({ route, navigation }) {
+  // imagelist(json) , json index params from ListPage
   const { index, DATA2 } = route.params;
 
   return (
