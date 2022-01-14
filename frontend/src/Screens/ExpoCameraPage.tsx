@@ -15,7 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import axios from "axios";
 import "localstorage-polyfill";
-
+import Spinner from "react-native-loading-spinner-overlay";
 import { string } from "yargs";
 
 let cameraFace = "back";
@@ -30,6 +30,7 @@ export const ExpoCameraPage = ({ navigation }) => {
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   const [fMode, setFMode] = useState("off");
+  const [loading, setLoading] = useState(false);
 
   // Gets permission from user to use camera
   const handleStartCamera = async () => {
@@ -84,6 +85,8 @@ export const ExpoCameraPage = ({ navigation }) => {
         body: formdata,
         redirect: "follow",
       };
+
+      setLoading(true);
 
       fetch("http://localhost:8000/images/", requestOptions)
         .then((response) => response.text())
@@ -159,7 +162,9 @@ export const ExpoCameraPage = ({ navigation }) => {
         redirect: "follow",
       };
 
-      fetch("http://127.0.0.1:8000/images/", requestOptions)
+      setLoading(true);
+
+      fetch("https://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
@@ -167,6 +172,7 @@ export const ExpoCameraPage = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
+      <Spinner visible={loading} textContent={"Loading..."} />
       <View style={styles.cameraContainer}>
         {previewVisible && capturedImage ? (
           <CameraPreview

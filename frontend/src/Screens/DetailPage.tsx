@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import { Svg, Path } from "react-native-svg";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";

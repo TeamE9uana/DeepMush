@@ -35,6 +35,7 @@
     "react-native-crypto": "^2.2.0",
     "react-native-fs": "^2.18.0",
     "react-native-level-fs": "^3.0.1",
+    "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-maps": "^0.30.1",
     "react-native-randombytes": "^3.6.1",
     "react-native-safe-area-context": "^3.3.2",
@@ -43,6 +44,8 @@
     "react-native-vector-icons": "^9.0.0",
     "react-native-web": "0.17.1",
     "react-native-webview": "11.15.0",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2",
     "request": "^2.88.2",
     "rn-nodeify": "^10.3.0",
     "StatusBar": "^1.0.0"
@@ -51,6 +54,7 @@
     "@babel/core": "^7.12.9",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
+    "@types/react-native-loading-spinner-overlay": "^0.5.3",
     "@types/request": "^2.48.8",
     "typescript": "~4.3.5"
   },

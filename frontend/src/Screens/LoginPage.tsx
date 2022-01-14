@@ -8,7 +8,6 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { Svg, Path } from "react-native-svg";
 import axios from "axios";
 
 import { getStatusBarHeight } from "react-native-status-bar-height";

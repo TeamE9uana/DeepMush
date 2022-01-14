@@ -43,15 +43,6 @@ const sampleData: MapMarker[] = [
   },
 ];
 
-const [location, setLocation] = useState<MapMarker[]>(sampleData);
-
-const getMidLatitude = (sampleData: MapMarker[]): number => {
-  const sum: number =
-    sampleData.reduce((cur, next) => cur + next.latitude, 0) /
-    sampleData.length;
-  return sum;
-};
-
 const getLocation = (sampleData: MapMarker[]): Coordinate => {
   return sampleData.reduce(
     (cur, next) => {
@@ -67,8 +58,8 @@ const getLocation = (sampleData: MapMarker[]): Coordinate => {
 const initiaLocation = getLocation(sampleData);
 
 const midLocation: Coordinate = {
-  latitude: initiaLocation.latitude,
-  longitude: initiaLocation.longitude,
+  latitude: initiaLocation.latitude / sampleData.length,
+  longitude: initiaLocation.longitude / sampleData.length,
 };
 
 export const MapPage = ({ navigation }) => {
@@ -89,57 +80,61 @@ export const MapPage = ({ navigation }) => {
   const [markers, setMarkers] = useState(sampleData);
 
   return (
-    <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        provider={"google"}
-        initialRegion={{
-          latitude: midLocation.latitude,
-          longitude: midLocation.longitude,
-          latitudeDelta: 0.03,
-          longitudeDelta: 0.04,
-        }}
-      >
-        {markers.map((props: MapMarker, index) => (
-          <>
-            <Marker
-              key={index}
-              coordinate={props}
-              onPress={(evt) => setClicked(!clicked)}
-              description="버섯넘버"
+    console.log(initiaLocation),
+    console.log(midLocation.longitude),
+    (
+      <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          provider={"google"}
+          initialRegion={{
+            latitude: midLocation.latitude,
+            longitude: midLocation.longitude,
+            latitudeDelta: 0.03,
+            longitudeDelta: 0.04,
+          }}
+        >
+          {markers.map((props: MapMarker, index) => (
+            <>
+              <Marker
+                key={index}
+                coordinate={props}
+                onPress={(evt) => setClicked(!clicked)}
+                description="버섯넘버"
+              />
+              {/* {clicked && index && <Text>{props.name}</Text>} */}
+            </>
+          ))}
+          {/* <Marker coordinate={myhouse} onPress={(evt) => alert("asdf")} /> */}
+          <TouchableOpacity
+            style={styles.touchableOpacityStyle}
+          ></TouchableOpacity>
+        </MapView>
+        <View style={stylesheet.footer}>
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate("ListPage")}>
+              <SimpleLineIcons name="folder" size={30} color="black" />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <SimpleLineIcons
+              name="camera"
+              size={30}
+              color="black"
+              onPress={() => navigation.navigate("ExpoCameraPage")}
             />
-            {/* {clicked && index && <Text>{props.name}</Text>} */}
-          </>
-        ))}
-        {/* <Marker coordinate={myhouse} onPress={(evt) => alert("asdf")} /> */}
-        <TouchableOpacity
-          style={styles.touchableOpacityStyle}
-        ></TouchableOpacity>
-      </MapView>
-      <View style={stylesheet.footer}>
-        <View>
-          <TouchableOpacity onPress={() => navigation.navigate("ListPage")}>
-            <SimpleLineIcons name="folder" size={30} color="black" />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <SimpleLineIcons
-            name="camera"
-            size={30}
-            color="black"
-            onPress={() => navigation.navigate("ExpoCameraPage")}
-          />
-        </View>
-        <View>
-          <MaterialCommunityIcons
-            name="map-marker-outline"
-            size={30}
-            color="blue"
-            onPress={() => navigation.navigate("MapPage")}
-          />
+          </View>
+          <View>
+            <MaterialCommunityIcons
+              name="map-marker-outline"
+              size={30}
+              color="blue"
+              onPress={() => navigation.navigate("MapPage")}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    )
   );
 };
 
