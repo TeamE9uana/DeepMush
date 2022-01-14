@@ -1,0 +1,10 @@
+[Unit]
+Description=502 Saver
+
+[Service]
+Type=simple
+User=root
+ExecStart=/home/leejiho/502saver.sh
+
+[Install]
+WantedBy=multi-user.target
