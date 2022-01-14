@@ -98,6 +98,8 @@ class ImagesView(APIView):
 
         inference, path = expect_image_task.delay(image.image.url).get()
 
+        max_prob = 0
+        max_label_name = ''
         for idx, elem in enumerate(inference):
             x, y, w, h, prob, label, label_name = elem
 
@@ -110,6 +112,9 @@ class ImagesView(APIView):
                 'label': label,
                 'label_name': label_name
             }
+            if prob > max_prob:
+                max_prob = prob
+                max_label_name = label_name
 
         with open(path, 'rb') as inference_img:
             data = inference_img.read()
@@ -125,14 +130,6 @@ class ImagesView(APIView):
         inference_obj.result_image.save(filename, ContentFile(data))
 
         inference_obj.save()
-
-        ### Find Max Prob ###
-        max_prob = 0
-        max_label_name = ''
-        for value in inference.values():
-            if value['prob'] > max_prob:
-                max_prob = value['prob']
-                max_label_name = value['label_name']
 
         if max_label_name == '영지버섯':
             description = "여름철 활엽수에서 돋아나는 불로초과 1년생 버섯. 영지초, 지초, 불로초라고 부르기도 한다."
