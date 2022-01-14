@@ -152,14 +152,12 @@ class ImageDeleteView(APIView):
 
         try:
             record_img = Image.objects.get(id=id)
-            
-            ### 아직 inference table과 latlng table에 데이터가 없기 때문에 주석 처리함 ###
-            # record_inf = Inference.objects.get(image=record_img)
-            # record_latlng = ImageLatLng.objects.get(image=record_img)
+            record_inf = Inference.objects.get(image=record_img)
+            record_latlng = ImageLatLng.objects.get(image=record_img)
             
             ### 지우는 순서 주의! ###
-            # record_inf.delete()
-            # record_latlng.delete()
+            record_inf.delete()
+            record_latlng.delete()
             record_img.delete()
 
             result = {'success': True,
