@@ -82,7 +82,7 @@ class ImagesView(APIView):
 
         ### Saving data ###
         image: Image = Image.objects.create(
-            made_by=profile, image=image_file, description=description)
+            made_by=profile, image=image_file, description="")
         image.save()
 
         ### Saving latlng data using exif(image metadata) ###
