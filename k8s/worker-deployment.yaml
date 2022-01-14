@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: worker
+  name: worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/db-tier: "true"
+        io.kompose.network/mq-tier: "true"
+        io.kompose.service: worker
+    spec:
+      containers:
+        - command:
+            - /bin/sh 
+            - -c
+            - >
+                cd /backend ;
+                ./run-celery.sh
+          env:
+            - name: IS_DOCKER
+              value: "1"
+            - name: USE_POSTGRES
+              value: "1"
+          image: a891/deepmush_backend:latest
+          name: worker
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /backend/secrets.json
+              name: worker-secrets-json
+            - mountPath: /backend/runs
+              name: worker-runs
+      restartPolicy: Always
+      volumes:
+        - hostPath:
+            path: /var/local/deepmush/production/secrets.json
+            type: FileOrCreate
+          name: worker-secrets-json
+        - hostPath:
+            path: /var/local/deepmush/backend/runs
+          name: worker-runs
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
+status: {}

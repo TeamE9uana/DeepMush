@@ -28,6 +28,7 @@ RUN pip install -r requirements.txt --no-cache-dir
 
 RUN pip install torch==1.10.1+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html ; exit 0
 RUN pip install torchvision==0.11.2+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html ; exit 0
+RUN pip install --upgrade certifi
 
 COPY registry.py /usr/local/lib/python3.9/site-packages/django/apps/
 

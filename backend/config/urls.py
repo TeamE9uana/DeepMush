@@ -20,6 +20,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 from config import settings
+from drf_yasg.generators import OpenAPISchemaGenerator
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
@@ -31,8 +32,15 @@ api_info = openapi.Info(
     license=openapi.License(name="MIT License"),
 )
 
+class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
+    def get_schema(self, request=None, public=False):
+        schema = super().get_schema(request, public)
+        schema.schemes = ["https", "http"]
+        return schema
+
 schema_view = get_schema_view(
     api_info,
+    generator_class=BothHttpAndHttpsSchemaGenerator,
     public=True,
     permission_classes=(permissions.AllowAny,),
 )

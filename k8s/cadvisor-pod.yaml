@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/prometheus-tier: "true"
+    io.kompose.service: cadvisor
+  name: cadvisor
+spec:
+  containers:
+    - image: google/cadvisor
+      name: cadvisor
+      ports:
+        - containerPort: 8080
+      resources: {}
+      tty: true
+      volumeMounts:
+        - mountPath: /rootfs
+          name: cadvisor-claim0
+          readOnly: true
+        - mountPath: /var/run
+          name: cadvisor-claim1
+        - mountPath: /sys
+          name: cadvisor-claim2
+          readOnly: true
+        - mountPath: /var/lib/docker
+          name: cadvisor-claim3
+          readOnly: true
+  restartPolicy: OnFailure
+  volumes:
+    - name: cadvisor-claim0
+      persistentVolumeClaim:
+        claimName: cadvisor-claim0
+        readOnly: true
+    - name: cadvisor-claim1
+      persistentVolumeClaim:
+        claimName: cadvisor-claim1
+    - name: cadvisor-claim2
+      persistentVolumeClaim:
+        claimName: cadvisor-claim2
+        readOnly: true
+    - name: cadvisor-claim3
+      persistentVolumeClaim:
+        claimName: cadvisor-claim3
+        readOnly: true
+status: {}

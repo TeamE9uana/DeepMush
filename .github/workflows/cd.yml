@@ -66,16 +66,6 @@ jobs:
       - name: backend Image digest
         run: echo ${{ steps.docker_build_backend.outputs.digest }}
 
-      - name: Build and push postgres
-        id: docker_build_postgres
-        uses: docker/build-push-action@v2
-        with:
-          context: ./build/postgres
-          push: true
-          tags: a891/deepmush_postgres:latest
-      - name: postgres Image digest
-        run: echo ${{ steps.docker_build_everytime.outputs.digest }}
-
       - name: Build and push filebeat
         id: docker_build_filebeat
         uses: docker/build-push-action@v2
@@ -85,3 +75,15 @@ jobs:
           tags: a891/deepmush_filebeat:latest
       - name: postgres Image digest
         run: echo ${{ steps.docker_build_everytime.outputs.digest }}
+
+      - name: Config kubectl & Trigger deployments & Do rolling update for existing deployments
+        run: |
+            echo -e "$CONFIG_YAML_BASE64" | base64 -d - > ./k3s.yaml
+            export KUBECONFIG=./k3s.yaml:$KUBECONFIG
+            echo -e "$ENV_CONFIG_BASE64" | base64 -d - > ./k8s/production-env-env-configmap.yaml
+            kubectl config use-context tpu-k8s
+            ./up-pods.sh
+            ./rolling-release.sh
+        env:
+          CONFIG_YAML_BASE64: ${{ secrets.CONFIG_YAML_BASE64 }}
+          ENV_CONFIG_BASE64: ${{ secrets.ENV_CONFIG_BASE64 }}
