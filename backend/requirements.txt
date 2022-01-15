@@ -60,6 +60,8 @@ djongo
 hypothesis
 hypothesis[all]
 
+git+https://github.com/nikolaik/LibCST.git@chore/linux-arm64
+
 django-test-without-migrations
 django-request-logging
 
