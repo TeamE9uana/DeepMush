@@ -265,12 +265,12 @@ let im = [];
 // 검색에 활용되는 임시 json
 let im2 = [];
 
-export function ListPage(props, { navigation }) {
+export function ListPage({ navigation }) {
   //login access_token from localstorage
   var token = localStorage.getItem("access_token");
 
   //props from expocamerapage's didupload
-  const didupload = props.didupload;
+  //const didupload = props.didupload;
 
   //image json update state
   const [updatedata, setupdatedata] = useState(im);
@@ -279,18 +279,38 @@ export function ListPage(props, { navigation }) {
   const [filterText, SetfilterText] = useState(filterText);
 
   // not completed - deletebutton , 삭제 api 연동 필요
-  var deletebutton = (index: any) => {
-    var le = DATA2.length;
+  var deletebutton = async (index, id) => {
+    var le = im.length;
 
-    setupdatedata(DATA2.splice(index, 1));
-    console.log("delete button pushed123");
-    console.log("DATA2_length" + DATA2.length);
+    setupdatedata(im.splice(index, 1));
+    console.log("delete button pushed!!!");
+    console.log("im_length " + im.length);
+    console.log("im_index " + index);
+    console.log("im_id " + id);
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Token ${token}`);
+    myHeaders.append("Content-Type", "multipart/form-data");
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    await fetch(
+      `http://backend.deepmush.io/images/delete/?image_id=${id}`,
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
   };
 
   // 텍스트 검색 state 서버 작업 완료시 로컬 데이터인 DATA2에서 im으로 변경필요
   async function searchData() {
     await console.log("searchbutton pushed !!!");
-    var imlength = await Object.keys(DATA2.images).length;
+    var imlength = await Object.keys(im.images).length;
 
     //console.log("imlength : " + imlength + "\n");
     //console.log("filterText : " + filterText + "\n");
@@ -304,8 +324,8 @@ export function ListPage(props, { navigation }) {
       //console.log(typeof DATA2.images[i].id.toString());
 
       //데이터 검색 if 문
-      if (filterText === DATA2.images[i].id.toString()) {
-        im2.push(DATA2.images[i]);
+      if (filterText === im.images[i].id.toString()) {
+        im2.push(im.images[i]);
         //console.log("searchmatchd!!");
         im = im2;
         check++;
@@ -336,15 +356,17 @@ export function ListPage(props, { navigation }) {
         redirect: "follow",
       };
 
-      await fetch("http://backend.deepmush.io/images/", requestOptions)
-        .then((response) => response.json())
+      await fetch("https://backend.deepmush.io/images/", requestOptions)
+        .then((response) => response.text)
         .then((result) => (im = result.images))
         .catch((error) => console.log("error", error));
+
+      await console.log(im);
 
       await setupdatedata(im);
     }
     fetchAndSetList();
-  }, [didupload]);
+  }, []);
 
   return (
     <View style={stylesheet.container}>
@@ -393,7 +415,7 @@ export function ListPage(props, { navigation }) {
         <View style={{}} />
         <FlatList
           data={im}
-          keyExtractor={(item) => String(item.created_at)}
+          keyExtractor={(item) => String(item.id)}
           renderItem={({ item, index }) => (
             <View
               style={{
@@ -406,7 +428,7 @@ export function ListPage(props, { navigation }) {
 
                 width: 319,
 
-                backgroundColor: index % 2 == 0 ? "#BDE39F" : "#",
+                backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
               }}
             >
               <View
@@ -508,7 +530,7 @@ export function ListPage(props, { navigation }) {
                     name="closesquare"
                     size={24}
                     color="white"
-                    onPress={() => deletebutton(index)}
+                    onPress={() => deletebutton(index, item.id)}
                   />
                 </TouchableOpacity>
               </View>
@@ -542,7 +564,7 @@ export function ListPage(props, { navigation }) {
             name="map-marker-outline"
             size={30}
             color="black"
-            onPress={() => navigation.navigate("MapPage", { im: im })}
+            onPress={() => navigation.navigate("MapPage")}
           />
         </View>
       </View>

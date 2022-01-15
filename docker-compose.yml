@@ -3,13 +3,11 @@ version: "3.3"
 
 services:
   database:
-    user: ubuntu
-    build: ./build/postgres
+    image: bitnami/postgresql:latest
     expose:
       - "5432"
     volumes:
       - ./db:/var/lib/postgresql/data
-      - ./scripts:/scripts:ro
     networks:
       - db-tier
     environment:
@@ -23,13 +21,12 @@ services:
     restart: always
     networks:
       - db-tier
-      - nginx-tier
     environment:
       PGADMIN_DEFAULT_EMAIL: deepmush@deepmush.com
       PGADMIN_DEFAULT_PASSWORD: deepmush
       PGADMIN_LISTEN_PORT: 8082
-    expose:
-      - "8082"
+    ports:
+      - "8082:8082"
     tty: true
 
   mongodb:
@@ -54,9 +51,8 @@ services:
       - mongodb
     networks:
       - db-tier
-      - nginx-tier
-    expose:
-      - "8081"
+    ports:
+      - "8081:8081"
     environment:
       ME_CONFIG_MONGODB_SERVER: mongodb
       ME_CONFIG_MONGODB_ADMINUSERNAME: deepmush
@@ -68,8 +64,8 @@ services:
       - database
       - mongodb
     build: ./backend
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
     volumes:
       - ./backend:/backend
     environment:
@@ -78,25 +74,6 @@ services:
     networks:
       - db-tier
       - mq-tier
-      - nginx-tier
-      - prometheus-tier
-    tty: true
-
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx/config:/etc/nginx/conf.d:ro
-      - ./nginx/logs:/var/log/nginx/
-    ports:
-      - "8000:8000"
-      - "8001:8001"
-      - "8002:8002"
-    networks:
-      - nginx-tier
-    depends_on:
-      - backend
-      - pgadmin
-      - mongo-express
     tty: true
 
   migrate:
@@ -141,121 +118,8 @@ services:
       - IS_DOCKER=1
     tty: true
 
-  elk:
-    image: sebp/elk
-    ports:
-      - "5601:5601"
-      - "9200:9200"
-      - "5044:5044"
-    networks:
-      - elk-tier
-    volumes:
-      - ./data/elk-data:/var/lib/elasticsearch
-      - ./logstash/input.local.conf:/etc/logstash/conf.d/03-input.conf
-      - ./elastic/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml
-    environment:
-      - ELASTIC_PASSWORD=deepmush
-    tty: true
-
-  filebeat:
-    build: ./filebeat
-    networks:
-      - elk-tier
-    volumes:
-      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - ./nginx/logs:/var/log/nginx
-      - ./backend/logs:/var/log/backend
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      # - /var/run/docker.sock:/var/run/docker.sock:ro
-    entrypoint: "/bin/sh -c 'sleep 60s && filebeat setup && filebeat -e && filebeat'"
-    depends_on:
-      - nginx
-      - backend
-      - elk
-    links:
-      - elk
-    tty: true
-
-  cadvisor:
-    image: google/cadvisor
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    ports:
-      - 8080:8080
-    networks:
-      - prometheus-tier
-    restart: always
-    deploy:
-      mode: global
-      restart_policy:
-        condition: on-failure
-    tty: true
-
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - ./prometheus/:/etc/prometheus/
-      - ./data/prometheus:/prometheus
-    networks:
-      - db-tier
-      - prometheus-tier
-      - nginx-tier
-      - mq-tier
-    expose:
-      - "9090"
-    ports:
-      - "5005:9090"
-    tty: true
-
-  grafana:
-    image: grafana/grafana
-    links:
-      - prometheus:prometheus
-    networks:
-      - prometheus-tier
-    ports:
-      - "5001:3000"
-    environment:
-      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
-    volumes:
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./data/grafana/grafana:/var/lib/grafana
-      - ./data/grafana/provisioning:/etc/grafana/provisioning
-    tty: true
-
-  node-exporter:
-    image: prom/node-exporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - "--path.procfs=/host/proc"
-      - "--path.sysfs=/host/sys"
-      - --collector.filesystem.ignored-mount-points
-      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/l\
-        ib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)(\
-        $$|/)"
-    expose:
-      - "9100"
-    restart: always
-    networks:
-      - prometheus-tier
-    deploy:
-      mode: global
-    tty: true
-
 networks:
   db-tier:
     driver: bridge
   mq-tier:
-    driver: bridge
-  nginx-tier:
-    driver: bridge
-  elk-tier:
-    driver: bridge
-  prometheus-tier:
     driver: bridge

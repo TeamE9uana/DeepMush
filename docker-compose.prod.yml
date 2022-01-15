@@ -7,13 +7,11 @@ version: "3.3"
 
 services:
   database:
-    user: ubuntu
-    image: a891/deepmush_postgres:latest
+    image: bitnami/postgresql:latest
     expose:
       - "5432"
     volumes:
       - ./db:/var/lib/postgresql/data
-      - ./scripts:/scripts:ro
     networks:
       - db-tier
     env_file:
