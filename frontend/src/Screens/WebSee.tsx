@@ -50,7 +50,7 @@ export function WebSee({ route, navigation }: any) {
     await localStorage.setItem("access_token", result.access_token);
     await console.log(localStorage.getItem("access_token"));
 
-    await navigation.navigate("ListPage");
+    await navigation.navigate("ListPage", { didupload: false });
   };
 
   return (

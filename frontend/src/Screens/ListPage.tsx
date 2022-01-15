@@ -260,12 +260,14 @@ function deletebutton(title:any) =() =>{
 */
 
 // 메인 flatlist에 사용 되는 json
-let im = [];
+let im = [{ inferences: [{ result: { prob: "", label_name: "" } }] }];
 
 // 검색에 활용되는 임시 json
 let im2 = [];
 
-export function ListPage({ navigation }) {
+export function ListPage({ route, navigation }) {
+  const { didupload } = route.params;
+
   //login access_token from localstorage
   var token = localStorage.getItem("access_token");
 
@@ -288,20 +290,22 @@ export function ListPage({ navigation }) {
     console.log("im_index " + index);
     console.log("im_id " + id);
 
+    var sid = id.toString();
+
+    console.log(sid);
+    console.log(typeof sid);
+
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Token ${token}`);
     myHeaders.append("Content-Type", "multipart/form-data");
 
     var requestOptions = {
-      method: "GET",
+      method: "DELETE",
       headers: myHeaders,
       redirect: "follow",
     };
 
-    await fetch(
-      `http://backend.deepmush.io/images/delete/?image_id=${id}`,
-      requestOptions
-    )
+    await fetch(`https://backend.deepmush.io/images/${sid}/`, requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -357,13 +361,12 @@ export function ListPage({ navigation }) {
       };
 
       await fetch("https://backend.deepmush.io/images/", requestOptions)
-        .then((response) => response.text)
+        .then((response) => response.json())
         .then((result) => (im = result.images))
         .catch((error) => console.log("error", error));
 
-      await console.log(im);
-
       await setupdatedata(im);
+      console.log(im);
     }
     fetchAndSetList();
   }, []);
@@ -455,8 +458,11 @@ export function ListPage({ navigation }) {
                     style={{
                       color: "white",
                       alignItems: "flex-end",
-                      marginTop: 15,
+                      marginTop: 5,
                       marginBottom: 10,
+                      fontSize: 12,
+                      maxWidth: 65,
+                      maxHeight: 12,
                     }}
                   >
                     {item.created_at}
@@ -469,22 +475,44 @@ export function ListPage({ navigation }) {
                       color: "white",
                       alignItems: "center",
                       justifyContent: "center",
-                      marginTop: 10,
+                      marginTop: 15,
                       fontSize: 20,
                     }}
                   >
-                    {item.id}
+                    {item.inferences[0].result[0].label_name === undefined
+                      ? "불일치"
+                      : item.inferences[0].result[0].label_name}
                   </Text>
+                  <Text
+                    style={{
+                      marginLeft: 10,
+                      color: "white",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 19,
+                      fontSize: 15,
+                      maxWidth: 30,
+                      maxHeight: 15,
+                    }}
+                  >
+                    {item.inferences[0].result[0].prob === undefined
+                      ? "불일치"
+                      : item.inferences[0].result[0].prob}
+                    %
+                  </Text>
+
                   <Text
                     style={{
                       color: "white",
                       alignItems: "center",
                       justifyContent: "center",
-                      marginTop: 11,
+                      marginTop: 19,
                       fontSize: 15,
+                      maxWidth: 48,
+                      maxHeight: 15,
                     }}
                   >
-                    &nbsp;{item.percent}%
+                    %
                   </Text>
                 </View>
               </View>

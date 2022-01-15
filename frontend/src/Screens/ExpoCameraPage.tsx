@@ -85,12 +85,14 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         redirect: "follow",
       };
 
-      fetch("http://backend.deepmush.io/images/", requestOptions)
+      await fetch("https://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .then(void setDidupload(true))
         .then(void console.log("upload success!!"))
         .catch((error) => console.log("error", error));
+
+      await console.log(didupload);
 
       return <ListPage didupload={didupload}> </ListPage>;
     } catch (err) {
@@ -147,7 +149,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       console.log(result.uri);
 
       formdata.append("mushroom_image", {
-        name: "mush.jpg",
+        name: "mush1.jpg",
         type: "image/jpg",
         uri: result.uri,
         //uri: "/Users/gimjunhyeong/expo-practice/DeepMush/frontend/src/images/mush.jpeg", //local images 폴더안에 있는 경로 , expo로 모바일상의 경로는 file:// 로 시작한다 . 따라서 에러가 발생했었음 현재 서버가 쿠버네틱스로 옮겨지고 있기에 localhost에서는 테스트 불가능 ,
@@ -160,7 +162,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         redirect: "follow",
       };
 
-      fetch("http://backend.deepmush.io/images/", requestOptions)
+      fetch("https://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
