@@ -95,7 +95,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
     @ swagger_serializer_method(serializer_or_field=InferenceSerializer(allow_null=True))
     def get_inference(self, obj: Image):
-        inferences = Inference.objects.filter(image=obj)
+        inferences = Inference.objects.filter(image=obj).order_by('id')
 
         inference = inferences.first()
 
