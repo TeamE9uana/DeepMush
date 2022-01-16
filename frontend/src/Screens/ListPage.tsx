@@ -260,7 +260,7 @@ function deletebutton(title:any) =() =>{
 */
 
 // 메인 flatlist에 사용 되는 json
-let im = [{ inferences: [{ result: { prob: "", label_name: "" } }] }];
+let im = { inference: { result: [{ prob: "", label_name: "" }] } };
 
 // 검색에 활용되는 임시 json
 let im2 = [];
@@ -335,6 +335,7 @@ export function ListPage({ route, navigation }) {
         check++;
       }
     }
+
     if (check == 0) {
       im = [];
     }
@@ -365,11 +366,46 @@ export function ListPage({ route, navigation }) {
         .then((result) => (im = result.images))
         .catch((error) => console.log("error", error));
 
+      //await console.log("this is im inference result" + im[0].inference.result);
+      //await console.log("this is im inference result" + im[1].inference.result);
+      //await console.log("this is im inference result" + im[2].inference.result);
+      //await console.log("this is im inference result" + im[3].inference.result);
+      //await console.log("this is im inference result" + im[0].inference.result);
+
+      for (let i = 0; i < im.length; i++) {
+        var count = 0;
+        for await (const element of im[i].inference.result) {
+          count++;
+        }
+
+        if (count == 0) {
+          await console.log("result is empty");
+          im[i].inference.result = [{ prob: "0", label_name: "empty" }];
+
+          console.log("[empty]" + im[i].inference.result[0].prob);
+        } else {
+          await console.log("result is not empty");
+        }
+      }
+
       await setupdatedata(im);
-      console.log(im);
+      //console.log(im);
     }
     fetchAndSetList();
   }, []);
+
+  /*
+      {item.inferences[0].result[0].label_name === undefined
+                      ? "불일치"
+                      : item.inferences[0].result[0].label_name}
+  */
+
+  /*
+                    {item.inferences[0].result[0].prob === undefined
+                      ? "불일치"
+                      : item.inferences[0].result[0].prob}
+                    %
+                      */
 
   return (
     <View style={stylesheet.container}>
@@ -479,9 +515,7 @@ export function ListPage({ route, navigation }) {
                       fontSize: 20,
                     }}
                   >
-                    {item.inferences[0].result[0].label_name === undefined
-                      ? "불일치"
-                      : item.inferences[0].result[0].label_name}
+                    {item.inference.result[0].label_name}
                   </Text>
                   <Text
                     style={{
@@ -494,12 +528,7 @@ export function ListPage({ route, navigation }) {
                       maxWidth: 30,
                       maxHeight: 15,
                     }}
-                  >
-                    {item.inferences[0].result[0].prob === undefined
-                      ? "불일치"
-                      : item.inferences[0].result[0].prob}
-                    %
-                  </Text>
+                  ></Text>
 
                   <Text
                     style={{
@@ -512,7 +541,7 @@ export function ListPage({ route, navigation }) {
                       maxHeight: 15,
                     }}
                   >
-                    %
+                    {item.inference.result[0].prob}%
                   </Text>
                 </View>
               </View>
