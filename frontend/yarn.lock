@@ -1217,6 +1217,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
+"@qeepsake/react-native-image-exif@^1.0.1":
+  "integrity" "sha512-YeudUupX7xcHTCAHK2zvVqxsbO5ZOWIF25jv4GKEvrV6ZDXSIPB68Dm3cgxfLlm5m7B2Pym3p95jR8vWwNyFJA=="
+  "resolved" "https://registry.npmjs.org/@qeepsake/react-native-image-exif/-/react-native-image-exif-1.0.1.tgz"
+  "version" "1.0.1"
+
 "@react-native-community/cli-debugger-ui@^5.0.1":
   "integrity" "sha512-5gGKaaXYOVE423BUqxIfvfAVSj5Cg1cU/TpGbeg/iqpy2CfqyWqJB3tTuVUbOOiOvR5wbU8tti6pIi1pchJ+oA=="
   "resolved" "https://registry.npmjs.org/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-5.0.1.tgz"
@@ -1634,6 +1639,13 @@
   "integrity" "sha512-6ckxMjBBD8URvjB6J3NcnuAn5Pkl7t3TizAg+xdlzzQGSPSmBcXf8KoIH0ua/i+tio+ZRUHEXp0HEmvaR4kt0w=="
   "resolved" "https://registry.npmjs.org/@types/caseless/-/caseless-0.12.2.tgz"
   "version" "0.12.2"
+
+"@types/exif@^0.6.3":
+  "integrity" "sha512-OMthUry1d2/gpXL2H3RGaj7KWRw0EWdxI0OANeUWbYMotBxljFuAl3eydCgDaBYTyD+d4Q3atdVcmimwS6KvGg=="
+  "resolved" "https://registry.npmjs.org/@types/exif/-/exif-0.6.3.tgz"
+  "version" "0.6.3"
+  dependencies:
+    "@types/node" "*"
 
 "@types/geojson@^7946.0.7":
   "integrity" "sha512-1rkryxURpr6aWP7R786/UQOkJ3PcpQiWkAXBmdWc7ryFWqN6a4xfK7BtjXvFBKO9LjQ+MWQSWxYeZX1OApnArA=="
@@ -6226,6 +6238,11 @@
   "resolved" "https://registry.npmjs.org/react-native-dynamic-search-bar/-/react-native-dynamic-search-bar-2.0.2.tgz"
   "version" "2.0.2"
 
+"react-native-exif@^0.5.0":
+  "integrity" "sha512-nt8JY1QhM3EE86Wk+IusJ8J37c3ecdRETlF5g/SFKmAt3E+vnQmWwWyuLNtJux/f1zBJXhQ9Dvb43BYfu8w2yQ=="
+  "resolved" "https://registry.npmjs.org/react-native-exif/-/react-native-exif-0.5.0.tgz"
+  "version" "0.5.0"
+
 "react-native-fs@^2.18.0":
   "integrity" "sha512-9iQhkUNnN2JNED0in06JwZy88YEVyIGKWz4KLlQYxa5Y2U0U2AZh9FUHtA04oWj+xt2LlHh0LFPCzhmNsAsUDg=="
   "resolved" "https://registry.npmjs.org/react-native-fs/-/react-native-fs-2.18.0.tgz"
@@ -6270,7 +6287,7 @@
     "react-freeze" "^1.0.0"
     "warn-once" "^0.1.0"
 
-"react-native-spinkit@>= 1.5.0":
+"react-native-spinkit@^1.5.1", "react-native-spinkit@>= 1.5.0":
   "integrity" "sha512-XkTgP4e+/MZpbI1GdZTIEQ+6WeMWQT4duWnSiXaaVW7py0rtaBLswtAEA6uXQGUhnxMnPWZhbLz7QponpH3ciQ=="
   "resolved" "https://registry.npmjs.org/react-native-spinkit/-/react-native-spinkit-1.5.1.tgz"
   "version" "1.5.1"
@@ -6786,7 +6803,7 @@
     "minimist" "^1.1.1"
     "walker" "~1.0.5"
 
-"sax@^1.2.1", "sax@>=0.6.0":
+"sax@^1.2.1", "sax@>=0.6.0", "sax@1.2.4":
   "integrity" "sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw=="
   "resolved" "https://registry.npmjs.org/sax/-/sax-1.2.4.tgz"
   "version" "1.2.4"
@@ -7383,6 +7400,13 @@
   "integrity" "sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o="
   "resolved" "https://registry.npmjs.org/tr46/-/tr46-0.0.3.tgz"
   "version" "0.0.3"
+
+"ts-exif-parser@^0.2.2":
+  "integrity" "sha512-Z7qGRfvHaISUOErkKfc8Tp+GBnfMWCSyduiLJR0x/b/wKp60oiOvORk73fFML3l8Kf0gVX48mrRsYUcBEb5avQ=="
+  "resolved" "https://registry.npmjs.org/ts-exif-parser/-/ts-exif-parser-0.2.2.tgz"
+  "version" "0.2.2"
+  dependencies:
+    "sax" "1.2.4"
 
 "ts-interface-checker@^0.1.9":
   "integrity" "sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA=="

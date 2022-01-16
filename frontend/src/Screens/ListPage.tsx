@@ -26,244 +26,12 @@ import { useEffect } from "react";
 import { DetailPage } from "./DetailPage";
 import SearchBar from "react-native-dynamic-search-bar";
 
-/*
-let DATA2 = [
-  {
-    uri: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/1",
-    description:
-      "식감 자체는 생각보다 평범하다. 새송이버섯을 썰어서 입에 넣었을 때 느껴지는 아작아작함을 생각하면 된다. 양송이버섯이나 새송이버섯은 송이버섯의 양산형이 아니라 아예 다른 종이다. 자세한 것은 양송이버섯과 새송이버섯 문서 참조. 갓 부분은 평범한 버섯의 식감이며, 익히면 말캉말캉해진다. 하지만 향의 차원으로 넘어가면 다른 버섯과는 비교를 불허한다. 신선한 송이는 익히지 않은 상태에서도 특유의 송이향을 느낄 수 있다. 송이 향은 곧 솔 향이다.",
-
-    id: "송이버섯",
-    percent: 100,
-  },
-  {
-    uri: "../images/mush2.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/2",
-    description: "hi",
-    id: "목이버섯",
-    percent: 80,
-  },
-  {
-    uri: "../images/mush3.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-    lat: "",
-    long: "",
-    created_at: "2022/01/3",
-    description: "hi",
-    id: "팽이버섯",
-    percent: 55,
-  },
-
-  {
-    uri: "../images/mush4.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/4",
-    description: "hi",
-    id: "노루궁뎅이버섯",
-    percent: 63,
-  },
-  {
-    uri: "../images/mush4.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/5",
-    description: "hi",
-    id: "느타리버섯",
-    percent: 100,
-  },
-
-  {
-    uri: "../images/mush4.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/6",
-    description: "hi",
-    id: "팽이버섯",
-    percent: 63,
-  },
-
-  {
-    uri: "../images/mush4.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/7",
-    description: "hi",
-    id: "양송이버섯",
-    percent: 63,
-  },
-];
-*/
-
-let DATA2 = {
-  success: true,
-  images: [
-    {
-      id: 31,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:00",
-      description: "",
-      made_by: 1,
-    },
-    {
-      id: 32,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:02",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:01",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:03",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:06",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:05",
-      description: "",
-      made_by: 2,
-    },
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:07",
-      description: "",
-      made_by: 2,
-    },
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:08",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 32,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:06",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 32,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:05",
-      description: "",
-      made_by: 2,
-    },
-    {
-      id: 32,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:07",
-      description: "",
-      made_by: 2,
-    },
-  ],
-};
-
-/*
-function deletebutton(title:any) =() =>{
-  var le = this.state.DATA.length;
-  for (var i = 0; i < le; i++) {
-    if (this.state.DATA[i].title === title) {
-      this.state.DATA.splice(i, 1);
-      this.setState(this.state.DATA);
-
-      break;
-    }
-  }
-}
-*/
-
 // 메인 flatlist에 사용 되는 json
-let im = { inference: { result: [{ prob: "", label_name: "" }] } };
+let im = [];
 
 // 검색에 활용되는 임시 json
 let im2 = [];
+let im3 = [];
 
 export function ListPage({ route, navigation }) {
   const { didupload } = route.params;
@@ -314,37 +82,44 @@ export function ListPage({ route, navigation }) {
   // 텍스트 검색 state 서버 작업 완료시 로컬 데이터인 DATA2에서 im으로 변경필요
   async function searchData() {
     await console.log("searchbutton pushed !!!");
-    var imlength = await Object.keys(im.images).length;
 
-    //console.log("imlength : " + imlength + "\n");
-    //console.log("filterText : " + filterText + "\n");
+    var imlength = await Object.keys(im).length;
+
+    console.log("imlength : " + imlength + "\n");
+    console.log("filterText : " + filterText + "\n");
 
     var check = 0;
 
     // 리스트에 들어있는 값만큼 filltertext와 비교해서 imagelist에 검색된 값을 넣어준다
 
-    for (let i = 0; i < imlength; i++) {
-      //console.log(DATA2.images[i].id + " " + typeof DATA2.images[i].id);
-      //console.log(typeof DATA2.images[i].id.toString());
+    if (filterText !== "") {
+      for (let i = 0; i < imlength; i++) {
+        //console.log(im[i].id + " " + typeof im[i].id);
+        //console.log(typeof im[i].id.toString());
+        console.log(i);
+        //데이터 검색 if 문
+        if (filterText === im[i].id.toString()) {
+          im2.push(im[i]);
 
-      //데이터 검색 if 문
-      if (filterText === im.images[i].id.toString()) {
-        im2.push(im.images[i]);
-        //console.log("searchmatchd!!");
-        im = im2;
-        check++;
+          console.log("searchmatchd!!");
+
+          check++;
+        }
       }
+
+      if (check == 0) im2 = [];
+
+      im3 = im2;
+      im2 = [];
+
+      setupdatedata(im3);
+
+      check = 0;
+    } else {
+      im3 = im;
+
+      setupdatedata(im3);
     }
-
-    if (check == 0) {
-      im = [];
-    }
-    im2 = [];
-    console.log(im);
-
-    setupdatedata(im);
-
-    check = 0;
   }
 
   // listpage 동작시 useEffect 작동 -> get Method 실행해서 이미지 리스트들을 받아오고 im state에 결과값을 저장한다
@@ -388,7 +163,10 @@ export function ListPage({ route, navigation }) {
         }
       }
 
+      im3 = im;
+
       await setupdatedata(im);
+
       //console.log(im);
     }
     fetchAndSetList();
@@ -453,7 +231,7 @@ export function ListPage({ route, navigation }) {
       <View style={stylesheet.body}>
         <View style={{}} />
         <FlatList
-          data={im}
+          data={im3}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item, index }) => (
             <View

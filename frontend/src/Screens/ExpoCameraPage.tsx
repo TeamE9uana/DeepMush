@@ -19,6 +19,8 @@ import "localstorage-polyfill";
 import { string } from "yargs";
 import { ListPage } from "./ListPage";
 
+import { ExifParserFactory } from "ts-exif-parser";
+
 let cameraFace = "back";
 
 export const ExpoCameraPage = ({ navigation }: any) => {
@@ -47,7 +49,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   // Takes photo, saves it to variable, and opens preview
   const handleTakePicture = async () => {
     if (!camera) return;
-    const photo = await camera.takePictureAsync();
+    const photo = await camera.takePictureAsync({ exif: true });
+    console.log(JSON.stringify(photo));
     setPreviewVisible(true);
     setCapturedImage(photo);
   };
@@ -63,7 +66,6 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       setPreviewVisible(false);
       setCapturedImage(null);
       setStartCamera(false);
-      console.log(newUri);
 
       var myHeaders = new Headers();
       myHeaders.append("Authorization", `Token ${token}`);
@@ -92,7 +94,15 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         .then(void console.log("upload success!!"))
         .catch((error) => console.log("error", error));
 
-      await console.log(didupload);
+      try {
+        const Data = await ExifParserFactory.create(newUri).parse();
+      } catch (error) {
+        console.log(error);
+      }
+      await console.log(Data);
+      await console.log("this is end");
+
+      //await console.log(didupload);
 
       return <ListPage didupload={didupload}> </ListPage>;
     } catch (err) {
