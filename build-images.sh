@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker build deepmush_backend ./backend
-docker build deepmush_filebeat ./filebeat
+docker build -t deepmush_backend ./backend
+docker build -t deepmush_filebeat ./filebeat
