@@ -33,8 +33,6 @@ spec:
           volumeMounts:
             - mountPath: /usr/share/filebeat
               name: filebeat-share
-            - mountPath: /var/log/nginx
-              name: filebeat-nginx
             - mountPath: /var/log/backend
               name: filebeat-backend
       restartPolicy: Always
@@ -46,9 +44,6 @@ spec:
         - name: filebeat-share
           secret:
             secretName: filebeat-share
-        - name: filebeat-nginx
-          persistentVolumeClaim:
-            claimName: nginx-logs-claim
         - name: filebeat-backend
           persistentVolumeClaim:
             claimName: backend-logs-claim
