@@ -131,6 +131,7 @@ class ImagesView(APIView):
 
         inference_obj.save()
 
+        description=''
         if max_label_name == '영지버섯':
             description = "여름철 활엽수에서 돋아나는 불로초과 1년생 버섯. 영지초, 지초, 불로초라고 부르기도 한다."
         elif max_label_name == '노루궁뎅이 버섯':
