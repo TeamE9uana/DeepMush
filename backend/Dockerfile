@@ -12,8 +12,6 @@ RUN sed -i 's|archive.ubuntu.com|mirror.kakao.com|g' /etc/apt/sources.list
 
 RUN apt update -y && apt install -y build-essential libpq-dev ffmpeg libsm6 libxext6
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rs.sh && chmod +x ./rs.sh && ./rs.sh -y
-
 RUN mkdir -p ~/.pip && echo "[global]\n\
     index-url=http://mirror.kakao.com/pypi/simple\n\
     trusted-host=mirror.kakao.com" > ~/.pip/pip.conf
@@ -23,6 +21,18 @@ RUN mkdir -p /root/.cache/torch/hub && wget https://github.com/ultralytics/yolov
 RUN pip install --upgrade pip
 
 COPY requirements.txt ./
+
+# install rustup (rust compiler toolchain)
+# original from https://github.com/linkerd/rustup-nightly-docker/blob/master/Dockerfile
+# edit by DPS0340 (https://github.com/DPS0340)
+RUN echo "(curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly --no-modify-path) && rustup default nightly" > /install-rust.sh && \
+    chmod 755 /install-rust.sh && \
+    /install-rust.sh ; \
+    rm -rf /install-rust.sh ; \
+    exit 0
+
+# install LibCST from source
+RUN PATH="$HOME/.cargo/bin:$PATH" pip install libcst --no-binary libcst
 
 RUN pip install psycopg2-binary --no-binary psycopg2-binary
 
