@@ -27,6 +27,8 @@ import { DetailPage } from "./DetailPage";
 import SearchBar from "react-native-dynamic-search-bar";
 import "localstorage-polyfill";
 
+import { Button, Menu, Divider, Provider, List } from "react-native-paper";
+
 // 메인 flatlist에 사용 되는 json
 let im = [];
 
@@ -200,11 +202,12 @@ export function ListPage({ navigation }) {
         </View>
 
         <View style={{ flexDirection: "row" }}>
-          <MaterialCommunityIcons
-            name="dots-vertical"
-            size={24}
-            color="black"
-          />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("UserInfoPage")}
+            style={{ marginRight: 5 }}
+          >
+            <AntDesign name="user" size={24} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
 
