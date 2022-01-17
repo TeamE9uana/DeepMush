@@ -23,7 +23,7 @@ RUN pip install --upgrade pip
 COPY requirements.txt ./
 
 # install rustup (rust compiler toolchain)
-# original from https://github.com/linkerd/rustup-nightly-docker/blob/master/Dockerfile
+# original code from https://github.com/linkerd/rustup-nightly-docker/blob/master/Dockerfile
 # edit by DPS0340 (https://github.com/DPS0340)
 RUN echo "(curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly --no-modify-path) && rustup default nightly" > /install-rust.sh && \
     chmod 755 /install-rust.sh && \
