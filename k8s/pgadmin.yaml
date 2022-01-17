@@ -21,10 +21,6 @@ status:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.26.1 (HEAD)
-  creationTimestamp: null
   labels:
     io.kompose.service: pgadmin
   name: pgadmin
@@ -44,8 +40,6 @@ spec:
         - envFrom:
           - configMapRef:
               name: production-env-env
-                  key: PGADMIN_DEFAULT_PASSWORD
-                  name: production-env-env
           image: dpage/pgadmin4
           name: pgadmin
           ports:

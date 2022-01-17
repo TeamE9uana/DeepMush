@@ -45,10 +45,9 @@ spec:
                   - -c
                   - cp /backend/secrets/secrets.json /backend/
           envFrom:
-          - configMapRef:
-              name: production-env-env
+            - configMapRef:
+                name: production-env-env
           image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
-          name: backend
           ports:
             - containerPort: 8000
           resources: {}
@@ -62,6 +61,13 @@ spec:
             - mountPath: /backend/logs
               name: backend-logs
         - name: migrate
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - cp /backend/secrets/secrets.json /backend/
           command:
             - /bin/sh
             - -c
@@ -74,14 +80,7 @@ spec:
                   python manage.py migrate authtoken --run-syncdb ;
                   python manage.py migrate --run-syncdb ;
                   python manage.py migrate --run-syncdb --database=mongodb ;
-                  done
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - /bin/sh
-                  - -c
-                  - cp /backend/secrets/secrets.json /backend/
+                done
           envFrom:
             - configMapRef:
                 name: production-env-env
@@ -93,7 +92,7 @@ spec:
               name: backend-secrets-json
               readOnly: true
         - name: worker
-         command:
+          command:
             - /bin/sh 
             - -c
             - >
@@ -110,7 +109,6 @@ spec:
             - configMapRef:
                 name: production-env-env
           image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
-          name: worker
           resources: {}
           tty: true
           volumeMounts:

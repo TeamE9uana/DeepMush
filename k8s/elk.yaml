@@ -57,6 +57,7 @@ spec:
         - envFrom:
           - configMapRef:
               name: production-env-env
+          image: sebp/elk
           name: elk
           ports:
             - containerPort: 5601
