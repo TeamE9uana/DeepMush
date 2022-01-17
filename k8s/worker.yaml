@@ -33,12 +33,10 @@ spec:
             - >
                 cd /backend ;
                 ./run-celery.sh
-          env:
-            - name: IS_DOCKER
-              value: "1"
-            - name: USE_POSTGRES
-              value: "1"
-          image: a891/deepmush_backend:latest
+          envFrom:
+            - configMapRef:
+                name: production-env-env
+          image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
           name: worker
           resources: {}
           tty: true
