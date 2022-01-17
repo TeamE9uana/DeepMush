@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -20,6 +20,7 @@ import { string } from "yargs";
 import { ListPage } from "./ListPage";
 
 import { ExifParserFactory } from "ts-exif-parser";
+import * as Location from "expo-location";
 
 let cameraFace = "back";
 
@@ -27,6 +28,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   var token = localStorage.getItem("access_token");
 
   let camera: Camera;
+
+  let location = null;
   const [startCamera, setStartCamera] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState<any>(null);
@@ -34,7 +37,24 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   const [fMode, setFMode] = useState("off");
 
-  const [didupload, setDidupload] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  // expo-location
+  const expoLocation = async () => {
+    //expo-location 권한요청
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    //현재위치데이터 받아오기
+    location = await Location.getCurrentPositionAsync({});
+
+    //위도 경도 콘솔
+    await console.log(location.coords.latitude);
+    await console.log(location.coords.longitude);
+  };
 
   // Gets permission from user to use camera
   const handleStartCamera = async () => {
@@ -61,11 +81,13 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     let image = capturedImage.uri;
     const fileName = image.split("/").pop();
     newUri = FileSystem.documentDirectory + fileName;
+
+    await expoLocation();
+
     try {
       await FileSystem.moveAsync({ from: image, to: newUri });
       setPreviewVisible(false);
       setCapturedImage(null);
-      setStartCamera(false);
 
       var myHeaders = new Headers();
       myHeaders.append("Authorization", `Token ${token}`);
@@ -90,21 +112,10 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       await fetch("https://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
-        .then(void setDidupload(true))
         .then(void console.log("upload success!!"))
         .catch((error) => console.log("error", error));
 
-      try {
-        const Data = await ExifParserFactory.create(newUri).parse();
-      } catch (error) {
-        console.log(error);
-      }
       await console.log(Data);
-      await console.log("this is end");
-
-      //await console.log(didupload);
-
-      return <ListPage didupload={didupload}> </ListPage>;
     } catch (err) {
       throw new Error("File could not be saved.");
     }
@@ -151,6 +162,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       //setImage(result.uri);
       // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
 
+      await expoLocation();
+
       var myHeaders = new Headers();
       myHeaders.append("Authorization", `Token ${token}`);
       myHeaders.append("Content-Type", "multipart/form-data");
@@ -177,7 +190,6 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
     }
-    return <ListPage didupload={didupload}> </ListPage>;
   };
   return (
     <View style={styles.container}>

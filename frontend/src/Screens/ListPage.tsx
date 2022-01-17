@@ -13,7 +13,7 @@ import {
   Touchable,
 } from "react-native";
 
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useIsFocused } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { Svg, Path } from "react-native-svg";
@@ -34,6 +34,8 @@ let im2 = [];
 let im3 = [];
 
 export function ListPage({ route, navigation }) {
+  const isFocused = useIsFocused();
+
   const { didupload } = route.params;
 
   //login access_token from localstorage
@@ -90,6 +92,10 @@ export function ListPage({ route, navigation }) {
 
     var check = 0;
 
+    im2 = [];
+
+    im3 = [];
+
     // 리스트에 들어있는 값만큼 filltertext와 비교해서 imagelist에 검색된 값을 넣어준다
 
     if (filterText !== "") {
@@ -110,7 +116,6 @@ export function ListPage({ route, navigation }) {
       if (check == 0) im2 = [];
 
       im3 = im2;
-      im2 = [];
 
       setupdatedata(im3);
 
@@ -170,7 +175,7 @@ export function ListPage({ route, navigation }) {
       //console.log(im);
     }
     fetchAndSetList();
-  }, []);
+  }, [isFocused]);
 
   /*
       {item.inferences[0].result[0].label_name === undefined
