@@ -5,26 +5,17 @@ import torch
 import requests
 from tempfile import NamedTemporaryFile
 from uuid import uuid4
+from glob import glob
 
 torch.hub._validate_not_a_forked_repo = lambda a, b, c: True
 
 
 def expect_image(image: str):
     """get bounding boxes"""
-    res = requests.get(image)
-
-    image_file = BytesIO(res.content)
-
-    temp_file = NamedTemporaryFile()
-    temp_file.write(image_file.read())
-
-    image_rgb = PILImage.open(temp_file.name).convert('RGB')
-    np_image = np.array(image_rgb)
-
     model = torch.hub.load('ultralytics/yolov5',
-                           'custom', path='inference/lib/mushroomAI.pt', force_reload=True)
+                           'custom', path='inference/lib/mushroomAI.pt')
 
-    results = model([np_image.copy()])
+    results = model(image)
 
     results.print()
 
@@ -33,6 +24,6 @@ def expect_image(image: str):
 
     results.save(path)
 
-    path += '/image0.jpg'
+    path = glob(path + '/*')[0]
 
     return [results.pandas().xyxy[0].values.tolist(), path]

@@ -1,0 +1,50 @@
+version: "3.3"
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs:ro
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - nginx-proxy-tier
+
+  letsencrypt:
+    image: nginxproxy/acme-companion:2.1.1
+    container_name: letsencrypt
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    networks:
+      - nginx-proxy-tier
+
+volumes:
+  conf:
+  vhost:
+  html:
+  dhparam:
+  acme:
+  certs:
+
+networks:
+  nginx-proxy-tier:
+    driver: bridge
+    external:
+      name: nginx-proxy-tier

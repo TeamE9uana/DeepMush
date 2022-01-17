@@ -87,6 +87,9 @@ class GoogleCallbackView(APIView):
             return JsonResponse({'error': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
         email_req_json = email_req.json()
         email = email_req_json.get('email')
+
+        if not email:
+            return JsonResponse({'error': 'email not found'}, status=status.HTTP_400_BAD_REQUEST)
         """
         Signup or Signin Request
         """
@@ -197,6 +200,7 @@ class KakaoCallbackView(APIView):
         profile_request = requests.get(
             "https://kapi.kakao.com/v2/user/me", headers={"Authorization": f"Bearer {access_token}"})
         profile_json = profile_request.json()
+
         kakao_account = profile_json.get('kakao_account')
         """
             kakao_account에서 이메일 외에
@@ -204,6 +208,9 @@ class KakaoCallbackView(APIView):
             print(kakao_account) 참고
         """
         email = kakao_account.get('email')
+
+        if not email:
+            return JsonResponse({'error': 'email not found'}, status=status.HTTP_400_BAD_REQUEST)
         """
             Signup or Signin Request
         """

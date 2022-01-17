@@ -1,0 +1,1 @@
+sudo ufw allow in on cni0 from 10.61.0.0/16 comment "K3s rule : https://github.com/rancher/k3s/issues/24#issuecomment-469759329"

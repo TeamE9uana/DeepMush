@@ -1,0 +1,13 @@
+version: "3.3"
+
+services:
+  worker:
+    deploy:
+      resources:
+        reservations:
+          cpus: '2'
+          memory: 4G
+          devices:
+          - driver: nvidia
+            count: 'all'
+            capabilities: [gpu]

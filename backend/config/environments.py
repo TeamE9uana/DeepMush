@@ -13,5 +13,5 @@ if os.path.isfile(secret_file):
         secrets = json.loads(f.read())
 
 
-def get_secret(key: str, secrets: dict = secrets) -> any:
-    return secrets.get(key, None)
+def get_secret(key: str, default_value: str = '', *, secrets: dict = secrets) -> any:
+    return secrets.get(key, default_value)

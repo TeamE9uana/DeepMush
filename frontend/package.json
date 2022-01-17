@@ -7,29 +7,65 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "postinstall": "node_modules/.bin/rn-nodeify --install crypto,fs,https --hack"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
+    "@react-native-google-signin/google-signin": "^7.0.4",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "@reduxjs/toolkit": "^1.7.1",
+    "axios": "^0.24.0",
     "expo": "~44.0.0",
     "expo-camera": "~12.1.0",
+    "expo-fs": "^0.2.2",
     "expo-image-manipulator": "~10.2.0",
     "expo-image-picker": "^12.0.1",
     "expo-status-bar": "~1.2.0",
+    "form-data": "^4.0.0",
+    "fs": "^0.0.1-security",
+    "https-browserify": "^0.0.1",
+    "localstorage": "^1.0.1",
+    "localstorage-polyfill": "^1.0.1",
+    "material-ui": "^0.20.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-google-login": "^5.2.2",
     "react-native": "0.64.3",
+    "react-native-crypto": "^2.2.0",
+    "react-native-dynamic-search-bar": "^2.0.2",
+    "react-native-fs": "^2.18.0",
+    "react-native-level-fs": "^3.0.1",
+    "react-native-maps": "^0.30.1",
+    "react-native-randombytes": "^3.6.1",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-screens": "^3.10.1",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-vector-icons": "^9.0.0",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "react-native-webview": "11.15.0",
+    "redux": "^4.1.2",
+    "request": "^2.88.2",
+    "rn-nodeify": "^10.3.0",
+    "StatusBar": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
+    "@types/request": "^2.48.8",
     "typescript": "~4.3.5"
   },
-  "private": true
+  "private": true,
+  "react-native": {
+    "crypto": "react-native-crypto",
+    "https": "https-browserify",
+    "fs": "react-native-level-fs"
+  },
+  "browser": {
+    "crypto": "react-native-crypto",
+    "https": "https-browserify",
+    "fs": "react-native-level-fs"
+  }
 }

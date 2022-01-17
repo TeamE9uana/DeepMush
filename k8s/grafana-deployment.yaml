@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: grafana
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: grafana
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/prometheus-tier: "true"
+        io.kompose.service: grafana
+    spec:
+      containers:
+        - env:
+            - name: GF_INSTALL_PLUGINS
+              value: grafana-clock-panel,grafana-simple-json-datasource
+          image: grafana/grafana
+          name: grafana
+          ports:
+            - containerPort: 3000
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /etc/grafana/grafana.ini
+              name: grafana-ini
+            - mountPath: /var/lib/grafana
+              name: grafana-lib
+            - mountPath: /etc/grafana/provisioning
+              name: grafana-provisioning
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
+      volumes:
+        - hostPath:
+            path: /var/local/deepmush/grafana/grafana.prod.ini
+            type: FileOrCreate
+          name: grafana-ini
+        - hostPath:
+            path: /var/local/deepmush/data/grafana/grafana
+          name: grafana-lib
+        - hostPath:
+            path: /var/local/deepmush/data/grafana/provisioning
+          name: grafana-provisioning
+status: {}

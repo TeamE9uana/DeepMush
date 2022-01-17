@@ -3,7 +3,7 @@ djangorestframework
 PyJWT == 2.1.0
 djangorestframework-simplejwt == 4.8.0
 
-pillow
+# pillow
 exifread
 piexif
 
@@ -41,8 +41,8 @@ opencv-python>=4.1.2
 # Pillow
 PyYAML==5.4.1
 # scipy>=1.4.1
-torch>=1.10.1
-torchvision>=0.11.2
+torch==1.10.1
+torchvision==0.11.2
 tqdm>=4.41.0
 tensorboard>=2.7.0
 cv
@@ -61,5 +61,6 @@ hypothesis
 hypothesis[all]
 
 django-test-without-migrations
+django-request-logging
 
 requests

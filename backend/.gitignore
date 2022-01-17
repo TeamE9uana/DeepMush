@@ -1,3 +1,5 @@
 secrets.json
+secrets.prod.json
 .hypothesis
 runs
+static-files

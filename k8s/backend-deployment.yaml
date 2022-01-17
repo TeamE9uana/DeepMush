@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: backend
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: backend
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/db-tier: "true"
+        io.kompose.network/mq-tier: "true"
+        io.kompose.network/prometheus-tier: "true"
+        io.kompose.service: backend
+    spec:
+      containers:
+        - env:
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: ELASTIC_PASSWORD
+                  name: production-env-env
+            - name: ELASTIC_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: ELASTIC_USERNAME
+                  name: production-env-env
+            - name: IS_DOCKER
+              value: "1"
+            - name: ME_CONFIG_BASICAUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: ME_CONFIG_BASICAUTH_PASSWORD
+                  name: production-env-env
+            - name: ME_CONFIG_BASICAUTH_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: ME_CONFIG_BASICAUTH_USERNAME
+                  name: production-env-env
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: ME_CONFIG_MONGODB_ADMINPASSWORD
+                  name: production-env-env
+            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: ME_CONFIG_MONGODB_ADMINUSERNAME
+                  name: production-env-env
+            - name: ME_CONFIG_MONGODB_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  key: ME_CONFIG_MONGODB_SERVER
+                  name: production-env-env
+            - name: MONGO_INITDB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_DATABASE
+                  name: production-env-env
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_ROOT_PASSWORD
+                  name: production-env-env
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_ROOT_USERNAME
+                  name: production-env-env
+            - name: PGADMIN_DEFAULT_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  key: PGADMIN_DEFAULT_EMAIL
+                  name: production-env-env
+            - name: PGADMIN_DEFAULT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: PGADMIN_DEFAULT_PASSWORD
+                  name: production-env-env
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  key: POSTGRES_DB
+                  name: production-env-env
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: production-env-env
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: POSTGRES_USER
+                  name: production-env-env
+            - name: USE_POSTGRES
+              value: "1"
+          image: a891/deepmush_backend:latest
+          name: backend
+          ports:
+            - containerPort: 8000
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /backend/secrets.json
+              name: backend-secrets-json
+              readOnly: true
+            - mountPath: /backend/runs
+              name: backend-runs
+            - mountPath: /backend/logs
+              name: backend-logs
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
+      volumes:
+        - hostPath:
+            path: /var/local/deepmush/production/secrets.json
+            type: FileOrCreate
+          name: backend-secrets-json
+        - hostPath:
+            path: /var/local/deepmush/backend/runs
+          name: backend-runs
+        - hostPath:
+            path: /var/local/deepmush/backend/logs
+          name: backend-logs
+status: {}

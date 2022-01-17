@@ -3,8 +3,10 @@
 pip3 install -r requirements.txt
 
 python3 manage.py makemigrations
+python3 manage.py migrate auth
 python3 manage.py migrate --run-syncdb
 python3 manage.py migrate --run-syncdb --database=mongodb
+python3 manage.py collectstatic --noinput -i .
 
 echo Starting Gunicorn.
 
