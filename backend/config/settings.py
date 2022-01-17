@@ -79,6 +79,8 @@ INSTALLED_APPS = [
     'images',
 
     'test_without_migrations',
+
+    'latlngs',
 ]
 
 
