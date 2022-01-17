@@ -4,7 +4,7 @@ metadata:
   name: database-data-claim
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 20Gi
