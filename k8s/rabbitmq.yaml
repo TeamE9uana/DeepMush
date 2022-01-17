@@ -1,3 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mq-tier
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              io.kompose.network/mq-tier: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/mq-tier: "true"
+---
 apiVersion: v1
 kind: Service
 metadata:
