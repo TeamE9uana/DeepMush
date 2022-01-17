@@ -24,6 +24,19 @@ export default function App() {
           component={ListPage}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="ExpoCameraPage"
+          component={ExpoCameraPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="DetailPage" component={DetailPage} />
+        <Stack.Screen name="Websee" component={WebSee} />
+        <Stack.Screen
+          name="MapPage"
+          component={MapPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="DetailMapPage" component={DetailMapPage} />
       </Stack.Navigator>
     </NavigationContainer>
     /*

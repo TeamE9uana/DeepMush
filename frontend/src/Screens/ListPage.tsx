@@ -25,6 +25,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { DetailPage } from "./DetailPage";
 import SearchBar from "react-native-dynamic-search-bar";
+import "localstorage-polyfill";
 
 // 메인 flatlist에 사용 되는 json
 let im = [];
