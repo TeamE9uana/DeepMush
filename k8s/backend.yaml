@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: backend
+  name: backend
+spec:
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+  selector:
+    io.kompose.service: backend
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: backend
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: backend
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        io.kompose.network/db-tier: "true"
+        io.kompose.network/mq-tier: "true"
+        io.kompose.network/prometheus-tier: "true"
+        io.kompose.service: backend
+    spec:
+      containers:
+        - envFrom:
+          - configMapRef:
+              name: production-env-env
+          image: a891/deepmush_backend:latest
+          name: backend
+          ports:
+            - containerPort: 8000
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /backend/secrets.json
+              name: backend-secrets-json
+              readOnly: true
+            - mountPath: /backend/runs
+              name: backend-runs
+            - mountPath: /backend/logs
+              name: backend-logs
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
+      volumes:
+        - hostPath:
+            path: /var/local/deepmush/production/secrets.json
+            type: FileOrCreate
+          name: backend-secrets-json
+        - hostPath:
+            path: /var/local/deepmush/backend/runs
+          name: backend-runs
+        - hostPath:
+            path: /var/local/deepmush/backend/logs
+          name: backend-logs
+status: {}

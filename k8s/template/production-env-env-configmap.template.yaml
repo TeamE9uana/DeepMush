@@ -15,9 +15,10 @@ data:
   POSTGRES_DB: TEMPLATE_PLACEHOLDER
   POSTGRES_PASSWORD: TEMPLATE_PLACEHOLDER
   POSTGRES_USER: TEMPLATE_PLACEHOLDER
+  USE_POSTGRES: "1"
+  USE_DOCKER: "1"
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   labels:
     io.kompose.service: backend-production-env-env
   name: production-env-env

@@ -1,0 +1,91 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: elk-tier
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              io.kompose.network/elk-tier: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/elk-tier: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: elk
+  name: elk
+spec:
+  ports:
+    - name: http
+      port: 5601
+      targetPort: 5601
+    - name: "9200"
+      port: 9200
+      targetPort: 9200
+    - name: "5044"
+      port: 5044
+      targetPort: 5044
+  selector:
+    io.kompose.service: elk
+status:
+  loadBalancer: {}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: elk
+  name: elk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: elk
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        io.kompose.network/elk-tier: "true"
+        io.kompose.service: elk
+    spec:
+      containers:
+        - envFrom:
+          - configMapRef:
+              name: production-env-env
+          name: elk
+          ports:
+            - containerPort: 5601
+            - containerPort: 9200
+            - containerPort: 5044
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /var/lib/elasticsearch
+              name: elk-lib
+            - mountPath: /etc/logstash/conf.d/03-input.conf
+              name: elk-conf
+            - mountPath: /etc/elasticsearch/elasticsearch.yml
+              name: elk-yml
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
+      volumes:
+        - hostPath:
+            path: /var/local/deepmush/data/elk-data
+          name: elk-lib
+        - hostPath:
+            path: /var/local/deepmush/logstash/input.local.conf
+            type: FileOrCreate
+          name: elk-conf
+        - hostPath:
+            path: /var/local/deepmush/elastic/elasticsearch.prod.yml
+            type: FileOrCreate
+          name: elk-yml
+status: {}

@@ -1,10 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.26.1 (HEAD)
-  creationTimestamp: null
   labels:
     io.kompose.service: migrate
   name: migrate
@@ -17,10 +13,6 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.26.1 (HEAD)
-      creationTimestamp: null
       labels:
         io.kompose.network/db-tier: "true"
         io.kompose.network/mq-tier: "true"
@@ -40,11 +32,9 @@ spec:
                   python manage.py migrate --run-syncdb ;
                   python manage.py migrate --run-syncdb --database=mongodb ;
                   done
-          env:
-            - name: IS_DOCKER
-              value: "1"
-            - name: USE_POSTGRES
-              value: "1"
+          envFrom:
+            - configMapRef:
+                name: production-env-env
           image: a891/deepmush_backend:latest
           name: migrate
           resources: {}
