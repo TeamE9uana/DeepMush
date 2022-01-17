@@ -36,7 +36,15 @@ spec:
         io.kompose.service: backend
     spec:
       containers:
-        - envFrom:
+        - name: backend
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - cp /backend/secrets/secrets.json /backend/
+          envFrom:
           - configMapRef:
               name: production-env-env
           image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
@@ -46,27 +54,84 @@ spec:
           resources: {}
           tty: true
           volumeMounts:
-            - mountPath: /backend/secrets.json
+            - mountPath: /backend/secrets
               name: backend-secrets-json
               readOnly: true
             - mountPath: /backend/runs
               name: backend-runs
             - mountPath: /backend/logs
               name: backend-logs
+        - name: migrate
+          command:
+            - /bin/sh
+            - -c
+            - >
+                cd /backend ;
+                while :; do
+                  sleep 60s ;
+                  python manage.py makemigrations ;
+                  python manage.py migrate auth --run-syncdb ;
+                  python manage.py migrate authtoken --run-syncdb ;
+                  python manage.py migrate --run-syncdb ;
+                  python manage.py migrate --run-syncdb --database=mongodb ;
+                  done
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - cp /backend/secrets/secrets.json /backend/
+          envFrom:
+            - configMapRef:
+                name: production-env-env
+          image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /backend/secrets
+              name: backend-secrets-json
+              readOnly: true
+        - name: worker
+         command:
+            - /bin/sh 
+            - -c
+            - >
+                cd /backend ;
+                ./run-celery.sh
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - cp /backend/secrets/secrets.json /backend/
+          envFrom:
+            - configMapRef:
+                name: production-env-env
+          image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
+          name: worker
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /backend/secrets
+              name: backend-secrets-json
+            - mountPath: /backend/runs
+              name: backend-runs
       restartPolicy: Always
       dnsPolicy: ClusterFirst
       dnsConfig:
         nameservers:
           - 8.8.8.8
       volumes:
-        - hostPath:
-            path: /var/local/deepmush/production/secrets.json
-            type: FileOrCreate
+        - name: backend-secrets-json
+          secret:
+            secretName: secrets-json
           name: backend-secrets-json
-        - hostPath:
-            path: /var/local/deepmush/backend/runs
-          name: backend-runs
-        - hostPath:
-            path: /var/local/deepmush/backend/logs
-          name: backend-logs
+        - name: backend-runs
+          persistentVolumeClaim:
+            claimName: backend-runs-claim
+        - name: backend-logs
+          persistentVolumeClaim:
+            claimName: backend-runs-claim
 status: {}
