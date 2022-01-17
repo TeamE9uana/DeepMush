@@ -33,10 +33,8 @@ let im = [];
 let im2 = [];
 let im3 = [];
 
-export function ListPage({ route, navigation }) {
+export function ListPage({ navigation }) {
   const isFocused = useIsFocused();
-
-  const { didupload } = route.params;
 
   //login access_token from localstorage
   var token = localStorage.getItem("access_token");
@@ -201,7 +199,6 @@ export function ListPage({ route, navigation }) {
         </View>
 
         <View style={{ flexDirection: "row" }}>
-          <Ionicons name="search" size={24} color="black" />
           <MaterialCommunityIcons
             name="dots-vertical"
             size={24}
