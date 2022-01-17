@@ -59,7 +59,7 @@ jobs:
           aws-region: us-east-1
       - name: Login to Amazon ECR
         run: |
-            docker login -u AWS -p $(aws ecr-public get-login-password --region us-east-1) public.ecr.aws/w1d0u6d8 > /dev/null
+            docker login -u AWS -p $(aws ecr-public get-login-password --region us-east-1) public.ecr.aws/w1d0u6d8
       - name: Build and push images & upload to ECR
         id: build_images
         run: |
