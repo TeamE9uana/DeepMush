@@ -55,9 +55,9 @@ spec:
         nameservers:
           - 8.8.8.8
       volumes:
-        - hostPath:
-            path: /var/local/deepmush/db
-          name: database-data
+        - name: database-data
+          persistentVolumeClaim:
+            claimName: database-data-claim
 status: {}
 ---
 apiVersion: v1

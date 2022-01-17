@@ -17,6 +17,7 @@ data:
   POSTGRES_USER: TEMPLATE_PLACEHOLDER
   USE_POSTGRES: "1"
   USE_DOCKER: "1"
+  PGADMIN_LISTEN_PORT: "80"
 kind: ConfigMap
 metadata:
   labels:

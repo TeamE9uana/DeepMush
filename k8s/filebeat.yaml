@@ -31,8 +31,8 @@ spec:
           resources: {}
           tty: true
           volumeMounts:
-            - mountPath: /usr/share/filebeat/filebeat.yml
-              name: filebeat-yml
+            - mountPath: /usr/share/filebeat
+              name: filebeat-share
             - mountPath: /var/log/nginx
               name: filebeat-nginx
             - mountPath: /var/log/backend
@@ -43,14 +43,13 @@ spec:
         nameservers:
           - 8.8.8.8
       volumes:
-        - hostPath:
-            path: /var/local/deepmush/filebeat/filebeat.prod.yml
-            type: FileOrCreate
-          name: filebeat-yml
-        - hostPath:
-            path: /var/local/deepmush/nginx/logs
-          name: filebeat-nginx
-        - hostPath:
-            path: /var/local/deepmush/backend/logs
-          name: filebeat-backend
+        - name: filebeat-share
+          secret:
+            secretName: filebeat-share
+        - name: filebeat-nginx
+          persistentVolumeClaim:
+            claimName: nginx-logs-claim
+        - name: filebeat-backend
+          persistentVolumeClaim:
+            claimName: backend-logs-claim
 status: {}

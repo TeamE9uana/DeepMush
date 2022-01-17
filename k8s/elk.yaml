@@ -67,25 +67,23 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/elasticsearch
               name: elk-lib
-            - mountPath: /etc/logstash/conf.d/03-input.conf
+            - mountPath: /etc/logstash/conf.d
               name: elk-conf
-            - mountPath: /etc/elasticsearch/elasticsearch.yml
-              name: elk-yml
+            - mountPath: /etc/elasticsearch
+              name: elk-etc
       restartPolicy: Always
       dnsPolicy: ClusterFirst
       dnsConfig:
         nameservers:
           - 8.8.8.8
       volumes:
-        - hostPath:
-            path: /var/local/deepmush/data/elk-data
-          name: elk-lib
-        - hostPath:
-            path: /var/local/deepmush/logstash/input.local.conf
-            type: FileOrCreate
-          name: elk-conf
-        - hostPath:
-            path: /var/local/deepmush/elastic/elasticsearch.prod.yml
-            type: FileOrCreate
-          name: elk-yml
+        - name: elk-lib
+          persistentVolumeClaim:
+            claimName: elk-lib-claim
+        - name: elk-conf
+          secret:
+            secretName: logstash-conf-d
+        - name: elk-etc
+          secret:
+            secretName: elastic-etc
 status: {}

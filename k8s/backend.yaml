@@ -127,11 +127,10 @@ spec:
         - name: backend-secrets-json
           secret:
             secretName: secrets-json
-          name: backend-secrets-json
         - name: backend-runs
           persistentVolumeClaim:
             claimName: backend-runs-claim
         - name: backend-logs
           persistentVolumeClaim:
-            claimName: backend-runs-claim
+            claimName: backend-logs-claim
 status: {}

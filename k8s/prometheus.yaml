@@ -67,10 +67,10 @@ spec:
         nameservers:
           - 8.8.8.8
       volumes:
-        - hostPath:
-            path: /var/local/deepmush/prometheus
-          name: prometheus-etc
-        - hostPath:
-            path: /var/local/deepmush/data/prometheus
-          name: prometheus-dir
+        - name: prometheus-etc
+          secret:
+            secretName: prometheus-etc
+        - name: prometheus-dir
+          persistentVolumeClaim:
+            claimName: prometheus-dir-claim
 status: {}

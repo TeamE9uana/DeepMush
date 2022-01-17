@@ -32,8 +32,8 @@ spec:
           resources: {}
           tty: true
           volumeMounts:
-            - mountPath: /etc/grafana/grafana.ini
-              name: grafana-ini
+            - mountPath: /etc/grafana
+              name: grafana-etc
             - mountPath: /var/lib/grafana
               name: grafana-lib
             - mountPath: /etc/grafana/provisioning
@@ -44,25 +44,20 @@ spec:
         nameservers:
           - 8.8.8.8
       volumes:
-        - hostPath:
-            path: /var/local/deepmush/grafana/grafana.prod.ini
-            type: FileOrCreate
-          name: grafana-ini
-        - hostPath:
-            path: /var/local/deepmush/data/grafana/grafana
-          name: grafana-lib
-        - hostPath:
-            path: /var/local/deepmush/data/grafana/provisioning
-          name: grafana-provisioning
+        - name: grafana-etc
+          secret:
+            secretName: grafana-etc
+        - name: grafana-lib
+          persistentVolumeClaim:
+            claimName: grafana-lib-claim
+        - name: grafana-provisioning
+          persistentVolumeClaim:
+            claimName: grafana-provisioning-claim
 status: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.26.1 (HEAD)
-  creationTimestamp: null
   labels:
     io.kompose.service: grafana
   name: grafana
