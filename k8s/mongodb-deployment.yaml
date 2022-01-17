@@ -14,7 +14,7 @@ spec:
     matchLabels:
       io.kompose.service: mongodb
   strategy:
-    type: Recreate
+    type: RollingUpdate
   template:
     metadata:
       annotations:

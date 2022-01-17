@@ -14,7 +14,7 @@ spec:
     matchLabels:
       io.kompose.service: migrate
   strategy:
-    type: Recreate
+    type: RollingUpdate
   template:
     metadata:
       annotations:
