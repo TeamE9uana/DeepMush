@@ -9,7 +9,7 @@ on:
 jobs:
   duplicate_guard:
     # continue-on-error: true # Uncomment once integration is finished
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     # Map a step output to a job output
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
@@ -25,7 +25,7 @@ jobs:
   # test:
   #   needs: duplicate_guard
   #   if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
-  #   runs-on: ubuntu-latest
+  #   runs-on: self-hosted
   #   steps:
   #     - name: checkout
   #       uses: actions/checkout@v2
@@ -43,7 +43,7 @@ jobs:
     # needs: test
     needs: duplicate_guard
     if: ${{ needs.duplicate_guard.outputs.should_skip != 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: checkout
         uses: actions/checkout@v2
