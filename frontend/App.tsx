@@ -20,8 +20,13 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="ExpoCameraPage"
-          component={ExpoCameraPage}
+          name="ListPage"
+          component={ListPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MapPage"
+          component={MapPage}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -25,21 +25,63 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { DetailPage } from "./DetailPage";
 import SearchBar from "react-native-dynamic-search-bar";
+import * as Location from "expo-location";
 
 // 메인 flatlist에 사용 되는 json
-let im = [];
+let im = [
+  {
+    name: "sample1",
+    latitude: 37.36957273223395,
+    longitude: -122.02391041565818,
+  },
+  {
+    name: "sample2",
+    latitude: 37.366730031441506,
+    longitude: -122.03164481984454,
+  },
+  // {
+  //   name: "sample3",
+  //   latitude: 37.367875874475885,
+  //   longitude: -122.03762870058752,
+  // },
+  {
+    name: "sample4",
+    latitude: 37.36100381579145,
+    longitude: -122.02484691349211,
+  },
+];
 
 // 검색에 활용되는 임시 json
 let im2 = [];
 let im3 = [];
 
-export function ListPage({ route, navigation }) {
+export function ListPage({
+  // route,
+  navigation,
+}) {
   const isFocused = useIsFocused();
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  const { didupload } = route.params;
+  let location = null;
+  const expoLocation = async () => {
+    //expo-location 권한요청
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    //현재위치데이터 받아오기
+    location = await Location.getCurrentPositionAsync({});
+
+    //위도 경도 콘솔
+    await console.log(location.coords.latitude);
+    await console.log(location.coords.longitude);
+  };
+  // const { didupload } = route.params;
 
   //login access_token from localstorage
-  var token = localStorage.getItem("access_token");
+  // var token = localStorage.getItem("access_token");
 
   //props from expocamerapage's didupload
   //const didupload = props.didupload;
@@ -129,6 +171,7 @@ export function ListPage({ route, navigation }) {
 
   // listpage 동작시 useEffect 작동 -> get Method 실행해서 이미지 리스트들을 받아오고 im state에 결과값을 저장한다
   useEffect(() => {
+    expoLocation();
     //get method - fetch
     async function fetchAndSetList() {
       var myHeaders = await new Headers();
@@ -404,7 +447,12 @@ export function ListPage({ route, navigation }) {
             name="map-marker-outline"
             size={30}
             color="black"
-            onPress={() => navigation.navigate("MapPage")}
+            onPress={() =>
+              navigation.navigate("MapPage", {
+                sampleLocation: im,
+                currentLocation: location,
+              })
+            }
           />
         </View>
       </View>
