@@ -59,7 +59,7 @@ resource "null_resource" "k3s_launch" {
     provisioner "local-exec" {
         command = <<EOT
             KUBECONFIG=$(pwd)/k3s.yaml:$KUBECONFIG
-            kubectl set-context deepmush-k3s
+            kubectl config set-context deepmush-k3s
             cd ..
             ./init-k3s-cluster.sh
         EOT
