@@ -1,3 +1,4 @@
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 ./install-cert-manager.sh
 kubectl apply -f ./k8s/volumes
 kubectl apply -f ./k8s/auth
