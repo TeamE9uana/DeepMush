@@ -67,10 +67,10 @@ jobs:
             ./push-images.sh
       - name: Config kubectl & Trigger deployments & Do rolling update for existing deployments
         run: |
-            echo -e "$CONFIG_YAML_BASE64" | base64 -d - | tee ~/k3s.yaml
+            echo -e "$CONFIG_YAML_BASE64" | base64 -d - | tee ~/k3s.yaml > /dev/null
             export KUBECONFIG=$HOME/k3s.yaml:$KUBECONFIG
-            echo -e "$ENV_CONFIG_BASE64" | base64 -d - > ./k8s/production-env-env-configmap.yaml
-            kubectl config use-context tpu-k8s
+            echo -e "$ENV_CONFIG_BASE64" | base64 -d - | tee ./k8s/production-env-env-configmap.yaml > /dev/null
+            kubectl config use-context deepmush-k3s
             ./up-pods.sh
             ./rolling-release.sh
         env:
