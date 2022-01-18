@@ -44,13 +44,10 @@ resource "null_resource" "ansible_exec" {
         command = <<EOF
             echo "[deepmush]" > inventory
             echo "${vultr_instance.k3s.main_ip} ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/vultr" >> inventory
-            echo "[ssh_connection]" >> inventory
-            echo "retries=999999" >> inventory
         EOF
     }
     provisioner "local-exec" {
         command = <<EOT
-
             ANSIBLE_HOST_KEY_CHECKING=False \
             ansible-playbook -i inventory setup.yaml
         EOT
