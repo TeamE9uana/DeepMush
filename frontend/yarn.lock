@@ -6345,6 +6345,13 @@
     "level-filesystem" "^1.0.1"
     "levelup" "^0.18.2"
 
+"react-native-loading-spinner-overlay@^2.0.0":
+  "integrity" "sha512-V38M+N1Wk9GlpbfrD6znsJA1K2+09b3naxq3UjDjqNTA3MOBfj4W87alKSI3P+4ZawczQASTv2fTzhEQ7Z+SVA=="
+  "resolved" "https://registry.npmjs.org/react-native-loading-spinner-overlay/-/react-native-loading-spinner-overlay-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "prop-types" "^15.6.2"
+
 "react-native-maps@^0.30.1":
   "integrity" "sha512-VDgGygFcXwKLFNmdGb5DVy3DJhjP3qCe3txzDfeO6kQyNELj875ZbZMTYW84XsLUBFNpAWXKffWvMKHMQKv2Gg=="
   "resolved" "https://registry.npmjs.org/react-native-maps/-/react-native-maps-0.30.1.tgz"
