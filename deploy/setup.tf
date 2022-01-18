@@ -69,6 +69,7 @@ resource "null_resource" "k3s_launch" {
 resource "aws_route53_record" "root" {
     depends_on = [null_resource.k3s_launch]
 
+    allow_overwrite = true
     zone_id = "Z034625926P0HUTT0YKW7"
     name    = "deepmush.io"
     type    = "A"
@@ -79,6 +80,7 @@ resource "aws_route53_record" "root" {
 resource "aws_route53_record" "sub" {
     depends_on = [null_resource.k3s_launch]
 
+    allow_overwrite = true
     zone_id = "Z034625926P0HUTT0YKW7"
     name    = "*.deepmush.io"
     type    = "A"
