@@ -64,8 +64,9 @@ spec:
                   - /bin/sh
                   - -c
                   - >
-                    sudo touch /var/log/elasticsearch/elasticsearch.log ;
-                    sudo chmod -R 777 /var/log/elasticsearch/elasticsearch.log
+                    touch /var/log/elasticsearch/elasticsearch.log ;
+                    chmod -R 777 /var/log/elasticsearch/elasticsearch.log ;
+                    cp /usr/local/elastic-etc/elasticsearch.yml /etc/elasticsearch/
           image: sebp/elk
           name: elk
           ports:
@@ -81,7 +82,7 @@ spec:
               name: elk-log
             - mountPath: /etc/logstash/conf.d
               name: elk-conf
-            - mountPath: /etc/elasticsearch
+            - mountPath: /usr/local/elastic-etc
               name: elk-etc
       restartPolicy: Always
       dnsPolicy: ClusterFirst
