@@ -13,7 +13,7 @@ import {
   Touchable,
 } from "react-native";
 
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useIsFocused } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { Svg, Path } from "react-native-svg";
@@ -25,247 +25,20 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { DetailPage } from "./DetailPage";
 import SearchBar from "react-native-dynamic-search-bar";
+import "localstorage-polyfill";
 
-/*
-let DATA2 = [
-  {
-    uri: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/1",
-    description:
-      "식감 자체는 생각보다 평범하다. 새송이버섯을 썰어서 입에 넣었을 때 느껴지는 아작아작함을 생각하면 된다. 양송이버섯이나 새송이버섯은 송이버섯의 양산형이 아니라 아예 다른 종이다. 자세한 것은 양송이버섯과 새송이버섯 문서 참조. 갓 부분은 평범한 버섯의 식감이며, 익히면 말캉말캉해진다. 하지만 향의 차원으로 넘어가면 다른 버섯과는 비교를 불허한다. 신선한 송이는 익히지 않은 상태에서도 특유의 송이향을 느낄 수 있다. 송이 향은 곧 솔 향이다.",
-
-    id: "송이버섯",
-    percent: 100,
-  },
-  {
-    uri: "../images/mush2.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/2",
-    description: "hi",
-    id: "목이버섯",
-    percent: 80,
-  },
-  {
-    uri: "../images/mush3.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-    lat: "",
-    long: "",
-    created_at: "2022/01/3",
-    description: "hi",
-    id: "팽이버섯",
-    percent: 55,
-  },
-
-  {
-    uri: "../images/mush4.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/4",
-    description: "hi",
-    id: "노루궁뎅이버섯",
-    percent: 63,
-  },
-  {
-    uri: "../images/mush4.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/5",
-    description: "hi",
-    id: "느타리버섯",
-    percent: 100,
-  },
-
-  {
-    uri: "../images/mush4.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/6",
-    description: "hi",
-    id: "팽이버섯",
-    percent: 63,
-  },
-
-  {
-    uri: "../images/mush4.jpeg",
-    uri2: "https://e9ana-s3-bucket.s3.ap-northeast-2.amazonaws.com/usr/이구하나.jpg",
-
-    lat: "",
-    long: "",
-    created_at: "2022/01/7",
-    description: "hi",
-    id: "양송이버섯",
-    percent: 63,
-  },
-];
-*/
-
-let DATA2 = {
-  success: true,
-  images: [
-    {
-      id: 31,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:00",
-      description: "",
-      made_by: 1,
-    },
-    {
-      id: 32,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:02",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:01",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:03",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:06",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:05",
-      description: "",
-      made_by: 2,
-    },
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:07",
-      description: "",
-      made_by: 2,
-    },
-    {
-      id: 33,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:08",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 32,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:06",
-      description: "",
-      made_by: 2,
-    },
-
-    {
-      id: 32,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:05",
-      description: "",
-      made_by: 2,
-    },
-    {
-      id: 32,
-      lat: null,
-      lng: null,
-      inference: null,
-      image:
-        "https://e9ana-s3-bucket.s3.amazonaws.com/DeepMush/mush.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVN5SPPTHXFLHDMBX%2F20220112%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20220112T135844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8f0c6a9b9dcf9e40e2daade3e30538d5a4dca646a0d2084b60bbdfd89b358cad",
-      created_at: "2022-01-12T17:50:29.215370+09:07",
-      description: "",
-      made_by: 2,
-    },
-  ],
-};
-
-/*
-function deletebutton(title:any) =() =>{
-  var le = this.state.DATA.length;
-  for (var i = 0; i < le; i++) {
-    if (this.state.DATA[i].title === title) {
-      this.state.DATA.splice(i, 1);
-      this.setState(this.state.DATA);
-
-      break;
-    }
-  }
-}
-*/
+import { Button, Menu, Divider, Provider, List } from "react-native-paper";
 
 // 메인 flatlist에 사용 되는 json
 let im = [];
 
 // 검색에 활용되는 임시 json
 let im2 = [];
+let im3 = [];
 
 export function ListPage({ navigation }) {
+  const isFocused = useIsFocused();
+
   //login access_token from localstorage
   var token = localStorage.getItem("access_token");
 
@@ -288,20 +61,22 @@ export function ListPage({ navigation }) {
     console.log("im_index " + index);
     console.log("im_id " + id);
 
+    var sid = id.toString();
+
+    console.log(sid);
+    console.log(typeof sid);
+
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Token ${token}`);
     myHeaders.append("Content-Type", "multipart/form-data");
 
     var requestOptions = {
-      method: "GET",
+      method: "DELETE",
       headers: myHeaders,
       redirect: "follow",
     };
 
-    await fetch(
-      `http://backend.deepmush.io/images/delete/?image_id=${id}`,
-      requestOptions
-    )
+    await fetch(`https://backend.deepmush.io/images/${sid}/`, requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -310,36 +85,47 @@ export function ListPage({ navigation }) {
   // 텍스트 검색 state 서버 작업 완료시 로컬 데이터인 DATA2에서 im으로 변경필요
   async function searchData() {
     await console.log("searchbutton pushed !!!");
-    var imlength = await Object.keys(im.images).length;
 
-    //console.log("imlength : " + imlength + "\n");
-    //console.log("filterText : " + filterText + "\n");
+    var imlength = await Object.keys(im).length;
+
+    console.log("imlength : " + imlength + "\n");
+    console.log("filterText : " + filterText + "\n");
 
     var check = 0;
 
+    im2 = [];
+
+    im3 = [];
+
     // 리스트에 들어있는 값만큼 filltertext와 비교해서 imagelist에 검색된 값을 넣어준다
 
-    for (let i = 0; i < imlength; i++) {
-      //console.log(DATA2.images[i].id + " " + typeof DATA2.images[i].id);
-      //console.log(typeof DATA2.images[i].id.toString());
+    if (filterText !== "") {
+      for (let i = 0; i < imlength; i++) {
+        //console.log(im[i].id + " " + typeof im[i].id);
+        //console.log(typeof im[i].id.toString());
+        console.log(i);
+        //데이터 검색 if 문
+        if (filterText === im[i].id.toString()) {
+          im2.push(im[i]);
 
-      //데이터 검색 if 문
-      if (filterText === im.images[i].id.toString()) {
-        im2.push(im.images[i]);
-        //console.log("searchmatchd!!");
-        im = im2;
-        check++;
+          console.log("searchmatchd!!");
+
+          check++;
+        }
       }
-    }
-    if (check == 0) {
-      im = [];
-    }
-    im2 = [];
-    console.log(im);
 
-    setupdatedata(im);
+      if (check == 0) im2 = [];
 
-    check = 0;
+      im3 = im2;
+
+      setupdatedata(im3);
+
+      check = 0;
+    } else {
+      im3 = im;
+
+      setupdatedata(im3);
+    }
   }
 
   // listpage 동작시 useEffect 작동 -> get Method 실행해서 이미지 리스트들을 받아오고 im state에 결과값을 저장한다
@@ -357,16 +143,53 @@ export function ListPage({ navigation }) {
       };
 
       await fetch("https://backend.deepmush.io/images/", requestOptions)
-        .then((response) => response.text)
+        .then((response) => response.json())
         .then((result) => (im = result.images))
         .catch((error) => console.log("error", error));
 
-      await console.log(im);
+      //await console.log("this is im inference result" + im[0].inference.result);
+      //await console.log("this is im inference result" + im[1].inference.result);
+      //await console.log("this is im inference result" + im[2].inference.result);
+      //await console.log("this is im inference result" + im[3].inference.result);
+      //await console.log("this is im inference result" + im[0].inference.result);
+
+      for (let i = 0; i < im.length; i++) {
+        var count = 0;
+        for await (const element of im[i].inference.result) {
+          count++;
+        }
+
+        if (count == 0) {
+          await console.log("result is empty");
+          im[i].inference.result = [{ prob: "0", label_name: "empty" }];
+
+          console.log("[empty]" + im[i].inference.result[0].prob);
+        } else {
+          await console.log("result is not empty");
+        }
+      }
+
+      im3 = im;
 
       await setupdatedata(im);
+
+      //console.log(im);
     }
     fetchAndSetList();
-  }, []);
+  }, [isFocused]);
+
+  /*
+      {item.inferences[0].result[0].label_name === undefined
+                      ? "불일치"
+                      : item.inferences[0].result[0].label_name}
+  */
+
+  /*
+                    {item.inferences[0].result[0].prob === undefined
+                      ? "불일치"
+                      : item.inferences[0].result[0].prob}
+                    %
+                      */
 
   return (
     <View style={stylesheet.container}>
@@ -379,12 +202,12 @@ export function ListPage({ navigation }) {
         </View>
 
         <View style={{ flexDirection: "row" }}>
-          <Ionicons name="search" size={24} color="black" />
-          <MaterialCommunityIcons
-            name="dots-vertical"
-            size={24}
-            color="black"
-          />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("UserInfoPage")}
+            style={{ marginRight: 5 }}
+          >
+            <AntDesign name="user" size={24} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -414,7 +237,7 @@ export function ListPage({ navigation }) {
       <View style={stylesheet.body}>
         <View style={{}} />
         <FlatList
-          data={im}
+          data={im3}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item, index }) => (
             <View
@@ -455,8 +278,11 @@ export function ListPage({ navigation }) {
                     style={{
                       color: "white",
                       alignItems: "flex-end",
-                      marginTop: 15,
+                      marginTop: 5,
                       marginBottom: 10,
+                      fontSize: 12,
+                      maxWidth: 65,
+                      maxHeight: 12,
                     }}
                   >
                     {item.created_at}
@@ -469,22 +295,37 @@ export function ListPage({ navigation }) {
                       color: "white",
                       alignItems: "center",
                       justifyContent: "center",
-                      marginTop: 10,
+                      marginTop: 15,
                       fontSize: 20,
                     }}
                   >
-                    {item.id}
+                    {item.inference.result[0].label_name}
                   </Text>
+                  <Text
+                    style={{
+                      marginLeft: 10,
+                      color: "white",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 19,
+                      fontSize: 15,
+                      maxWidth: 30,
+                      maxHeight: 15,
+                    }}
+                  ></Text>
+
                   <Text
                     style={{
                       color: "white",
                       alignItems: "center",
                       justifyContent: "center",
-                      marginTop: 11,
+                      marginTop: 19,
                       fontSize: 15,
+                      maxWidth: 48,
+                      maxHeight: 15,
                     }}
                   >
-                    &nbsp;{item.percent}%
+                    {item.inference.result[0].prob}%
                   </Text>
                 </View>
               </View>

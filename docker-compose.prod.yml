@@ -70,7 +70,7 @@ services:
     depends_on:
       - database
       - mongodb
-    image: a891/deepmush_backend:latest
+    image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
     expose:
       - "8000"
     volumes:
@@ -92,7 +92,7 @@ services:
     tty: true
 
   migrate:
-    image: a891/deepmush_backend:latest
+    image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
     depends_on:
       - database
       - mongodb
@@ -118,7 +118,7 @@ services:
     tty: true
 
   worker:
-    image: a891/deepmush_backend:latest
+    image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
     entrypoint: "/bin/sh ./run-celery.sh"
     volumes:
       - ./production/secrets.json:/backend/secrets.json:ro
@@ -155,7 +155,7 @@ services:
     tty: true
 
   filebeat:
-    image: a891/deepmush_filebeat:latest
+    image: public.ecr.aws/w1d0u6d8/deepmush_filebeat:latest
     networks:
       - elk-tier
     volumes:

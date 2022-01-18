@@ -12,6 +12,7 @@ import { WebSee } from "./src/Screens/WebSee";
 import { WebView } from "react-native-webview";
 import { MapPage } from "./src/Screens/MapPage";
 import { DetailMapPage } from "./src/Screens/DetailMapPage";
+import { UserInfoPage } from "./src/Screens/UserInfoPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,11 +21,10 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          options={{ headerShown: false }}
           name="LoginPage"
           component={LoginPage}
-          options={{ headerShown: false }}
         />
-
         <Stack.Screen
           name="ListPage"
           component={ListPage}
@@ -42,6 +42,9 @@ export default function App() {
           component={MapPage}
           options={{ headerShown: false }}
         />
+
+        <Stack.Screen name="UserInfoPage" component={UserInfoPage} />
+
         <Stack.Screen name="DetailMapPage" component={DetailMapPage} />
       </Stack.Navigator>
     </NavigationContainer>

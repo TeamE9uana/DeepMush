@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,9 +15,12 @@ import * as ImagePicker from "expo-image-picker";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import axios from "axios";
 import "localstorage-polyfill";
-
+import Spinner from "react-native-loading-spinner-overlay";
 import { string } from "yargs";
 import { ListPage } from "./ListPage";
+
+import { ExifParserFactory } from "ts-exif-parser";
+import * as Location from "expo-location";
 
 let cameraFace = "back";
 
@@ -25,14 +28,34 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   var token = localStorage.getItem("access_token");
 
   let camera: Camera;
+
+  let location = null;
   const [startCamera, setStartCamera] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState<any>(null);
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   const [fMode, setFMode] = useState("off");
+  const [loading, setLoading] = useState(false);
 
-  const [didupload, setDidupload] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  // expo-location
+  const expoLocation = async () => {
+    //expo-location 권한요청
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    //현재위치데이터 받아오기
+    location = await Location.getCurrentPositionAsync({});
+
+    //위도 경도 콘솔
+    await console.log(location.coords.latitude);
+    await console.log(location.coords.longitude);
+  };
 
   // Gets permission from user to use camera
   const handleStartCamera = async () => {
@@ -47,7 +70,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   // Takes photo, saves it to variable, and opens preview
   const handleTakePicture = async () => {
     if (!camera) return;
-    const photo = await camera.takePictureAsync();
+    const photo = await camera.takePictureAsync({ exif: true });
+    console.log(JSON.stringify(photo));
     setPreviewVisible(true);
     setCapturedImage(photo);
   };
@@ -58,12 +82,13 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     let image = capturedImage.uri;
     const fileName = image.split("/").pop();
     newUri = FileSystem.documentDirectory + fileName;
+
+    await expoLocation();
+
     try {
       await FileSystem.moveAsync({ from: image, to: newUri });
       setPreviewVisible(false);
       setCapturedImage(null);
-      setStartCamera(false);
-      console.log(newUri);
 
       var myHeaders = new Headers();
       myHeaders.append("Authorization", `Token ${token}`);
@@ -85,14 +110,17 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         redirect: "follow",
       };
 
-      fetch("http://backend.deepmush.io/images/", requestOptions)
+      setLoading(true);
+
+      await fetch("https://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
-        .then(void setDidupload(true))
         .then(void console.log("upload success!!"))
         .catch((error) => console.log("error", error));
 
-      return <ListPage didupload={didupload}> </ListPage>;
+      setLoading(false);
+
+      await console.log(Data);
     } catch (err) {
       throw new Error("File could not be saved.");
     }
@@ -139,6 +167,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       //setImage(result.uri);
       // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
 
+      await expoLocation();
+
       var myHeaders = new Headers();
       myHeaders.append("Authorization", `Token ${token}`);
       myHeaders.append("Content-Type", "multipart/form-data");
@@ -147,7 +177,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       console.log(result.uri);
 
       formdata.append("mushroom_image", {
-        name: "mush.jpg",
+        name: "mush1.jpg",
         type: "image/jpg",
         uri: result.uri,
         //uri: "/Users/gimjunhyeong/expo-practice/DeepMush/frontend/src/images/mush.jpeg", //local images 폴더안에 있는 경로 , expo로 모바일상의 경로는 file:// 로 시작한다 . 따라서 에러가 발생했었음 현재 서버가 쿠버네틱스로 옮겨지고 있기에 localhost에서는 테스트 불가능 ,
@@ -160,15 +190,19 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         redirect: "follow",
       };
 
-      fetch("http://backend.deepmush.io/images/", requestOptions)
+      setLoading(true);
+
+      fetch("https://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
+
+      setLoading(false);
     }
-    return <ListPage didupload={didupload}> </ListPage>;
   };
   return (
     <View style={styles.container}>
+      <Spinner visible={loading} textContent={"Loading..."} />
       <View style={styles.cameraContainer}>
         {previewVisible && capturedImage ? (
           <CameraPreview

@@ -55,7 +55,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('images/', include('images.urls')),
-    path('users/', include('users.urls'))
+    path('users/', include('users.urls')),
+    path('images/', include('latlngs.urls'))
 ]
 
 static_urlpatterns = [
