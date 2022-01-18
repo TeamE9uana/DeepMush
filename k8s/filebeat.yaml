@@ -22,8 +22,8 @@ spec:
             - /bin/sh
             - -c
             - >
-                sleep 60s ;
-                filebeat modules enable elasticsearch
+                cp /usr/share/filebeat-config/filebeat.ini /usr/share/filebeat/
+                filebeat modules enable elasticsearch ;
                 filebeat setup ;
                 filebeat -e ;
                 filebeat
@@ -32,7 +32,7 @@ spec:
           resources: {}
           tty: true
           volumeMounts:
-            - mountPath: /usr/share/filebeat
+            - mountPath: /usr/share/filebeat-config
               name: filebeat-share
             - mountPath: /var/log/backend
               name: filebeat-backend
