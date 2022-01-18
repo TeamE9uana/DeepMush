@@ -26,7 +26,7 @@ spec:
                 filebeat setup ;
                 filebeat -e ;
                 filebeat
-          image: a891/deepmush_filebeat:latest
+          image: public.ecr.aws/w1d0u6d8/deepmush_filebeat:latest
           name: filebeat
           resources: {}
           tty: true

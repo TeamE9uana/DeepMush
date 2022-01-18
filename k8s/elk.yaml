@@ -57,6 +57,15 @@ spec:
         - envFrom:
           - configMapRef:
               name: production-env-env
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - >
+                    sudo touch /var/log/elasticsearch/elasticsearch.log ;
+                    sudo chmod -R 777 /var/log/elasticsearch/elasticsearch.log
           image: sebp/elk
           name: elk
           ports:
@@ -68,6 +77,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/elasticsearch
               name: elk-lib
+            - mountPath: /var/log/elasticsearch
+              name: elk-log
             - mountPath: /etc/logstash/conf.d
               name: elk-conf
             - mountPath: /etc/elasticsearch
@@ -81,6 +92,9 @@ spec:
         - name: elk-lib
           persistentVolumeClaim:
             claimName: elk-lib-claim
+        - name: elk-log
+          persistentVolumeClaim:
+            claimName: elk-log-claim
         - name: elk-conf
           secret:
             secretName: logstash-conf-d
