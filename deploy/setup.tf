@@ -60,7 +60,8 @@ resource "null_resource" "k3s_launch" {
         command = <<EOT
             KUBECONFIG=$(pwd)/k3s.yaml:$KUBECONFIG
             kubectl set-context deepmush-k3s
-            ../init-k3s-cluster.sh
+            cd ..
+            ./init-k3s-cluster.sh
         EOT
     }
 }
