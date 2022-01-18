@@ -66,15 +66,10 @@ resource "null_resource" "k3s_launch" {
     }
 }
 
-resource "aws_route53_zone" "primary" {
-    depends_on = [null_resource.k3s_launch]
-    name = "deepmush.io"
-}
-
 resource "aws_route53_record" "root" {
-    depends_on = [aws_route53_zone.primary]
+    depends_on = [null_resource.k3s_launch]
 
-    zone_id = aws_route53_zone.primary.zone_id
+    zone_id = "Z034625926P0HUTT0YKW7"
     name    = "deepmush.io"
     type    = "A"
     ttl     = "60"
@@ -82,9 +77,9 @@ resource "aws_route53_record" "root" {
 }
 
 resource "aws_route53_record" "sub" {
-    depends_on = [aws_route53_zone.primary]
+    depends_on = [null_resource.k3s_launch]
 
-    zone_id = aws_route53_zone.primary.zone_id
+    zone_id = "Z034625926P0HUTT0YKW7"
     name    = "*.deepmush.io"
     type    = "A"
     ttl     = "60"
