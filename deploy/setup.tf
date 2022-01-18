@@ -50,7 +50,8 @@ resource "null_resource" "ansible_exec" {
 
     provisioner "local-exec" {
         command = <<EOT
-            ANSIBLE_HOST_KEY_CHECKING=False \
+            sleep 120s
+            ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -T 9999 -i inventory setup.yaml
         EOT
     }
