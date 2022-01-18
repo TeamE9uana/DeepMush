@@ -48,9 +48,15 @@ class ImagesView(APIView):
                 required=True,
             ),
             openapi.Parameter(
-                name="description",
+                name="lat",
                 in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
+                type=openapi.TYPE_NUMBER,
+                required=False,
+            ),
+            openapi.Parameter(
+                name="lng",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_NUMBER,
                 required=False,
             ),
         ],
@@ -85,11 +91,8 @@ class ImagesView(APIView):
             made_by=profile, image=image_file, description="")
         image.save()
 
-        ### Saving latlng data using exif(image metadata) ###
-        gps_data: dict = gpsphoto.getGPSData(temp_image_file.name)
-
         found_lat_Lng = False
-        if (lat := gps_data.get('Latitude')) and (lng := gps_data.get('Longitude')):
+        if (lat := request.POST.get('lat')) != None and (lng := request.POST.get('lng')) != None:
             found_lat_Lng = True
             lat_Lng = ImageLatLng.objects.create(image=image, lat=lat, lng=lng)
             lat_Lng.save()
@@ -158,7 +161,7 @@ class ImagesView(APIView):
         updated_image.save()
 
         result = {'success': True,
-                  'comment': f'LatLng {not_found_comment}found',
+                  'comment': f'LatLng {not_found_comment}given',
                   'result': inference,
                   'result_image': inference_obj.result_image.url}
 
