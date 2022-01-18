@@ -1,0 +1,67 @@
+---
+- name: Setup Deepmush server
+  hosts: deepmush
+  become_user: root
+  become: yes
+  tasks:
+    - name: Set OS Time
+      timezone:
+        name: Asia/Seoul
+
+    - name: Copy 502Saver script
+      ansible.builtin.copy:
+        src: 502saver.sh
+        dest: /usr/local
+        owner: root
+        group: root
+        mode: '0777'
+
+    - name: Copy 502Saver service
+      ansible.builtin.copy:
+        src: 502saver.service
+        dest: /etc/systemd/system
+        owner: root
+        group: root
+    
+    - name: Enable 502Saver service
+      shell: |
+        sudo systemctl daemon-reload
+        sudo systemctl enable 502saver
+        sudo systemctl start 502saver
+
+    - name: Install docker
+      shell: |
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        sudo sh get-docker.sh
+        rm -rf get-docker.sh
+    
+    - name: Install docker compose
+      shell: |
+        sudo rm -rf /usr/local/bin/docker-compose /usr/bin/docker-compose
+        sudo curl -L "https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    
+    - name: Disable ufw firewall for k3s
+      ansible.builtin.service:
+        name: ufw
+        state: stopped
+    
+    - name: Install k3s
+      shell: curl -sfL https://get.k3s.io | sh -
+    
+    - name: k3s yaml chmod 777
+      shell: sudo chmod 777 /etc/rancher/k3s/k3s.yaml
+    
+    - name: sed k3s yaml
+      shell: |
+        MY_IP=$(curl checkip.amazonaws.com | xargs)
+        sed -e "s/127.0.0.1/$MY_IP/g" -e 's/default/deepmush-k3s/g' /etc/rancher/k3s/k3s.yaml > ~/k3s.yaml
+    
+    - name: Get k3s yaml
+      ansible.builtin.fetch:
+        src: ~/k3s.yaml
+        dest: ./
+        flat: true
+
+

@@ -1,0 +1,105 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: elk-tier
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              io.kompose.network/elk-tier: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/elk-tier: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: elk
+  name: elk
+spec:
+  ports:
+    - name: http
+      port: 5601
+      targetPort: 5601
+    - name: "9200"
+      port: 9200
+      targetPort: 9200
+    - name: "5044"
+      port: 5044
+      targetPort: 5044
+  selector:
+    io.kompose.service: elk
+status:
+  loadBalancer: {}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: elk
+  name: elk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: elk
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        io.kompose.network/elk-tier: "true"
+        io.kompose.service: elk
+    spec:
+      containers:
+        - envFrom:
+          - configMapRef:
+              name: production-env-env
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - >
+                    touch /var/log/elasticsearch/elasticsearch.log ;
+                    chmod -R 777 /var/log/elasticsearch/elasticsearch.log ;
+                    cp /usr/local/elastic-etc/elasticsearch.yml /etc/elasticsearch/
+          image: sebp/elk
+          name: elk
+          ports:
+            - containerPort: 5601
+            - containerPort: 9200
+            - containerPort: 5044
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /var/lib/elasticsearch
+              name: elk-lib
+            - mountPath: /var/log/elasticsearch
+              name: elk-log
+            - mountPath: /etc/logstash/conf.d
+              name: elk-conf
+            - mountPath: /usr/local/elastic-etc
+              name: elk-etc
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
+      volumes:
+        - name: elk-lib
+          persistentVolumeClaim:
+            claimName: elk-lib-claim
+        - name: elk-log
+          persistentVolumeClaim:
+            claimName: elk-log-claim
+        - name: elk-conf
+          secret:
+            secretName: logstash-conf-d
+        - name: elk-etc
+          secret:
+            secretName: elastic-etc
+status: {}

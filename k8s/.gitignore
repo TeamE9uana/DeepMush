@@ -1,1 +1,7 @@
 production-env-env-configmap.yaml
+elastic-etc.yaml
+grafana-etc.yaml
+logstash-conf-d.yaml
+prometheus-etc.yaml
+secrets.yaml
+filebeat-share.yaml

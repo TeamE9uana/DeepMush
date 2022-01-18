@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: backend
+  name: backend
+spec:
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+  selector:
+    io.kompose.service: backend
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: backend
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: backend
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        io.kompose.network/db-tier: "true"
+        io.kompose.network/mq-tier: "true"
+        io.kompose.network/prometheus-tier: "true"
+        io.kompose.service: backend
+    spec:
+      containers:
+        - name: backend
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - cp /backend/secrets/secrets.json /backend/
+          envFrom:
+            - configMapRef:
+                name: production-env-env
+          image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
+          ports:
+            - containerPort: 8000
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /backend/secrets
+              name: backend-secrets-json
+              readOnly: true
+            - mountPath: /backend/runs
+              name: backend-runs
+            - mountPath: /backend/logs
+              name: backend-logs
+        - name: migrate
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - cp /backend/secrets/secrets.json /backend/
+          command:
+            - /bin/sh
+            - -c
+            - >
+                cd /backend ;
+                while :; do
+                  sleep 60s ;
+                  python manage.py makemigrations ;
+                  python manage.py migrate auth --run-syncdb ;
+                  python manage.py migrate authtoken --run-syncdb ;
+                  python manage.py migrate --run-syncdb ;
+                  python manage.py migrate --run-syncdb --database=mongodb ;
+                done
+          envFrom:
+            - configMapRef:
+                name: production-env-env
+          image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /backend/secrets
+              name: backend-secrets-json
+              readOnly: true
+        - name: worker
+          command:
+            - /bin/sh 
+            - -c
+            - >
+                cd /backend ;
+                ./run-celery.sh
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - cp /backend/secrets/secrets.json /backend/
+          envFrom:
+            - configMapRef:
+                name: production-env-env
+          image: public.ecr.aws/w1d0u6d8/deepmush_backend:latest
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /backend/secrets
+              name: backend-secrets-json
+            - mountPath: /backend/runs
+              name: backend-runs
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
+      volumes:
+        - name: backend-secrets-json
+          secret:
+            secretName: secrets-json
+        - name: backend-runs
+          persistentVolumeClaim:
+            claimName: backend-runs-claim
+        - name: backend-logs
+          persistentVolumeClaim:
+            claimName: backend-logs-claim
+status: {}

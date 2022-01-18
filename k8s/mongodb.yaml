@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: mongodb
+  name: mongodb
+spec:
+  ports:
+    - name: "27017"
+      port: 27017
+      targetPort: 27017
+  selector:
+    io.kompose.service: mongodb
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: mongodb
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongodb
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/db-tier: "true"
+        io.kompose.service: mongodb
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: production-env-env
+          image: mongo
+          name: mongodb
+          ports:
+            - containerPort: 27017
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-db
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
+      volumes:
+        - hostPath:
+            path: /var/local/deepmush/mongo-db
+          name: mongodb-db
+status: {}
