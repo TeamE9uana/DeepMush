@@ -76,8 +76,8 @@ spec:
                 while :; do
                   sleep 60s ;
                   python manage.py makemigrations ;
-                  python manage.py migrate auth --run-syncdb ;
-                  python manage.py migrate authtoken --run-syncdb ;
+                  python manage.py migrate auth ;
+                  python manage.py migrate authtoken ;
                   python manage.py migrate --run-syncdb ;
                   python manage.py migrate --run-syncdb --database=mongodb ;
                 done
