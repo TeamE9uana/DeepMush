@@ -11,7 +11,6 @@ from images.serializers import *
 from rest_framework.parsers import MultiPartParser
 from rest_framework.request import Request
 from rest_framework import status
-from GPSPhoto import gpsphoto
 import tempfile
 from django.core.files.base import ContentFile
 from uuid import uuid4
@@ -74,7 +73,7 @@ class ImagesView(APIView):
         user = request.user  # 사용자
         profile = Profile.objects.get(user=user.id)
         # description = request.POST.get('description', '')  # 사용자의 코멘트
-        image_file = request.FILES.get('mushroom_image', None)  # 버섯 이미지
+        image_file = request.data.get('mushroom_image', None)  # 버섯 이미지
 
         if not image_file:
             return JsonResponse({'success': False, 'result': 'image not given'}, status=status.HTTP_400_BAD_REQUEST)
@@ -92,7 +91,12 @@ class ImagesView(APIView):
         image.save()
 
         found_lat_Lng = False
-        if (lat := request.POST.get('lat')) != None and (lng := request.POST.get('lng')) != None:
+        if (lat := request.data.get('lat')) != None and (lng := request.data.get('lng')) != None:
+            try:
+                lat = int(lat)
+                lng = int(lng)
+            except TypeError:
+                return JsonResponse({'error': 'lat or lng is not number'}, status=status.HTTP_400_BAD_REQUEST)
             found_lat_Lng = True
             lat_Lng = ImageLatLng.objects.create(image=image, lat=lat, lng=lng)
             lat_Lng.save()
