@@ -137,7 +137,7 @@ class ImagesView(APIView):
 
         inference_obj.save()
 
-        description=''
+        description = ''
         if max_label_name == 'youngji':
             description = "여름철 활엽수에서 돋아나는 불로초과 1년생 버섯. 영지초, 지초, 불로초라고 부르기도 한다."
         elif max_label_name == 'noru':
@@ -152,14 +152,14 @@ class ImagesView(APIView):
             description = "봄부터 가을에 걸쳐 밤나무, 떡갈나무 등 주로 활엽수의 죽은 나무 줄기에서 자란다."
         elif max_label_name == 'yellowegg':
             description = "달걀버섯과 비슷하지만 색깔이 노란색이다. 자주 독버섯과 헷갈린다. 애초에 보호종이기 때문에 손도 대지 말자."
-        elif max_label_name=='enoki':
-            description='NOT USE'
-        elif max_label_name=='songi':
-            description='NOT USE'
+        elif max_label_name == 'enoki':
+            description = 'NOT USE'
+        elif max_label_name == 'songi':
+            description = 'NOT USE'
         else:
             description = "ERROR"
 
-        updated_image:Image = Image.objects.get(made_by=profile)
+        updated_image: Image = Image.objects.get(made_by=profile)
         updated_image.description = description
         updated_image.save()
 

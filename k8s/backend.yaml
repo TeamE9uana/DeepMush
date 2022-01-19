@@ -60,6 +60,8 @@ spec:
               name: backend-runs
             - mountPath: /backend/logs
               name: backend-logs
+            - mountPath: /backend/media
+              name: backend-media
         - name: migrate
           lifecycle:
             postStart:
@@ -116,6 +118,8 @@ spec:
               name: backend-secrets-json
             - mountPath: /backend/runs
               name: backend-runs
+            - mountPath: /backend/media
+              name: backend-media
       restartPolicy: Always
       dnsPolicy: ClusterFirst
       dnsConfig:
@@ -128,6 +132,9 @@ spec:
         - name: backend-runs
           persistentVolumeClaim:
             claimName: backend-runs-claim
+        - name: backend-media
+          persistentVolumeClaim:
+            claimName: backend-media-claim
         - name: backend-logs
           persistentVolumeClaim:
             claimName: backend-logs-claim

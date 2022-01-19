@@ -74,6 +74,10 @@ services:
     networks:
       - db-tier
       - mq-tier
+    dns:
+      - 8.8.8.8
+      - 4.4.4.4
+      - 1.1.1.1
     tty: true
 
   migrate:
