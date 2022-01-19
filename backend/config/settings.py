@@ -191,27 +191,6 @@ DATABASES = {
             'NAME': 'test_deepmush',
         },
     }
-} if IS_DOCKER else {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DB_DIR / 'db.sqlite3',
-    },
-    'mongodb': {
-        'ENGINE': 'djongo',
-        'ENFORCE_SCHEMA': True,
-        'NAME': get_secret('MONGODB_DB', 'deepmush'),
-        'CLIENT': {
-            'host': 'localhost',
-            'port': 27017,
-            'username': get_secret('MONGODB_USERNAME', 'deepmush'),
-            'password': get_secret('MONGODB_PASSWORD', 'deepmush'),
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1',
-        },
-        'TEST': {
-            'NAME': 'test_deepmush',
-        },
-    }
 }
 
 AUTHENTICATION_BACKENDS = [
