@@ -85,6 +85,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
 
     await expoLocation();
 
+    await setLoading(true);
+
     await FileSystem.moveAsync({ from: image, to: newUri });
     setPreviewVisible(false);
     setCapturedImage(null);
@@ -96,7 +98,6 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     var formdata = new FormData();
     console.log(newUri);
 
-<<<<<<< HEAD
     formdata.append("mushroom_image", {
       name: "mush01.jpg",
       type: "image/jpeg",
@@ -115,35 +116,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       .then((result) => console.log(result))
       .then(void console.log("upload success!!"))
       .catch((error) => console.log("error", error));
-=======
-      formdata.append("mushroom_image", {
-        name: "mush01.jpg",
-        type: "image/jpeg",
-        uri: newUri,
-      });
 
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow",
-      };
-
-      setLoading(true);
-
-      await fetch("https://backend.deepmush.io/images/", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .then(void console.log("upload success!!"))
-        .catch((error) => console.log("error", error));
-
-      setLoading(false);
-
-      await console.log(Data);
-    } catch (err) {
-      throw new Error("File could not be saved.");
-    }
->>>>>>> feat-frontend-latlang
+    await setLoading(false);
   };
 
   // Reset image and allow user to retake photo
@@ -184,6 +158,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     });
 
     if (!result.cancelled) {
+      await setLoading(true);
+
       //setImage(result.uri);
       // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
 
@@ -210,14 +186,12 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         redirect: "follow",
       };
 
-      setLoading(true);
-
-      fetch("https://backend.deepmush.io/images/", requestOptions)
+      await fetch("https://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
 
-      setLoading(false);
+      await setLoading(false);
     }
   };
   return (
@@ -265,7 +239,10 @@ export const ExpoCameraPage = ({ navigation }: any) => {
               </View>
 
               <View>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <TouchableOpacity
+                  disabled={setLoading}
+                  onPress={() => navigation.goBack()}
+                >
                   <Text style={{ color: "white", fontSize: 20 }}>✖</Text>
                 </TouchableOpacity>
               </View>
