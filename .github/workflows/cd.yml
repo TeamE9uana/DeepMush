@@ -69,10 +69,8 @@ jobs:
         run: |
             echo -e "$CONFIG_YAML_BASE64" | base64 -d - | tee ~/k3s.yaml > /dev/null
             export KUBECONFIG=$HOME/k3s.yaml:$KUBECONFIG
-            echo -e "$ENV_CONFIG_BASE64" | base64 -d - | tee ./k8s/production-env-env-configmap.yaml > /dev/null
             kubectl config use-context deepmush-k3s
             ./up-pods.sh
             ./rolling-release.sh
         env:
           CONFIG_YAML_BASE64: ${{ secrets.CONFIG_YAML_BASE64 }}
-          ENV_CONFIG_BASE64: ${{ secrets.ENV_CONFIG_BASE64 }}
