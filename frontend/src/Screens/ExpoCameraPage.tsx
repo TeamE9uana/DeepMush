@@ -15,7 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import axios from "axios";
 import "localstorage-polyfill";
-
+import Spinner from "react-native-loading-spinner-overlay";
 import { string } from "yargs";
 import { ListPage } from "./ListPage";
 
@@ -36,6 +36,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   const [fMode, setFMode] = useState("off");
+  const [loading, setLoading] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -95,6 +96,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     var formdata = new FormData();
     console.log(newUri);
 
+<<<<<<< HEAD
     formdata.append("mushroom_image", {
       name: "mush01.jpg",
       type: "image/jpeg",
@@ -113,6 +115,35 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       .then((result) => console.log(result))
       .then(void console.log("upload success!!"))
       .catch((error) => console.log("error", error));
+=======
+      formdata.append("mushroom_image", {
+        name: "mush01.jpg",
+        type: "image/jpeg",
+        uri: newUri,
+      });
+
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
+
+      setLoading(true);
+
+      await fetch("https://backend.deepmush.io/images/", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .then(void console.log("upload success!!"))
+        .catch((error) => console.log("error", error));
+
+      setLoading(false);
+
+      await console.log(Data);
+    } catch (err) {
+      throw new Error("File could not be saved.");
+    }
+>>>>>>> feat-frontend-latlang
   };
 
   // Reset image and allow user to retake photo
@@ -179,14 +210,19 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         redirect: "follow",
       };
 
+      setLoading(true);
+
       fetch("https://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
+
+      setLoading(false);
     }
   };
   return (
     <View style={styles.container}>
+      <Spinner visible={loading} textContent={"Loading..."} />
       <View style={styles.cameraContainer}>
         {previewVisible && capturedImage ? (
           <CameraPreview
