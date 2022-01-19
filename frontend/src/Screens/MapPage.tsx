@@ -72,6 +72,17 @@ export const MapPage = ({ navigation }: any) => {
       latitude: 37.367875874475885,
       longitude: -122.03762870058752,
     },
+
+    {
+      name: "sample4",
+      latitude: 37.367875874475885,
+      longitude: -122.03262870058752,
+    },
+    {
+      name: "sample5",
+      latitude: 37.367875874475885,
+      longitude: -122.03562870058752,
+    },
   ];
   const [markers, setMarkers] = useState(dataSet);
 
@@ -96,7 +107,7 @@ export const MapPage = ({ navigation }: any) => {
               coordinate={props}
               onPress={(evt) => setClicked(!clicked)}
               description="버섯넘버"
-            />
+            ></Marker>
             {/* {clicked && index && <Text>{props.name}</Text>} */}
           </>
         ))}

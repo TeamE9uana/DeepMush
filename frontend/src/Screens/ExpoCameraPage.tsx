@@ -84,41 +84,35 @@ export const ExpoCameraPage = ({ navigation }: any) => {
 
     await expoLocation();
 
-    try {
-      await FileSystem.moveAsync({ from: image, to: newUri });
-      setPreviewVisible(false);
-      setCapturedImage(null);
+    await FileSystem.moveAsync({ from: image, to: newUri });
+    setPreviewVisible(false);
+    setCapturedImage(null);
 
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Token ${token}`);
-      myHeaders.append("Content-Type", "multipart/form-data");
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Token ${token}`);
+    myHeaders.append("Content-Type", "multipart/form-data");
 
-      var formdata = new FormData();
-      console.log(newUri);
+    var formdata = new FormData();
+    console.log(newUri);
 
-      formdata.append("mushroom_image", {
-        name: "mush01.jpg",
-        type: "image/jpeg",
-        uri: newUri,
-      });
+    formdata.append("mushroom_image", {
+      name: "mush01.jpg",
+      type: "image/jpeg",
+      uri: newUri,
+    });
 
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow",
-      };
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
 
-      await fetch("https://backend.deepmush.io/images/", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .then(void console.log("upload success!!"))
-        .catch((error) => console.log("error", error));
-
-      await console.log(Data);
-    } catch (err) {
-      throw new Error("File could not be saved.");
-    }
+    await fetch("https://backend.deepmush.io/images/", requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .then(void console.log("upload success!!"))
+      .catch((error) => console.log("error", error));
   };
 
   // Reset image and allow user to retake photo

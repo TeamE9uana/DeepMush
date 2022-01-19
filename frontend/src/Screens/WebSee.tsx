@@ -73,6 +73,5 @@ export function WebSee({ route, navigation }: any) {
 const stylesheet = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: getStatusBarHeight(),
   },
 });

@@ -28,6 +28,14 @@ import SearchBar from "react-native-dynamic-search-bar";
 import "localstorage-polyfill";
 
 import { Button, Menu, Divider, Provider, List } from "react-native-paper";
+import {
+  ListPageHeader,
+  ListPageHeaderComponent,
+} from "../Components/ListPageHeaderComponent";
+import { BorderLine } from "../Components/BorderLineComponent";
+import { SearchBarComponent } from "../Components/SearchBarComponent";
+import { ListBodyComponent } from "../Components/ListBodyComponent";
+import { ListFooterComponent } from "../Components/ListFooterComponent";
 
 // 메인 flatlist에 사용 되는 json
 let im = [];
@@ -178,48 +186,13 @@ export function ListPage({ navigation }) {
     fetchAndSetList();
   }, [isFocused]);
 
-  /*
-      {item.inferences[0].result[0].label_name === undefined
-                      ? "불일치"
-                      : item.inferences[0].result[0].label_name}
-  */
-
-  /*
-                    {item.inferences[0].result[0].prob === undefined
-                      ? "불일치"
-                      : item.inferences[0].result[0].prob}
-                    %
-                      */
-
   return (
     <View style={stylesheet.container}>
-      <View style={stylesheet.header}>
-        <View>
-          <Text style={stylesheet.logotext}>🍄deepmush</Text>
-        </View>
-        <View>
-          <Text style={{ marginRight: 25, fontSize: 16 }}>목록</Text>
-        </View>
+      <ListPageHeaderComponent />
 
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("UserInfoPage")}
-            style={{ marginRight: 5 }}
-          >
-            <AntDesign name="user" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <BorderLine />
 
       <View>
-        <View
-          style={{
-            borderBottomColor: "black",
-            borderBottomWidth: 1,
-            marginBottom: 9,
-          }}
-        />
-
         <SearchBar
           style={{
             marginBottom: 9,
@@ -346,7 +319,7 @@ export function ListPage({ navigation }) {
                   onPress={() =>
                     navigation.navigate("DetailPage", {
                       index: index,
-                      DATA2: im,
+                      DATA2: im3,
                     })
                   }
                 />
@@ -379,36 +352,8 @@ export function ListPage({ navigation }) {
           )}
         />
       </View>
-      <View>
-        <View
-          style={{
-            borderBottomColor: "black",
-            borderBottomWidth: 1,
-          }}
-        />
-      </View>
-
-      <View style={stylesheet.footer}>
-        <View>
-          <SimpleLineIcons name="folder" size={30} color="blue" />
-        </View>
-        <View>
-          <SimpleLineIcons
-            name="camera"
-            size={30}
-            color="black"
-            onPress={() => navigation.navigate("ExpoCameraPage")}
-          />
-        </View>
-        <View>
-          <MaterialCommunityIcons
-            name="map-marker-outline"
-            size={30}
-            color="black"
-            onPress={() => navigation.navigate("MapPage")}
-          />
-        </View>
-      </View>
+      <BorderLine />
+      <ListFooterComponent />
     </View>
   );
 }
