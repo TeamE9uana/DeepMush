@@ -74,4 +74,3 @@ jobs:
             ./rolling-release.sh
         env:
           CONFIG_YAML_BASE64: ${{ secrets.CONFIG_YAML_BASE64 }}
-          ENV_CONFIG_BASE64: ${{ secrets.ENV_CONFIG_BASE64 }}
