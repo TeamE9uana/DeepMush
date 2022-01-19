@@ -72,7 +72,6 @@ class ImagesView(APIView):
         ### Parsing data ###
         user = request.user  # 사용자
         profile = Profile.objects.get(user=user.id)
-        # description = request.POST.get('description', '')  # 사용자의 코멘트
         image_file = request.data.get('mushroom_image', None)  # 버섯 이미지
 
         if not image_file:
