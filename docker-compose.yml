@@ -7,7 +7,7 @@ services:
     expose:
       - "5432"
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
     networks:
       - db-tier
     environment:
@@ -35,7 +35,7 @@ services:
     expose:
       - "27017"
     volumes:
-      - ./mongo-db:/data/db
+      - mongodb:/data/db
     networks:
       - db-tier
     environment:
@@ -123,3 +123,7 @@ networks:
     driver: bridge
   mq-tier:
     driver: bridge
+
+volumes:
+  mongodb:
+  db:
