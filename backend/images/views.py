@@ -8,7 +8,7 @@ from config.serializers import ImageResponseSerializer, ImagesResponseSerializer
 
 from config.models import Image, ImageLatLng, Inference, Profile
 from images.serializers import *
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.request import Request
 from rest_framework import status
 import tempfile
@@ -19,7 +19,7 @@ from uuid import uuid4
 
 
 class ImagesView(APIView):
-    parser_classes = (MultiPartParser,)
+    parser_classes = (MultiPartParser, FormParser, FileUploadParser)
 
     @swagger_auto_schema(
         operation_id="자신의 이미지 목록 조회",
