@@ -96,6 +96,10 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     myHeaders.append("Content-Type", "multipart/form-data");
 
     var formdata = new FormData();
+
+    formdata.append("lat", location.coords.latitude);
+    formdata.append("lng", location.coords.longitude);
+
     console.log(newUri);
 
     formdata.append("mushroom_image", {
@@ -173,6 +177,9 @@ export const ExpoCameraPage = ({ navigation }: any) => {
 
       var formdata = new FormData();
       console.log(result.uri);
+
+      formdata.append("lat", location.coords.latitude);
+      formdata.append("lng", location.coords.longitude);
 
       formdata.append("mushroom_image", {
         name: "mush1.jpg",
