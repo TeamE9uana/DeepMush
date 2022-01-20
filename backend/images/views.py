@@ -168,8 +168,6 @@ class ImagesView(APIView):
         inference_serializer = InferenceUploadSerializer(
             data=inference_data)
 
-        print(inference_data)
-
         if not inference_serializer.is_valid():
             print(inference_serializer._errors)
             return JsonResponse({'error': 'inference arguments are not valid'}, status=status.HTTP_400_BAD_REQUEST)
