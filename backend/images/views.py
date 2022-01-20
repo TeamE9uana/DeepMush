@@ -17,9 +17,35 @@ from uuid import uuid4
 
 # Create your views here.
 
+class Description:
+    @staticmethod
+    def get(max_label_name):
+        description = ''
+        if max_label_name == 'youngji':
+            description = "여름철 활엽수에서 돋아나는 불로초과 1년생 버섯. 영지초, 지초, 불로초라고 부르기도 한다."
+        elif max_label_name == 'noru':
+            description = "영미권에서는 Lion's mane (사자갈기) 라고 불리는, 산호침버섯속 노루궁뎅이과에 속하는 버섯으로, 정식 명칭은 노루궁뎅이이다. "
+        elif max_label_name == 'neungi':
+            description = "사마귀버섯목 능이버섯과 능이버섯속의 식용 버섯."
+        elif max_label_name == 'songe':
+            description = "균계 담자균문 담자균강 주름버섯목 송이과 송이속의 식용 버섯."
+        elif max_label_name == 'woodear':
+            description = "담자균강 목이목의 버섯. 해외에선 식용으로 인기가 없었기 때문에 중국을 통해 알려졌다."
+        elif max_label_name == 'shitake':
+            description = "봄부터 가을에 걸쳐 밤나무, 떡갈나무 등 주로 활엽수의 죽은 나무 줄기에서 자란다."
+        elif max_label_name == 'yellowegg':
+            description = "달걀버섯과 비슷하지만 색깔이 노란색이다. 자주 독버섯과 헷갈린다. 애초에 보호종이기 때문에 손도 대지 말자."
+        elif max_label_name == 'enoki':
+            description = 'NOT USE'
+        elif max_label_name == 'songi':
+            description = 'NOT USE'
+        else:
+            description = "ERROR"
+        return description
+
 
 class ImagesView(APIView):
-    parser_classes = (MultiPartParser, )
+    parser_classes = (MultiPartParser, FormParser)
 
     @swagger_auto_schema(
         operation_id="자신의 이미지 목록 조회",
@@ -92,9 +118,10 @@ class ImagesView(APIView):
         found_lat_Lng = False
         if (lat := request.data.get('lat')) != None and (lng := request.data.get('lng')) != None:
             try:
-                lat = int(lat)
-                lng = int(lng)
-            except TypeError:
+                lat = int(float(lat))
+                lng = int(float(lng))
+            except ValueError as e:
+                print(e)
                 return JsonResponse({'error': 'lat or lng is not number'}, status=status.HTTP_400_BAD_REQUEST)
             found_lat_Lng = True
             lat_Lng = ImageLatLng.objects.create(image=image, lat=lat, lng=lng)
@@ -137,29 +164,7 @@ class ImagesView(APIView):
 
         inference_obj.save()
 
-        description = ''
-        if max_label_name == 'youngji':
-            description = "여름철 활엽수에서 돋아나는 불로초과 1년생 버섯. 영지초, 지초, 불로초라고 부르기도 한다."
-        elif max_label_name == 'noru':
-            description = "영미권에서는 Lion's mane (사자갈기) 라고 불리는, 산호침버섯속 노루궁뎅이과에 속하는 버섯으로, 정식 명칭은 노루궁뎅이이다. "
-        elif max_label_name == 'neungi':
-            description = "사마귀버섯목 능이버섯과 능이버섯속의 식용 버섯."
-        elif max_label_name == 'songe':
-            description = "균계 담자균문 담자균강 주름버섯목 송이과 송이속의 식용 버섯."
-        elif max_label_name == 'woodear':
-            description = "담자균강 목이목의 버섯. 해외에선 식용으로 인기가 없었기 때문에 중국을 통해 알려졌다."
-        elif max_label_name == 'shitake':
-            description = "봄부터 가을에 걸쳐 밤나무, 떡갈나무 등 주로 활엽수의 죽은 나무 줄기에서 자란다."
-        elif max_label_name == 'yellowegg':
-            description = "달걀버섯과 비슷하지만 색깔이 노란색이다. 자주 독버섯과 헷갈린다. 애초에 보호종이기 때문에 손도 대지 말자."
-        elif max_label_name == 'enoki':
-            description = 'NOT USE'
-        elif max_label_name == 'songi':
-            description = 'NOT USE'
-        else:
-            description = "ERROR"
-        
-        image.description = description
+        image.description = Description.get(max_label_name)
         image.save()
 
         result = {'success': True,
