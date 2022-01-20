@@ -92,9 +92,10 @@ class ImagesView(APIView):
         found_lat_Lng = False
         if (lat := request.data.get('lat')) != None and (lng := request.data.get('lng')) != None:
             try:
-                lat = int(lat)
-                lng = int(lng)
-            except TypeError:
+                lat = int(float(lat))
+                lng = int(float(lng))
+            except ValueError as e:
+                print(e)
                 return JsonResponse({'error': 'lat or lng is not number'}, status=status.HTTP_400_BAD_REQUEST)
             found_lat_Lng = True
             lat_Lng = ImageLatLng.objects.create(image=image, lat=lat, lng=lng)
