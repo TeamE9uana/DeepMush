@@ -155,7 +155,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   };
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let result = await ImagePicker.launchImageibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowEditing: true,
       aspect: [1, 1],
