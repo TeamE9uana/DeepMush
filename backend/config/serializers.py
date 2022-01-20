@@ -41,6 +41,12 @@ class BoundingBoxSerializer(serializers.ListSerializer):
     child = BoundingBoxElementSerializer()
 
 
+class InferenceUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inference
+        fields = ['image', 'result', 'result_image']
+
+
 class InferenceSerializer(serializers.ModelSerializer):
 
     class Meta:
