@@ -19,7 +19,7 @@ from uuid import uuid4
 
 
 class ImagesView(APIView):
-    parser_classes = (MultiPartParser, )
+    parser_classes = (MultiPartParser, FormParser)
 
     @swagger_auto_schema(
         operation_id="자신의 이미지 목록 조회",

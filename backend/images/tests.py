@@ -1,4 +1,5 @@
 import random
+from tempfile import NamedTemporaryFile, TemporaryFile
 from typing import List
 from hypothesis.extra.django import from_model
 from hypothesis import given, settings
@@ -8,9 +9,9 @@ from config.models import Image, Profile, User
 from images.views import ImagesView
 from config.tests import ImageStrategy, MockRequestBaseTransactionTestCase
 from django.db.models import QuerySet
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 import json
-
 # Create your tests here.
 
 
@@ -55,8 +56,13 @@ class ImagesTestCase(MockRequestBaseTransactionTestCase):
 
     @given(from_model(Profile, user=from_model(User)), lists(ImageStrategy()))
     @settings(max_examples=10)
-    def test_images_post_api(self, profile: Profile, images: List[ImageStrategy]):
+    def test_images_post_api(self, profile: Profile, images: List[NamedTemporaryFile]):
         profile.save()
+
+        for image in images:
+            with open(image.name, 'rb') as f:
+                content = f.read()
+            image = SimpleUploadedFile(name="mushroom.jpg", content=content, content_type="image/jpg")
         
         user = profile.user
         token = self.get_token(user)
@@ -66,7 +72,7 @@ class ImagesTestCase(MockRequestBaseTransactionTestCase):
             lng = random.randrange(0, 10000, 1) / 100
 
             res = self.mock_request(
-                user, token, data={'mushroom_image': image, 'lat': lat, 'lng': lng}, view_name='images_view', view=ImagesView, mode='post')
+                user, token, data={'mushroom_image': image, 'lat': lat, 'lng': lng}, content_type="multipart/form-data", view_name='images_view', view=ImagesView, mode='post')
 
             response_status = status.HTTP_200_OK
 
@@ -75,7 +81,7 @@ class ImagesTestCase(MockRequestBaseTransactionTestCase):
 
             parsed_res: dict = json.loads(res.content)
 
-            self.assertEquals(parsed_res.get('success'), True, parsed_res)
+            self.assertEquals(parsed_res.get('success'), True, res.content.decode('utf-8'))
         
         image_columns: QuerySet[Image] = Image.objects.all()
 
