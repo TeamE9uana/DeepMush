@@ -80,7 +80,6 @@ const stylesheet = StyleSheet.create({
   header: {
     flex: 0.6,
     alignItems: "center",
-
     marginTop: getStatusBarHeight(),
   },
 
@@ -91,7 +90,7 @@ const stylesheet = StyleSheet.create({
 
   body: {
     flex: 1.5,
-    backgroundColor: "yellow",
+    backgroundColor: "#FFFFFF",
   },
 
   footer: {
@@ -108,7 +107,7 @@ const stylesheet = StyleSheet.create({
     top: 0,
     bottom: "auto",
     transform: [{ translateX: 0 }, { translateY: 0 }, { rotate: "0deg" }],
-    backgroundColor: "rgba(0,0,0,0)",
+    backgroundColor: "#FFFFFF",
   },
 
   buttonContainer: {

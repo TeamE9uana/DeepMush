@@ -304,11 +304,11 @@ export function ListPage({
                         marginTop: 5,
                         marginBottom: 10,
                         fontSize: 12,
-                        maxWidth: 65,
+                        maxWidth: 80,
                         maxHeight: 12,
                       }}
                     >
-                      {item.created_at}
+                      {item.created_at.substring(0, 10)}
                     </Text>
                   </View>
 
@@ -337,7 +337,7 @@ export function ListPage({
                       }}
                     ></Text>
 
-                    <Text
+                    {/* <Text
                       style={{
                         color: "white",
                         alignItems: "center",
@@ -349,7 +349,7 @@ export function ListPage({
                       }}
                     >
                       {item.inference.result[0].prob}%
-                    </Text>
+                    </Text> */}
                   </View>
                 </View>
 
@@ -472,6 +472,7 @@ const stylesheet = StyleSheet.create({
 
   logotext: {
     fontSize: 14,
+    marginLeft: 10,
   },
   tinyLogo: {
     width: 80,
