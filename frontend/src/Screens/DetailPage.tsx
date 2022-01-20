@@ -38,7 +38,7 @@ export function DetailPage({ route, navigation }) {
         <View style={{ flex: 5 }}>
           <Image
             style={stylesheet.tinyLogo}
-            source={require("../images/mush4.jpeg")}
+            source={{ uri: DATA2[index].image }}
           />
           <View>
             <View
