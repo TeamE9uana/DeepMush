@@ -38,7 +38,7 @@ export function DetailPage({ route, navigation }) {
         <View style={{ flex: 5 }}>
           <Image
             style={stylesheet.tinyLogo}
-            source={{ uri: DATA2[index].image }}
+            source={{ uri: DATA2[index].inference.result_image }}
           />
           <View>
             <View

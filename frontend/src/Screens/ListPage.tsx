@@ -238,7 +238,7 @@ export function ListPage({ navigation }) {
                 <Image
                   style={stylesheet.tinyLogo}
                   source={{
-                    uri: item.image,
+                    uri: item.inference.result_image,
                   }}
                 />
               </View>
@@ -254,7 +254,7 @@ export function ListPage({ navigation }) {
                       marginTop: 5,
                       marginBottom: 10,
                       fontSize: 12,
-                      maxWidth: 68,
+                      maxWidth: 65,
                       maxHeight: 12,
                     }}
                   >
