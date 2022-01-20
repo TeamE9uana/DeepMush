@@ -450,6 +450,7 @@ export function ListPage({
 
 const stylesheet = StyleSheet.create({
   container: {
+    backgroundColor: "#FFFFFF",
     flex: 1,
   },
   header: {

@@ -32,15 +32,6 @@ export const LoginPage = ({ navigation }: any) => {
       </View>
 
       <View style={stylesheet.footer}>
-        <View>
-          <View
-            style={{
-              borderBottomColor: "black",
-              borderBottomWidth: 1,
-            }}
-          />
-        </View>
-
         <View style={stylesheet.logincontainer}>
           <TouchableOpacity
             style={[stylesheet.buttonContainer, stylesheet.googleButton]}
@@ -53,11 +44,9 @@ export const LoginPage = ({ navigation }: any) => {
             <View style={stylesheet.socialButtonContent}>
               <Image
                 style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/google/androidL/40/FFFFFF",
-                }}
+                source={require("../images/googleIcon.png")}
               />
-              <Text style={stylesheet.loginText}>Continue with google</Text>
+              <Text style={{ color: "#4079DF" }}>Sign in with Google</Text>
             </View>
           </TouchableOpacity>
 
@@ -72,11 +61,9 @@ export const LoginPage = ({ navigation }: any) => {
             <View style={stylesheet.socialButtonContent}>
               <Image
                 style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/google/androidL/40/FFFFFF",
-                }}
+                source={require("../images/kakaoIcon.png")}
               />
-              <Text style={stylesheet.loginText}>Continue with kakao</Text>
+              <Text style={stylesheet.loginText}>카카오 계정 로그인</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -86,6 +73,7 @@ export const LoginPage = ({ navigation }: any) => {
 };
 const stylesheet = StyleSheet.create({
   container: {
+    backgroundColor: "#FFFFFF",
     flex: 1,
   },
 
@@ -130,23 +118,33 @@ const stylesheet = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
     width: 250,
-    borderRadius: 30,
   },
   loginButton: {
     backgroundColor: "#3498db",
   },
-  fabookButton: {
-    backgroundColor: "#3b5998",
-  },
   googleButton: {
-    backgroundColor: "#ff0000",
+    borderColor: "black",
+    borderWidth: 0,
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#C0C0C0",
+    shadowOpacity: 0.8,
+    elevation: 50,
+    shadowRadius: 15,
+    shadowOffset: { width: 1, height: 13 },
   },
   kakaoButton: {
-    backgroundColor: "#f9e000",
+    borderColor: "black",
+    borderWidth: 0,
+    backgroundColor: "#FFEB32",
+    shadowColor: "#C0C0C0",
+    shadowOpacity: 0.8,
+    elevation: 1,
+    shadowRadius: 15,
+    shadowOffset: { width: 1, height: 5 },
   },
 
   loginText: {
-    color: "white",
+    color: "#3F1800",
   },
   restoreButtonContainer: {
     width: 250,
@@ -165,6 +163,7 @@ const stylesheet = StyleSheet.create({
   icon: {
     width: 30,
     height: 30,
+    marginRight: 20,
   },
 
   logincontainer: {
