@@ -87,7 +87,11 @@ export function DetailPage({ route, navigation }) {
             }}
           >
             <TouchableOpacity
-              onPress={() => navigation.navigate("DetailMapPage")}
+              onPress={() =>
+                navigation.navigate("DetailMapPage", {
+                  mapData: DATA2[index],
+                })
+              }
             >
               <MaterialCommunityIcons
                 name="map-marker-outline"
