@@ -13,7 +13,7 @@ torch.hub._validate_not_a_forked_repo = lambda a, b, c: True
 def expect_image(image: str):
     """get bounding boxes"""
     model = torch.hub.load('ultralytics/yolov5',
-                           'custom', path='inference/lib/mushroomAI.pt')
+                           'custom', path='inference/lib/mushroomAI_v3.pt')
 
     results = model(image)
 

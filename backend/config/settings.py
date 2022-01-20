@@ -79,6 +79,8 @@ INSTALLED_APPS = [
     'images',
 
     'test_without_migrations',
+
+    'latlngs',
 ]
 
 
@@ -157,60 +159,52 @@ NOSE_ARGS = ['--nocapture',
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 USE_POSTGRES = os.environ.get('USE_POSTGRES')
+IS_TEST = os.environ.get('IS_TEST')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': get_secret('POSTGRES_DB', 'deepmush'),
-        'USER': get_secret('POSTGRES_USER', 'deepmush'),
-        'PASSWORD': get_secret('POSTGRES_PASSWORD', 'deepmush'),
-        'HOST': 'database',
-        'PORT': 5432,
-        'TEST': {
-            'NAME': 'test_deepmush',
+if IS_TEST:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'test-default.db'),
         },
-        'OPTIONS': {
-            'connect_timeout': 50000
+        'mongodb': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'test-mongo.db'),
         }
-    },
-    'mongodb': {
-        'ENGINE': 'djongo',
-        'ENFORCE_SCHEMA': True,
-        'NAME': get_secret('MONGODB_DB', 'deepmush'),
-        'CLIENT': {
-            'host': 'mongodb',
-            'port': 27017,
-            'username': get_secret('MONGODB_USERNAME', 'deepmush'),
-            'password': get_secret('MONGODB_PASSWORD', 'deepmush'),
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1',
-        },
-        'TEST': {
-            'NAME': 'test_deepmush',
-        },
     }
-} if IS_DOCKER else {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DB_DIR / 'db.sqlite3',
-    },
-    'mongodb': {
-        'ENGINE': 'djongo',
-        'ENFORCE_SCHEMA': True,
-        'NAME': get_secret('MONGODB_DB', 'deepmush'),
-        'CLIENT': {
-            'host': 'localhost',
-            'port': 27017,
-            'username': get_secret('MONGODB_USERNAME', 'deepmush'),
-            'password': get_secret('MONGODB_PASSWORD', 'deepmush'),
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1',
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': get_secret('POSTGRES_DB', 'deepmush'),
+            'USER': get_secret('POSTGRES_USER', 'deepmush'),
+            'PASSWORD': get_secret('POSTGRES_PASSWORD', 'deepmush'),
+            'HOST': 'database',
+            'PORT': 5432,
+            'TEST': {
+                'NAME': 'test_deepmush',
+            },
+            'OPTIONS': {
+                'connect_timeout': 50000
+            }
         },
-        'TEST': {
-            'NAME': 'test_deepmush',
-        },
+        'mongodb': {
+            'ENGINE': 'djongo',
+            'ENFORCE_SCHEMA': True,
+            'NAME': get_secret('MONGODB_DB', 'deepmush'),
+            'CLIENT': {
+                'host': 'mongodb',
+                'port': 27017,
+                'username': get_secret('MONGODB_USERNAME', 'deepmush'),
+                'password': get_secret('MONGODB_PASSWORD', 'deepmush'),
+                'authSource': 'admin',
+                'authMechanism': 'SCRAM-SHA-1',
+            },
+            'TEST': {
+                'NAME': 'test_deepmush',
+            },
+        }
     }
-}
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
@@ -304,6 +298,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_URL = '/static-files/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -334,4 +331,4 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Seoul'
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 1e+9
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(1e10)

@@ -95,11 +95,11 @@ class ImageSerializer(serializers.ModelSerializer):
 
     @ swagger_serializer_method(serializer_or_field=InferenceSerializer(allow_null=True))
     def get_inference(self, obj: Image):
-        inference: Optional[ImageLatLng] = None
+        inferences = Inference.objects.filter(image=obj).order_by('id')
 
-        try:
-            inference = Inference.objects.get(image=obj)
-        except Inference.DoesNotExist:
+        inference = inferences.first()
+
+        if not inference:
             return None
 
         return InferenceSerializer(inference).data
@@ -112,3 +112,8 @@ class ImagesSerializer(serializers.ListSerializer):
 class ImagesResponseSerializer(serializers.Serializer):
     success = serializers.BooleanField()
     images = ImagesSerializer()
+
+
+class ImageResponseSerializer(serializers.Serializer):
+    success = serializers.BooleanField()
+    image = ImageSerializer()

@@ -1,0 +1,61 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mq-tier
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              io.kompose.network/mq-tier: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/mq-tier: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: rabbitmq
+  name: rabbitmq
+spec:
+  ports:
+    - name: "rabbitmq"
+      port: 5672
+      targetPort: 5672
+  selector:
+    io.kompose.service: rabbitmq
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: rabbitmq
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: rabbitmq
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/mq-tier: "true"
+        io.kompose.service: rabbitmq
+    spec:
+      containers:
+        - image: rabbitmq:3
+          name: rabbitmq
+          ports:
+            - containerPort: 5672
+          resources: {}
+          tty: true
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        nameservers:
+          - 8.8.8.8
+status: {}
