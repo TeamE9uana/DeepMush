@@ -62,8 +62,8 @@ class ImagesTestCase(MockRequestBaseTransactionTestCase):
         token = self.get_token(user)
 
         for image in images:
-            lat = random.randrange(0, 100, 0.1)
-            lng = random.randrange(0, 100, 0.1)
+            lat = random.randrange(0, 10000, 1) / 100
+            lng = random.randrange(0, 10000, 1) / 100
 
             res = self.mock_request(
                 user, token, data={'mushroom_image': image, 'lat': lat, 'lng': lng}, view_name='images_view', view=ImagesView, mode='post')
