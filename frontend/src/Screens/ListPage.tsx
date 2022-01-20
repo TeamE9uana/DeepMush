@@ -29,6 +29,7 @@ import "localstorage-polyfill";
 
 import { Button, Menu, Divider, Provider, List } from "react-native-paper";
 
+
 // 메인 flatlist에 사용 되는 json
 let im = [];
 
@@ -36,14 +37,24 @@ let im = [];
 let im2 = [];
 let im3 = [];
 
+
 export function ListPage({ navigation }) {
   const isFocused = useIsFocused();
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const expoLocation = async () => {
+    //expo-location 권한요청
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
 
   //login access_token from localstorage
   var token = localStorage.getItem("access_token");
 
   //props from expocamerapage's didupload
-  //const didupload = props.didupload;
+  // const didupload = props.didupload;
 
   //image json update state
   const [updatedata, setupdatedata] = useState(im);
@@ -130,6 +141,7 @@ export function ListPage({ navigation }) {
 
   // listpage 동작시 useEffect 작동 -> get Method 실행해서 이미지 리스트들을 받아오고 im state에 결과값을 저장한다
   useEffect(() => {
+    expoLocation();
     //get method - fetch
     async function fetchAndSetList() {
       var myHeaders = await new Headers();
@@ -192,14 +204,35 @@ export function ListPage({ navigation }) {
                       */
 
   return (
-    <View style={stylesheet.container}>
-      <View style={stylesheet.header}>
-        <View>
-          <Text style={stylesheet.logotext}>🍄deepmush</Text>
+    console.log(location),
+    (
+      <View style={stylesheet.container}>
+        <View style={stylesheet.header}>
+          <View>
+            <Text style={stylesheet.logotext}>🍄deepmush</Text>
+          </View>
+          <View>
+            <Text style={{ marginRight: 25, fontSize: 16 }}>목록</Text>
+          </View>
+
+          <View style={{ flexDirection: "row" }}>
+            <Ionicons name="search" size={24} color="black" />
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              size={24}
+              color="black"
+            />
+          </View>
         </View>
         <View>
-          <Text style={{ marginRight: 25, fontSize: 16 }}>목록</Text>
-        </View>
+          <View
+            style={{
+              borderBottomColor: "black",
+              borderBottomWidth: 1,
+              marginBottom: 9,
+            }}
+          />
+
 
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
@@ -209,207 +242,189 @@ export function ListPage({ navigation }) {
             <AntDesign name="user" size={24} color="black" />
           </TouchableOpacity>
         </View>
-      </View>
-
-      <View>
-        <View
-          style={{
-            borderBottomColor: "black",
-            borderBottomWidth: 1,
-            marginBottom: 9,
-          }}
-        />
-
-        <SearchBar
-          style={{
-            marginBottom: 9,
-          }}
-          fontColor="#c6c6c6"
-          iconColor="#c6c6c6"
-          shadowColor="#282828"
-          cancelIconColor="#c6c6c6"
-          placeholder="Search here"
-          onChangeText={(text) => SetfilterText(text)}
-          onSearchPress={() => searchData()}
-          onClearPress={() => SetfilterText("")}
-        />
-      </View>
-      <View style={stylesheet.body}>
-        <View style={{}} />
-        <FlatList
-          data={im3}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item, index }) => (
-            <View
-              style={{
-                borderRadius: 20,
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                marginBottom: 9,
-                height: 105,
-
-                width: 319,
-
-                backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
-              }}
-            >
+        <View style={stylesheet.body}>
+          <View style={{}} />
+          <FlatList
+            data={im3}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={({ item, index }) => (
               <View
                 style={{
-                  alignItems: "center",
+                  borderRadius: 20,
+                  flexDirection: "row",
+                  alignItems: "flex-start",
                   justifyContent: "center",
-                  marginTop: 10,
-                  flex: 1,
+                  marginBottom: 9,
+                  height: 105,
+
+                  width: 319,
+
+                  backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
                 }}
               >
-                <Image
-                  style={stylesheet.tinyLogo}
-                  source={{
-                    uri: item.image,
-                  }}
-                />
-              </View>
-
-              <View
-                style={{ marginLeft: 20, flexDirection: "column", flex: 1 }}
-              >
-                <View>
-                  <Text
-                    style={{
-                      color: "white",
-                      alignItems: "flex-end",
-                      marginTop: 5,
-                      marginBottom: 10,
-                      fontSize: 12,
-                      maxWidth: 65,
-                      maxHeight: 12,
-                    }}
-                  >
-                    {item.created_at}
-                  </Text>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      color: "white",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 15,
-                      fontSize: 20,
-                    }}
-                  >
-                    {item.inference.result[0].label_name}
-                  </Text>
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      color: "white",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 19,
-                      fontSize: 15,
-                      maxWidth: 30,
-                      maxHeight: 15,
-                    }}
-                  ></Text>
-
-                  <Text
-                    style={{
-                      color: "white",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 19,
-                      fontSize: 15,
-                      maxWidth: 48,
-                      maxHeight: 15,
-                    }}
-                  >
-                    {item.inference.result[0].prob}%
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "flex-end",
-                  justifyContent: "center",
-                  marginTop: 40,
-                }}
-              >
-                <Ionicons
-                  style={{ marginRight: 5 }}
-                  name="search"
-                  size={24}
-                  color="blue"
-                  onPress={() =>
-                    navigation.navigate("DetailPage", {
-                      index: index,
-                      DATA2: im,
-                    })
-                  }
-                />
-                <View style={{ marginLeft: 30 }}>
-                  <Text style={{ fontSize: 10, color: "white" }}>상세보기</Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flex: 0.5,
-                  alignItems: "flex-end",
-                }}
-              >
-                <TouchableOpacity
+                <View
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
+                    marginTop: 10,
+                    flex: 1,
                   }}
                 >
-                  <AntDesign
-                    name="closesquare"
-                    size={24}
-                    color="white"
-                    onPress={() => deletebutton(index, item.id)}
+                  <Image
+                    style={stylesheet.tinyLogo}
+                    source={{
+                      uri: item.image,
+                    }}
                   />
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
-      </View>
-      <View>
-        <View
-          style={{
-            borderBottomColor: "black",
-            borderBottomWidth: 1,
-          }}
-        />
-      </View>
+                </View>
 
-      <View style={stylesheet.footer}>
-        <View>
-          <SimpleLineIcons name="folder" size={30} color="blue" />
-        </View>
-        <View>
-          <SimpleLineIcons
-            name="camera"
-            size={30}
-            color="black"
-            onPress={() => navigation.navigate("ExpoCameraPage")}
+                <View
+                  style={{ marginLeft: 20, flexDirection: "column", flex: 1 }}
+                >
+                  <View>
+                    <Text
+                      style={{
+                        color: "white",
+                        alignItems: "flex-end",
+                        marginTop: 5,
+                        marginBottom: 10,
+                        fontSize: 12,
+                        maxWidth: 65,
+                        maxHeight: 12,
+                      }}
+                    >
+                      {item.created_at}
+                    </Text>
+                  </View>
+
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        color: "white",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 15,
+                        fontSize: 20,
+                      }}
+                    >
+                      {item.inference.result[0].label_name}
+                    </Text>
+                    <Text
+                      style={{
+                        marginLeft: 10,
+                        color: "white",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 19,
+                        fontSize: 15,
+                        maxWidth: 30,
+                        maxHeight: 15,
+                      }}
+                    ></Text>
+
+                    <Text
+                      style={{
+                        color: "white",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 19,
+                        fontSize: 15,
+                        maxWidth: 48,
+                        maxHeight: 15,
+                      }}
+                    >
+                      {item.inference.result[0].prob}%
+                    </Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "flex-end",
+                    justifyContent: "center",
+                    marginTop: 40,
+                  }}
+                >
+                  <Ionicons
+                    style={{ marginRight: 5 }}
+                    name="search"
+                    size={24}
+                    color="blue"
+                    onPress={() =>
+                      navigation.navigate("DetailPage", {
+                        index: index,
+                        DATA2: im,
+                      })
+                    }
+                  />
+                  <View style={{ marginLeft: 30 }}>
+                    <Text style={{ fontSize: 10, color: "white" }}>
+                      상세보기
+                    </Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flex: 0.5,
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <AntDesign
+                      name="closesquare"
+                      size={24}
+                      color="white"
+                      onPress={() => deletebutton(index, item.id)}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
           />
         </View>
         <View>
-          <MaterialCommunityIcons
-            name="map-marker-outline"
-            size={30}
-            color="black"
-            onPress={() => navigation.navigate("MapPage")}
+          <View
+            style={{
+              borderBottomColor: "black",
+              borderBottomWidth: 1,
+            }}
           />
+        </View>
+        <View style={stylesheet.footer}>
+          <View>
+            <SimpleLineIcons name="folder" size={30} color="blue" />
+          </View>
+          <View>
+            <SimpleLineIcons
+              name="camera"
+              size={30}
+              color="black"
+              onPress={() => navigation.navigate("ExpoCameraPage")}
+            />
+          </View>
+          <View>
+            <MaterialCommunityIcons
+              name="map-marker-outline"
+              size={30}
+              color="black"
+              onPress={() =>
+                navigation.navigate("MapPage", {
+                  listData: im,
+                  currentLocation: location,
+                })
+              }
+            />
+          </View>
         </View>
       </View>
-    </View>
+    )
   );
 }
 

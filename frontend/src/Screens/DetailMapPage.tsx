@@ -36,7 +36,8 @@ const initialregion = {
   longitude: (sample1.longitude + sample2.longitude + myhouse.longitude) / 3,
 };
 
-export const DetailMapPage = ({ navigation }) => {
+export const DetailMapPage = ({ route, navigation }) => {
+  const { mapData } = route.params;
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitleVisivle: false,
@@ -51,24 +52,7 @@ export const DetailMapPage = ({ navigation }) => {
     });
   });
   const [clicked, setClicked] = useState(false);
-  const dataSet = [
-    {
-      name: "sample1",
-      latitude: 37.3667300314415,
-      longitude: -122.03164481984454,
-    },
-    {
-      name: "sample2",
-      latitude: 37.36957273223395,
-      longitude: -122.02391041565818,
-    },
-    {
-      name: "sample3",
-      latitude: 37.367875874475885,
-      longitude: -122.03762870058752,
-    },
-  ];
-  const [markers, setMarkers] = useState(dataSet);
+  const [markers, setMarkers] = useState(mapData);
 
   return (
     <View style={styles.container}>
@@ -76,26 +60,17 @@ export const DetailMapPage = ({ navigation }) => {
         style={styles.map}
         provider={"google"}
         initialRegion={{
-          latitude:
-            (sample1.latitude + sample2.latitude + myhouse.latitude) / 3,
-          longitude:
-            (sample1.longitude + sample2.longitude + myhouse.longitude) / 3,
+          latitude: mapData.lat,
+          longitude: mapData.lng,
           latitudeDelta: 0.03,
           longitudeDelta: 0.04,
         }}
       >
-        {markers.map((props: Markers, index) => (
-          <>
-            <Marker
-              key={index}
-              coordinate={props}
-              onPress={(evt) => setClicked(!clicked)}
-              description="버섯넘버"
-            />
-            {/* {clicked && index && <Text>{props.name}</Text>} */}
-          </>
-        ))}
-        {/* <Marker coordinate={myhouse} onPress={(evt) => alert("asdf")} /> */}
+        <Marker
+          coordinate={{ latitude: mapData.lat, longitude: mapData.lng }}
+          onPress={(evt) => setClicked(!clicked)}
+          description="버섯넘버"
+        />
         <TouchableOpacity
           style={styles.touchableOpacityStyle}
         ></TouchableOpacity>

@@ -44,7 +44,7 @@ class Description:
         elif max_label_name == 'songi':
             description = 'NOT USE'
         else:
-            description = "ERROR"
+            description = "버섯이 없습니다."
         return description
 
 
