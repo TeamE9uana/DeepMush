@@ -57,8 +57,6 @@ class ImagesTestCase(MockRequestBaseTransactionTestCase):
     @settings(max_examples=10)
     def test_images_post_api(self, profile: Profile, images: List[ImageStrategy]):
         profile.save()
-        for image in images:
-            image = image.generate_image()
         
         user = profile.user
         token = self.get_token(user)
@@ -81,5 +79,5 @@ class ImagesTestCase(MockRequestBaseTransactionTestCase):
         
         image_columns: QuerySet[Image] = Image.objects.all()
 
-        self.assertEquals(len(images), image_columns.size(),
+        self.assertEquals(len(images), image_columns.count(),
                             f"images {images} != image_columns {image_columns}")
