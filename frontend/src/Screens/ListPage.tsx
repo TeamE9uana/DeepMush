@@ -25,10 +25,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { DetailPage } from "./DetailPage";
 import SearchBar from "react-native-dynamic-search-bar";
-import "localstorage-polyfill";
-
-import { Button, Menu, Divider, Provider, List } from "react-native-paper";
-
+import * as Location from "expo-location";
 
 // 메인 flatlist에 사용 되는 json
 let im = [];
@@ -37,8 +34,12 @@ let im = [];
 let im2 = [];
 let im3 = [];
 
+export function ListPage({
+  // route,
+  navigation,
+}) {
+  const [location, setLocation] = useState(null);
 
-export function ListPage({ navigation }) {
   const isFocused = useIsFocused();
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -49,6 +50,15 @@ export function ListPage({ navigation }) {
       setErrorMsg("Permission to access location was denied");
       return;
     }
+
+    //현재위치데이터 받아오기
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+    //위도 경도 콘솔
+    await console.log(location.coords.latitude);
+    await console.log(location.coords.longitude);
+  };
+  // const { didupload } = route.params;
 
   //login access_token from localstorage
   var token = localStorage.getItem("access_token");
@@ -233,14 +243,19 @@ export function ListPage({ navigation }) {
             }}
           />
 
-
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("UserInfoPage")}
-            style={{ marginRight: 5 }}
-          >
-            <AntDesign name="user" size={24} color="black" />
-          </TouchableOpacity>
+          <SearchBar
+            style={{
+              marginBottom: 9,
+            }}
+            fontColor="#c6c6c6"
+            iconColor="#c6c6c6"
+            shadowColor="#282828"
+            cancelIconColor="#c6c6c6"
+            placeholder="Search here"
+            onChangeText={(text) => SetfilterText(text)}
+            onSearchPress={() => searchData()}
+            onClearPress={() => SetfilterText("")}
+          />
         </View>
         <View style={stylesheet.body}>
           <View style={{}} />
