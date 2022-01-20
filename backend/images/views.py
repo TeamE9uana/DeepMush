@@ -158,10 +158,9 @@ class ImagesView(APIView):
             description = 'NOT USE'
         else:
             description = "ERROR"
-
-        updated_image: Image = Image.objects.get(made_by=profile)
-        updated_image.description = description
-        updated_image.save()
+        
+        image.description = description
+        image.save()
 
         result = {'success': True,
                   'comment': f'LatLng {not_found_comment}given',
