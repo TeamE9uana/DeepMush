@@ -139,7 +139,7 @@ export const MapPage = ({ route, navigation }) => {
               name="map-marker-outline"
               size={30}
               color="blue"
-              onPress={() => navigation.navigate("MapPage")}
+              // onPress={() => navigation.navigate("MapPage")}
             />
           </View>
         </View>

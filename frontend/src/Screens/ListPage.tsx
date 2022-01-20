@@ -238,7 +238,7 @@ export function ListPage({
           <View
             style={{
               borderBottomColor: "black",
-              borderBottomWidth: 1,
+              borderBottomWidth: 0.3,
               marginBottom: 9,
             }}
           />
@@ -265,7 +265,7 @@ export function ListPage({
             renderItem={({ item, index }) => (
               <View
                 style={{
-                  borderRadius: 20,
+                  borderRadius: 8,
                   flexDirection: "row",
                   alignItems: "flex-start",
                   justifyContent: "center",
@@ -397,6 +397,11 @@ export function ListPage({
                       size={24}
                       color="white"
                       onPress={() => deletebutton(index, item.id)}
+                      style={{
+                        marginTop: 5,
+                        marginRight: 5,
+                        borderRadius: 12,
+                      }}
                     />
                   </TouchableOpacity>
                 </View>
@@ -408,7 +413,7 @@ export function ListPage({
           <View
             style={{
               borderBottomColor: "black",
-              borderBottomWidth: 1,
+              borderBottomWidth: 0.3,
             }}
           />
         </View>
@@ -471,5 +476,7 @@ const stylesheet = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 12,
+    marginLeft: 15,
+    marginTop: 3,
   },
 });
