@@ -53,8 +53,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     location = await Location.getCurrentPositionAsync({});
 
     //위도 경도 콘솔
-    await console.log(location.coords.latitude);
-    await console.log(location.coords.longitude);
+    await console.log("this is latitude : " + location.coords.latitude);
+    await console.log("this is longitude : " + location.coords.longitude);
   };
 
   // Gets permission from user to use camera
@@ -78,13 +78,14 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   const handleTakePicture = async () => {
     if (!camera) return;
     const photo = await camera.takePictureAsync({ exif: true });
-    console.log(JSON.stringify(photo));
     setPreviewVisible(true);
     setCapturedImage(photo);
   };
 
   // Saves the image to the file system
   const handleSaveImage = async () => {
+    await setLoading(true);
+
     let newUri = "";
     let image = capturedImage.uri;
     const fileName = image.split("/").pop();
@@ -92,11 +93,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
 
     await expoLocation();
 
-    await setLoading(true);
-
     await FileSystem.moveAsync({ from: image, to: newUri });
-    setPreviewVisible(false);
-    setCapturedImage(null);
 
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Token ${token}`);
@@ -129,8 +126,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       .catch((error) => console.log("error", error));
 
     await setLoading(false);
-
-    await console.log(loading);
+    await setPreviewVisible(false);
+    await setCapturedImage(null);
   };
 
   // Reset image and allow user to retake photo
@@ -404,8 +401,6 @@ const styles = StyleSheet.create({
 
 // Image preview section
 const CameraPreview = ({ photo, retakeImage, saveImage }: any) => {
-  console.log(photo);
-
   return (
     <View style={previewStyles.container}>
       <ImageBackground
