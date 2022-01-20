@@ -17,6 +17,7 @@ from uuid import uuid4
 
 # Create your views here.
 
+
 class Description:
     @staticmethod
     def get(max_label_name):
@@ -118,8 +119,8 @@ class ImagesView(APIView):
         found_lat_Lng = False
         if (lat := request.data.get('lat')) != None and (lng := request.data.get('lng')) != None:
             try:
-                lat = int(float(lat))
-                lng = int(float(lng))
+                lat = float(lat)
+                lng = float(lng)
             except ValueError as e:
                 print(e)
                 return JsonResponse({'error': 'lat or lng is not number'}, status=status.HTTP_400_BAD_REQUEST)
