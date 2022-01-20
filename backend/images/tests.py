@@ -1,3 +1,4 @@
+import random
 from typing import List
 from hypothesis.extra.django import from_model
 from hypothesis import given, settings
@@ -6,6 +7,7 @@ from config.serializers import ImageSerializer
 from config.models import Image, Profile, User
 from images.views import ImagesView
 from config.tests import ImageStrategy, MockRequestBaseTransactionTestCase
+from django.db.models import QuerySet
 from rest_framework import status
 import json
 
@@ -50,3 +52,34 @@ class ImagesTestCase(MockRequestBaseTransactionTestCase):
 
             self.assertEquals(response_image, serialized_image,
                               f"response_image {response_image} != serialized_image {serialized_image}")
+
+    @given(from_model(Profile, user=from_model(User)), lists(ImageStrategy()))
+    @settings(max_examples=10)
+    def test_images_post_api(self, profile: Profile, images: List[ImageStrategy]):
+        profile.save()
+        for image in images:
+            image = image.generate_image()
+        
+        user = profile.user
+        token = self.get_token(user)
+
+        for image in images:
+            lat = random.randrange(0, 100, 0.1)
+            lng = random.randrange(0, 100, 0.1)
+
+            res = self.mock_request(
+                user, token, data={'mushroom_image': image, 'lat': lat, 'lng': lng}, view_name='images_view', view=ImagesView, mode='post')
+
+            response_status = status.HTTP_200_OK
+
+            self.check_match_serializer_type(
+                res, ImagesView.post, status=response_status)
+
+            parsed_res: dict = json.loads(res.content)
+
+            self.assertEquals(parsed_res.get('success'), True, parsed_res)
+        
+        image_columns: QuerySet[Image] = Image.objects.all()
+
+        self.assertEquals(len(images), image_columns.size(),
+                            f"images {images} != image_columns {image_columns}")
