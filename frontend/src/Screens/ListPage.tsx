@@ -254,7 +254,7 @@ export function ListPage({ navigation }) {
                       marginTop: 5,
                       marginBottom: 10,
                       fontSize: 12,
-                      maxWidth: 65,
+                      maxWidth: 68,
                       maxHeight: 12,
                     }}
                   >

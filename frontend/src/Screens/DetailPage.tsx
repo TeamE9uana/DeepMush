@@ -73,7 +73,7 @@ export function DetailPage({ route, navigation }) {
             </View>
             <View>
               <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                {DATA2[index].id}
+                {DATA2[index].inference.result[0].label_name}
               </Text>
             </View>
           </View>
