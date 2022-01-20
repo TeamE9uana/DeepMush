@@ -1,19 +1,22 @@
+from uuid import uuid4
+from django.core.files.base import ContentFile
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
+import io
+from PIL import Image as PILImage
+import sys
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from inference.tasks import expect_image_task
-from config.serializers import ImageResponseSerializer, ImagesResponseSerializer, SuccessSerializer, SuccessWithInferenceSerializer
+from config.serializers import ImageResponseSerializer, ImagesResponseSerializer, InferenceUploadSerializer, SuccessSerializer, SuccessWithInferenceSerializer
 
-from config.models import Image, ImageLatLng, Inference, Profile
+from config.models import Image, ImageLatLng, Profile
 from images.serializers import *
-from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.request import Request
 from rest_framework import status
 import tempfile
-from django.core.files.base import ContentFile
-from uuid import uuid4
 
 # Create your views here.
 
@@ -150,28 +153,38 @@ class ImagesView(APIView):
                 max_prob = prob
                 max_label_name = label_name
 
-        with open(path, 'rb') as inference_img:
-            data = inference_img.read()
-
-        inference_obj = Inference()
-
-        inference_obj.image = image
-        inference_obj.result = inference
-
         uid = str(uuid4())
 
-        filename = f"{uid}.png"
-        inference_obj.result_image.save(filename, ContentFile(data))
+        image_file = io.BytesIO()
+        img = PILImage.open(path)
 
-        inference_obj.save()
+        img.save(image_file, 'png')
+        image_file.seek(0)
+
+        result_image_file = ContentFile(image_file.read(), f'{uid}.png')
+
+        inference_data = {'image': image.id, 'result': inference,
+                          'result_image': result_image_file}
+        inference_serializer = InferenceUploadSerializer(
+            data=inference_data)
+
+        print(inference_data)
+
+        if not inference_serializer.is_valid():
+            print(inference_serializer._errors)
+            return JsonResponse({'error': 'inference arguments are not valid'}, status=status.HTTP_400_BAD_REQUEST)
+        inference_serializer.save()
 
         image.description = Description.get(max_label_name)
         image.save()
 
+        result_image_url = inference_serializer.data.get(
+            'result_image')
+
         result = {'success': True,
                   'comment': f'LatLng {not_found_comment}given',
                   'result': inference,
-                  'result_image': inference_obj.result_image.url}
+                  'result_image': result_image_url}
 
         return JsonResponse(result, status=status.HTTP_200_OK)
 
