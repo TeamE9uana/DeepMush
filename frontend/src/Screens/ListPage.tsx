@@ -28,28 +28,7 @@ import SearchBar from "react-native-dynamic-search-bar";
 import * as Location from "expo-location";
 
 // 메인 flatlist에 사용 되는 json
-let im = [
-  {
-    name: "sample1",
-    latitude: 37.36957273223395,
-    longitude: -122.02391041565818,
-  },
-  {
-    name: "sample2",
-    latitude: 37.366730031441506,
-    longitude: -122.03164481984454,
-  },
-  // {
-  //   name: "sample3",
-  //   latitude: 37.367875874475885,
-  //   longitude: -122.03762870058752,
-  // },
-  {
-    name: "sample4",
-    latitude: 37.36100381579145,
-    longitude: -122.02484691349211,
-  },
-];
+let im = [];
 
 // 검색에 활용되는 임시 json
 let im2 = [];
@@ -59,10 +38,11 @@ export function ListPage({
   // route,
   navigation,
 }) {
+  const [location, setLocation] = useState(null);
+
   const isFocused = useIsFocused();
   const [errorMsg, setErrorMsg] = useState(null);
 
-  let location = null;
   const expoLocation = async () => {
     //expo-location 권한요청
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -72,8 +52,8 @@ export function ListPage({
     }
 
     //현재위치데이터 받아오기
-    location = await Location.getCurrentPositionAsync({});
-
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
     //위도 경도 콘솔
     await console.log(location.coords.latitude);
     await console.log(location.coords.longitude);
@@ -81,10 +61,10 @@ export function ListPage({
   // const { didupload } = route.params;
 
   //login access_token from localstorage
-  // var token = localStorage.getItem("access_token");
+  var token = localStorage.getItem("access_token");
 
   //props from expocamerapage's didupload
-  //const didupload = props.didupload;
+  // const didupload = props.didupload;
 
   //image json update state
   const [updatedata, setupdatedata] = useState(im);
@@ -234,229 +214,232 @@ export function ListPage({
                       */
 
   return (
-    <View style={stylesheet.container}>
-      <View style={stylesheet.header}>
-        <View>
-          <Text style={stylesheet.logotext}>🍄deepmush</Text>
-        </View>
-        <View>
-          <Text style={{ marginRight: 25, fontSize: 16 }}>목록</Text>
-        </View>
+    console.log(location),
+    (
+      <View style={stylesheet.container}>
+        <View style={stylesheet.header}>
+          <View>
+            <Text style={stylesheet.logotext}>🍄deepmush</Text>
+          </View>
+          <View>
+            <Text style={{ marginRight: 25, fontSize: 16 }}>목록</Text>
+          </View>
 
-        <View style={{ flexDirection: "row" }}>
-          <Ionicons name="search" size={24} color="black" />
-          <MaterialCommunityIcons
-            name="dots-vertical"
-            size={24}
-            color="black"
+          <View style={{ flexDirection: "row" }}>
+            <Ionicons name="search" size={24} color="black" />
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              size={24}
+              color="black"
+            />
+          </View>
+        </View>
+        <View>
+          <View
+            style={{
+              borderBottomColor: "black",
+              borderBottomWidth: 1,
+              marginBottom: 9,
+            }}
+          />
+
+          <SearchBar
+            style={{
+              marginBottom: 9,
+            }}
+            fontColor="#c6c6c6"
+            iconColor="#c6c6c6"
+            shadowColor="#282828"
+            cancelIconColor="#c6c6c6"
+            placeholder="Search here"
+            onChangeText={(text) => SetfilterText(text)}
+            onSearchPress={() => searchData()}
+            onClearPress={() => SetfilterText("")}
           />
         </View>
-      </View>
-
-      <View>
-        <View
-          style={{
-            borderBottomColor: "black",
-            borderBottomWidth: 1,
-            marginBottom: 9,
-          }}
-        />
-
-        <SearchBar
-          style={{
-            marginBottom: 9,
-          }}
-          fontColor="#c6c6c6"
-          iconColor="#c6c6c6"
-          shadowColor="#282828"
-          cancelIconColor="#c6c6c6"
-          placeholder="Search here"
-          onChangeText={(text) => SetfilterText(text)}
-          onSearchPress={() => searchData()}
-          onClearPress={() => SetfilterText("")}
-        />
-      </View>
-      <View style={stylesheet.body}>
-        <View style={{}} />
-        <FlatList
-          data={im3}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item, index }) => (
-            <View
-              style={{
-                borderRadius: 20,
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                marginBottom: 9,
-                height: 105,
-
-                width: 319,
-
-                backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
-              }}
-            >
+        <View style={stylesheet.body}>
+          <View style={{}} />
+          <FlatList
+            data={im3}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={({ item, index }) => (
               <View
                 style={{
-                  alignItems: "center",
+                  borderRadius: 20,
+                  flexDirection: "row",
+                  alignItems: "flex-start",
                   justifyContent: "center",
-                  marginTop: 10,
-                  flex: 1,
+                  marginBottom: 9,
+                  height: 105,
+
+                  width: 319,
+
+                  backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
                 }}
               >
-                <Image
-                  style={stylesheet.tinyLogo}
-                  source={{
-                    uri: item.image,
-                  }}
-                />
-              </View>
-
-              <View
-                style={{ marginLeft: 20, flexDirection: "column", flex: 1 }}
-              >
-                <View>
-                  <Text
-                    style={{
-                      color: "white",
-                      alignItems: "flex-end",
-                      marginTop: 5,
-                      marginBottom: 10,
-                      fontSize: 12,
-                      maxWidth: 65,
-                      maxHeight: 12,
-                    }}
-                  >
-                    {item.created_at}
-                  </Text>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      color: "white",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 15,
-                      fontSize: 20,
-                    }}
-                  >
-                    {item.inference.result[0].label_name}
-                  </Text>
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      color: "white",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 19,
-                      fontSize: 15,
-                      maxWidth: 30,
-                      maxHeight: 15,
-                    }}
-                  ></Text>
-
-                  <Text
-                    style={{
-                      color: "white",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 19,
-                      fontSize: 15,
-                      maxWidth: 48,
-                      maxHeight: 15,
-                    }}
-                  >
-                    {item.inference.result[0].prob}%
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "flex-end",
-                  justifyContent: "center",
-                  marginTop: 40,
-                }}
-              >
-                <Ionicons
-                  style={{ marginRight: 5 }}
-                  name="search"
-                  size={24}
-                  color="blue"
-                  onPress={() =>
-                    navigation.navigate("DetailPage", {
-                      index: index,
-                      DATA2: im,
-                    })
-                  }
-                />
-                <View style={{ marginLeft: 30 }}>
-                  <Text style={{ fontSize: 10, color: "white" }}>상세보기</Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flex: 0.5,
-                  alignItems: "flex-end",
-                }}
-              >
-                <TouchableOpacity
+                <View
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
+                    marginTop: 10,
+                    flex: 1,
                   }}
                 >
-                  <AntDesign
-                    name="closesquare"
-                    size={24}
-                    color="white"
-                    onPress={() => deletebutton(index, item.id)}
+                  <Image
+                    style={stylesheet.tinyLogo}
+                    source={{
+                      uri: item.image,
+                    }}
                   />
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
-      </View>
-      <View>
-        <View
-          style={{
-            borderBottomColor: "black",
-            borderBottomWidth: 1,
-          }}
-        />
-      </View>
+                </View>
 
-      <View style={stylesheet.footer}>
-        <View>
-          <SimpleLineIcons name="folder" size={30} color="blue" />
-        </View>
-        <View>
-          <SimpleLineIcons
-            name="camera"
-            size={30}
-            color="black"
-            onPress={() => navigation.navigate("ExpoCameraPage")}
+                <View
+                  style={{ marginLeft: 20, flexDirection: "column", flex: 1 }}
+                >
+                  <View>
+                    <Text
+                      style={{
+                        color: "white",
+                        alignItems: "flex-end",
+                        marginTop: 5,
+                        marginBottom: 10,
+                        fontSize: 12,
+                        maxWidth: 65,
+                        maxHeight: 12,
+                      }}
+                    >
+                      {item.created_at}
+                    </Text>
+                  </View>
+
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        color: "white",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 15,
+                        fontSize: 20,
+                      }}
+                    >
+                      {item.inference.result[0].label_name}
+                    </Text>
+                    <Text
+                      style={{
+                        marginLeft: 10,
+                        color: "white",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 19,
+                        fontSize: 15,
+                        maxWidth: 30,
+                        maxHeight: 15,
+                      }}
+                    ></Text>
+
+                    <Text
+                      style={{
+                        color: "white",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 19,
+                        fontSize: 15,
+                        maxWidth: 48,
+                        maxHeight: 15,
+                      }}
+                    >
+                      {item.inference.result[0].prob}%
+                    </Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "flex-end",
+                    justifyContent: "center",
+                    marginTop: 40,
+                  }}
+                >
+                  <Ionicons
+                    style={{ marginRight: 5 }}
+                    name="search"
+                    size={24}
+                    color="blue"
+                    onPress={() =>
+                      navigation.navigate("DetailPage", {
+                        index: index,
+                        DATA2: im,
+                      })
+                    }
+                  />
+                  <View style={{ marginLeft: 30 }}>
+                    <Text style={{ fontSize: 10, color: "white" }}>
+                      상세보기
+                    </Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flex: 0.5,
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <AntDesign
+                      name="closesquare"
+                      size={24}
+                      color="white"
+                      onPress={() => deletebutton(index, item.id)}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
           />
         </View>
         <View>
-          <MaterialCommunityIcons
-            name="map-marker-outline"
-            size={30}
-            color="black"
-            onPress={() =>
-              navigation.navigate("MapPage", {
-                sampleLocation: im,
-                currentLocation: location,
-              })
-            }
+          <View
+            style={{
+              borderBottomColor: "black",
+              borderBottomWidth: 1,
+            }}
           />
+        </View>
+        <View style={stylesheet.footer}>
+          <View>
+            <SimpleLineIcons name="folder" size={30} color="blue" />
+          </View>
+          <View>
+            <SimpleLineIcons
+              name="camera"
+              size={30}
+              color="black"
+              onPress={() => navigation.navigate("ExpoCameraPage")}
+            />
+          </View>
+          <View>
+            <MaterialCommunityIcons
+              name="map-marker-outline"
+              size={30}
+              color="black"
+              onPress={() =>
+                navigation.navigate("MapPage", {
+                  listData: im,
+                  currentLocation: location,
+                })
+              }
+            />
+          </View>
         </View>
       </View>
-    </View>
+    )
   );
 }
 

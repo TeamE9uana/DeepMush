@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
-import { Marker } from "react-native-maps";
+import { Marker, Callout } from "react-native-maps";
 import { useLayoutEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -63,7 +63,7 @@ const midLocation: Coordinate = {
 };
 
 export const MapPage = ({ route, navigation }) => {
-  const { sampleLocation, currentLocation } = route.params;
+  const { listData, currentLocation } = route.params;
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitleVisivle: false,
@@ -78,10 +78,10 @@ export const MapPage = ({ route, navigation }) => {
     });
   });
   const [clicked, setClicked] = useState(false);
-  const [markers, setMarkers] = useState(sampleLocation);
+  const [markers, setMarkers] = useState(listData);
 
   return (
-    console.log(currentLocation.coords.longitude),
+    console.log(listData[0]),
     (
       <View style={styles.container}>
         <MapView
@@ -94,16 +94,17 @@ export const MapPage = ({ route, navigation }) => {
             longitudeDelta: 0.04,
           }}
         >
-          {markers.map((props: MapMarker, index) => (
+          {markers.map((props, index) => (
             <>
               <Marker
                 key={index}
-                coordinate={props}
+                coordinate={{ latitude: props.lat, longitude: props.lng }}
                 onPress={(evt) => setClicked(!clicked)}
                 description={props.name}
               />
             </>
           ))}
+
           <Marker
             coordinate={{
               latitude: currentLocation.coords.latitude,
@@ -111,7 +112,10 @@ export const MapPage = ({ route, navigation }) => {
             }}
             description="currentLocation"
             pinColor={"black"}
-          />
+          >
+            <Callout tooltip></Callout>
+          </Marker>
+
           <TouchableOpacity
             style={styles.touchableOpacityStyle}
           ></TouchableOpacity>

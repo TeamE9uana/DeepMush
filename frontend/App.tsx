@@ -1,3 +1,12 @@
+// import * as React from "react";
+// import MainContainer from "./src/MainContainer";
+
+// function App() {
+//   return <MainContainer />;
+// }
+
+// export default App;
+
 import React from "react";
 
 import { LoginPage } from "./src/Screens/LoginPage";
@@ -17,21 +26,21 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="ListPage"
-          component={ListPage}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="MapPage"
-          component={MapPage}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-    /*
+    // <NavigationContainer>
+    //   <Stack.Navigator>
+    //     <Stack.Screen
+    //       name="ListPage"
+    //       component={ListPage}
+    //       options={{ headerShown: false }}
+    //     />
+    //     <Stack.Screen
+    //       name="MapPage"
+    //       component={MapPage}
+    //       options={{ headerShown: false }}
+    //     />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -60,6 +69,5 @@ export default function App() {
         <Stack.Screen name="DetailMapPage" component={DetailMapPage} />
       </Stack.Navigator>
     </NavigationContainer>
-    */
   );
 }
