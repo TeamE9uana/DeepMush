@@ -25,7 +25,7 @@ export function ListFooterComponent() {
           name="map-marker-outline"
           size={30}
           color="black"
-          onPress={() => navigation.navigate("MapPage")}
+          onPress={() => navigation.navsetigate("MapPage")}
         />
       </View>
     </View>

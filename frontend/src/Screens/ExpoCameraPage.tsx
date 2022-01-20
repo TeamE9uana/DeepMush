@@ -60,12 +60,19 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   // Gets permission from user to use camera
   const handleStartCamera = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
+    console.log("handlestartcamera !!!");
     if (status === "granted") {
       setStartCamera(true);
     } else {
       Alert.alert("Access denied. Camera requires user permission.");
     }
   };
+
+  useEffect(() => {
+    if (startCamera == false) {
+      handleStartCamera();
+    }
+  });
 
   // Takes photo, saves it to variable, and opens preview
   const handleTakePicture = async () => {
@@ -201,7 +208,6 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         .catch((error) => console.log("error", error));
 
       await setLoading(false);
-      await console.log(loading);
     }
   };
   return (
