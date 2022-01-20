@@ -118,6 +118,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       .catch((error) => console.log("error", error));
 
     await setLoading(false);
+
+    await console.log(loading);
   };
 
   // Reset image and allow user to retake photo
@@ -192,6 +194,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         .catch((error) => console.log("error", error));
 
       await setLoading(false);
+      await console.log(loading);
     }
   };
   return (
@@ -240,7 +243,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
 
               <View>
                 <TouchableOpacity
-                  disabled={setLoading}
+                  disabled={loading}
                   onPress={() => navigation.goBack()}
                 >
                   <Text style={{ color: "white", fontSize: 20 }}>✖</Text>
