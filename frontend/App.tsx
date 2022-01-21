@@ -1,3 +1,12 @@
+// import * as React from "react";
+// import MainContainer from "./src/MainContainer";
+
+// function App() {
+//   return <MainContainer />;
+// }
+
+// export default App;
+
 import React from "react";
 
 import { LoginPage } from "./src/Screens/LoginPage";
@@ -12,7 +21,6 @@ import { WebSee } from "./src/Screens/WebSee";
 import { WebView } from "react-native-webview";
 import { MapPage } from "./src/Screens/MapPage";
 import { DetailMapPage } from "./src/Screens/DetailMapPage";
-import { UserInfoPage } from "./src/Screens/UserInfoPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -103,6 +111,5 @@ export default function App() {
         <Stack.Screen name="DetailMapPage" component={DetailMapPage} />
       </Stack.Navigator>
     </NavigationContainer>
-    */
   );
 }

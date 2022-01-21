@@ -11,25 +11,35 @@ from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIRequestFactory, force_authenticate
+from django.test.client import MULTIPART_CONTENT, encode_multipart, BOUNDARY
 from django.urls import reverse
 from typing import Callable, Optional, Type
 import uuid
 
 
 class MockRequestMixin():
-    def mock_request(self: TestCase, user: User, token: Token, *, params: dict = {}, data: dict = {}, view_name: str = 'images_view', view: Optional[Type[APIView]] = None, mode: str = 'post'):
+    def mock_request(self: TestCase, user: User, token: Token, *, params: dict = {}, data: dict = {}, content_type: str = "application/json", view_name: str = 'images_view', view: Optional[Type[APIView]] = None, mode: str = 'post'):
         self.assertIsNotNone(view)
 
         url = reverse(view_name, kwargs=params)
         factory = APIRequestFactory()
 
+        if content_type == "multipart/form-data":
+            data = encode_multipart(data=data, boundary=BOUNDARY)
+            content_type = MULTIPART_CONTENT
+
         request = factory.__getattribute__(mode)(
-            url, data=data, format='json')
+            url, data=data, content_type=content_type)
 
         force_authenticate(request, user=user, token=token)
 
         response = view.as_view()(
             request, **params)
+        
+        try:
+            response.render()
+        except:
+            pass
 
         return response
 
@@ -47,7 +57,7 @@ class MockRequestMixin():
         return Token.objects.get_or_create(key=key, user=user)[0]
 
     def check_match_serializer_type(self: TestCase, res: JsonResponse, method: Callable, *, status=status.HTTP_200_OK):
-        self.assertEquals(res.status_code, status, res.content)
+        self.assertEquals(res.status_code, status, res.content.decode('utf-8'))
 
         parsed_res = json.loads(res.content)
 

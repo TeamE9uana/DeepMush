@@ -27,20 +27,11 @@ export const LoginPage = ({ navigation }: any) => {
       <View style={stylesheet.body}>
         <Image
           style={stylesheet._image_1}
-          source={{ uri: imageUrl_image_1 }}
+          source={require("../images/mainImage.jpeg")}
         ></Image>
       </View>
 
       <View style={stylesheet.footer}>
-        <View>
-          <View
-            style={{
-              borderBottomColor: "black",
-              borderBottomWidth: 1,
-            }}
-          />
-        </View>
-
         <View style={stylesheet.logincontainer}>
           <TouchableOpacity
             style={[stylesheet.buttonContainer, stylesheet.googleButton]}
@@ -53,11 +44,9 @@ export const LoginPage = ({ navigation }: any) => {
             <View style={stylesheet.socialButtonContent}>
               <Image
                 style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/google/androidL/40/FFFFFF",
-                }}
+                source={require("../images/googleIcon.png")}
               />
-              <Text style={stylesheet.loginText}>Continue with google</Text>
+              <Text style={{ color: "#4079DF" }}>Sign in with Google</Text>
             </View>
           </TouchableOpacity>
 
@@ -72,11 +61,9 @@ export const LoginPage = ({ navigation }: any) => {
             <View style={stylesheet.socialButtonContent}>
               <Image
                 style={stylesheet.icon}
-                source={{
-                  uri: "https://png.icons8.com/google/androidL/40/FFFFFF",
-                }}
+                source={require("../images/kakaoIcon.png")}
               />
-              <Text style={stylesheet.loginText}>Continue with kakao</Text>
+              <Text style={stylesheet.loginText}>카카오 계정 로그인</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -86,13 +73,13 @@ export const LoginPage = ({ navigation }: any) => {
 };
 const stylesheet = StyleSheet.create({
   container: {
+    backgroundColor: "#FFFFFF",
     flex: 1,
   },
 
   header: {
     flex: 0.6,
     alignItems: "center",
-
     marginTop: getStatusBarHeight(),
   },
 
@@ -103,7 +90,7 @@ const stylesheet = StyleSheet.create({
 
   body: {
     flex: 1.5,
-    backgroundColor: "yellow",
+    backgroundColor: "#FFFFFF",
   },
 
   footer: {
@@ -120,7 +107,7 @@ const stylesheet = StyleSheet.create({
     top: 0,
     bottom: "auto",
     transform: [{ translateX: 0 }, { translateY: 0 }, { rotate: "0deg" }],
-    backgroundColor: "rgba(0,0,0,0)",
+    backgroundColor: "#FFFFFF",
   },
 
   buttonContainer: {
@@ -130,23 +117,33 @@ const stylesheet = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
     width: 250,
-    borderRadius: 30,
   },
   loginButton: {
     backgroundColor: "#3498db",
   },
-  fabookButton: {
-    backgroundColor: "#3b5998",
-  },
   googleButton: {
-    backgroundColor: "#ff0000",
+    borderColor: "black",
+    borderWidth: 0,
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#C0C0C0",
+    shadowOpacity: 0.8,
+    elevation: 50,
+    shadowRadius: 15,
+    shadowOffset: { width: 1, height: 5 },
   },
   kakaoButton: {
-    backgroundColor: "#f9e000",
+    borderColor: "black",
+    borderWidth: 0,
+    backgroundColor: "#FFEB32",
+    shadowColor: "#C0C0C0",
+    shadowOpacity: 0.8,
+    elevation: 1,
+    shadowRadius: 15,
+    shadowOffset: { width: 1, height: 5 },
   },
 
   loginText: {
-    color: "white",
+    color: "#3F1800",
   },
   restoreButtonContainer: {
     width: 250,
@@ -165,6 +162,7 @@ const stylesheet = StyleSheet.create({
   icon: {
     width: 30,
     height: 30,
+    marginRight: 20,
   },
 
   logincontainer: {
@@ -174,6 +172,3 @@ const stylesheet = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-const imageUrl_image_1 =
-  "https://sizze-figma-plugin-images-upload.s3.us-east-2.amazonaws.com/fe45c1fbd6a959d2d502bf5e016fd5c7";

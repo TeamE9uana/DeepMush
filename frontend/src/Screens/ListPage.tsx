@@ -36,6 +36,7 @@ import { BorderLine } from "../Components/BorderLineComponent";
 import { SearchBarComponent } from "../Components/SearchBarComponent";
 import { ListBodyComponent } from "../Components/ListBodyComponent";
 import { ListFooterComponent } from "../Components/ListFooterComponent";
+import * as Location from "expo-location";
 
 // 메인 flatlist에 사용 되는 json
 let im = [];
@@ -44,14 +45,37 @@ let im = [];
 let im2 = [];
 let im3 = [];
 
-export function ListPage({ navigation }) {
+export function ListPage({
+  // route,
+  navigation,
+}) {
+  const [location, setLocation] = useState(null);
+
   const isFocused = useIsFocused();
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const expoLocation = async () => {
+    //expo-location 권한요청
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    //현재위치데이터 받아오기
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+    //위도 경도 콘솔
+    await console.log(location.coords.latitude);
+    await console.log(location.coords.longitude);
+  };
+  // const { didupload } = route.params;
 
   //login access_token from localstorage
   var token = localStorage.getItem("access_token");
 
   //props from expocamerapage's didupload
-  //const didupload = props.didupload;
+  // const didupload = props.didupload;
 
   //image json update state
   const [updatedata, setupdatedata] = useState(im);
@@ -89,6 +113,28 @@ export function ListPage({ navigation }) {
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
   };
+
+  function nameToKor(name: string) {
+    if (name === "enoki") {
+      return "팽이버섯";
+    } else if (name === "shitake") {
+      return "표고버섯";
+    } else if (name === "songi") {
+      return "새송이버섯";
+    } else if (name === "yellowegg") {
+      return "노란달걀버섯";
+    } else if (name === "woodear") {
+      return "목이버섯";
+    } else if (name === "neungi") {
+      return "능이버섯";
+    } else if (name === "noru") {
+      return "노루궁뎅이버섯";
+    } else if (name === "songe") {
+      return "송이버섯";
+    } else if (name === "youngji") {
+      return "영지버섯";
+    }
+  }
 
   // 텍스트 검색 state 서버 작업 완료시 로컬 데이터인 DATA2에서 im으로 변경필요
   async function searchData() {
@@ -138,6 +184,7 @@ export function ListPage({ navigation }) {
 
   // listpage 동작시 useEffect 작동 -> get Method 실행해서 이미지 리스트들을 받아오고 im state에 결과값을 저장한다
   useEffect(() => {
+    expoLocation();
     //get method - fetch
     async function fetchAndSetList() {
       var myHeaders = await new Headers();
@@ -187,179 +234,241 @@ export function ListPage({ navigation }) {
   }, [isFocused]);
 
   return (
-    <View style={stylesheet.container}>
-      <ListPageHeaderComponent />
+    console.log(location),
+    (
+      <View style={stylesheet.container}>
+        <View style={stylesheet.header}>
+          <View>
+            <Text style={stylesheet.logotext}>🍄deepmush</Text>
+          </View>
+          <View>
+            <Text style={{ marginRight: 25, fontSize: 16 }}>목록</Text>
+          </View>
 
-      <BorderLine />
+          <View style={{ flexDirection: "row" }}>
+            <Ionicons name="search" size={24} color="black" />
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              size={24}
+              color="black"
+            />
+          </View>
+        </View>
+        <View>
+          <View
+            style={{
+              borderBottomColor: "grey",
+              borderBottomWidth: 0.3,
+              marginBottom: 9,
+            }}
+          />
 
-      <View>
-        <SearchBar
-          style={{
-            marginBottom: 9,
-          }}
-          fontColor="#c6c6c6"
-          iconColor="#c6c6c6"
-          shadowColor="#282828"
-          cancelIconColor="#c6c6c6"
-          placeholder="Search here"
-          onChangeText={(text) => SetfilterText(text)}
-          onSearchPress={() => searchData()}
-          onClearPress={() => SetfilterText("")}
-        />
-      </View>
-      <View style={stylesheet.body}>
-        <View style={{}} />
-        <FlatList
-          data={im3}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item, index }) => (
-            <View
-              style={{
-                borderRadius: 20,
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                marginBottom: 9,
-                height: 105,
-
-                width: 319,
-
-                backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
-              }}
-            >
+          <SearchBar
+            style={{
+              marginBottom: 20,
+              marginTop: 10,
+              width: 320,
+            }}
+            fontColor="#c6c6c6"
+            iconColor="#3DD598"
+            shadowColor="#282828"
+            cancelIconColor="#3DD598"
+            placeholder="Search here"
+            onChangeText={(text) => SetfilterText(text)}
+            onSearchPress={() => searchData()}
+            onClearPress={() => SetfilterText("")}
+          />
+        </View>
+        <View style={stylesheet.body}>
+          <View style={{}} />
+          <FlatList
+            data={im3}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={({ item, index }) => (
               <View
                 style={{
-                  alignItems: "center",
+                  borderRadius: 8,
+                  flexDirection: "row",
+                  alignItems: "flex-start",
                   justifyContent: "center",
-                  marginTop: 10,
-                  flex: 1,
+                  marginBottom: 13,
+                  height: 105,
+                  borderColor: "#989898",
+                  borderWidth: 0.2,
+                  width: 320,
+                  backgroundColor: "#FFFFFF",
+                  shadowColor: "#C0C0C0",
+                  shadowOpacity: 0.4,
+                  elevation: 50,
+                  shadowRadius: 5,
+                  shadowOffset: { width: 3, height: 3 },
+                  marginRight: 20,
+                  marginLeft: 20,
+                  // backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
                 }}
               >
-                <Image
-                  style={stylesheet.tinyLogo}
-                  source={{
-                    uri: item.inference.result_image,
-                  }}
-                />
-              </View>
 
-              <View
-                style={{ marginLeft: 20, flexDirection: "column", flex: 1 }}
-              >
-                <View>
-                  <Text
-                    style={{
-                      color: "white",
-                      alignItems: "flex-end",
-                      marginTop: 5,
-                      marginBottom: 10,
-                      fontSize: 12,
-                      maxWidth: 65,
-                      maxHeight: 12,
-                    }}
-                  >
-                    {item.created_at}
-                  </Text>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      color: "white",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 15,
-                      fontSize: 20,
-                    }}
-                  >
-                    {item.inference.result[0].label_name}
-                  </Text>
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      color: "white",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 19,
-                      fontSize: 15,
-                      maxWidth: 30,
-                      maxHeight: 15,
-                    }}
-                  ></Text>
-
-                  <Text
-                    style={{
-                      color: "white",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 19,
-                      fontSize: 15,
-                      maxWidth: 48,
-                      maxHeight: 15,
-                    }}
-                  >
-                    {item.inference.result[0].prob}%
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "flex-end",
-                  justifyContent: "center",
-                  marginTop: 40,
-                }}
-              >
-                <Ionicons
-                  style={{ marginRight: 5 }}
-                  name="search"
-                  size={24}
-                  color="blue"
-                  onPress={() =>
-                    navigation.navigate("DetailPage", {
-                      index: index,
-                      DATA2: im3,
-                    })
-                  }
-                />
-                <View style={{ marginLeft: 30 }}>
-                  <Text style={{ fontSize: 10, color: "white" }}>상세보기</Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flex: 0.5,
-                  alignItems: "flex-end",
-                }}
-              >
-                <TouchableOpacity
+                <View
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
+                    marginTop: 10,
+                    flex: 1,
                   }}
                 >
-                  <AntDesign
-                    name="closesquare"
-                    size={24}
-                    color="white"
-                    onPress={() => deletebutton(index, item.id)}
+                  <Image
+                    style={stylesheet.tinyLogo}
+                    source={{
+                      uri: item.image,
+                    }}
                   />
-                </TouchableOpacity>
+                </View>
+                <View
+                  style={{ marginLeft: 20, flexDirection: "column", flex: 1 }}
+                >
+                  <View>
+                    <Text
+                      style={{
+                        color: "black",
+                        alignItems: "flex-end",
+                        marginTop: 15,
+                        marginBottom: 0,
+                        fontSize: 12,
+                        maxWidth: 80,
+                        maxHeight: 12,
+                      }}
+                    >
+                      {item.created_at.substring(0, 10)}
+                    </Text>
+                  </View>
+
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        color: "black",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 15,
+                        fontSize: 20,
+                      }}
+                    >
+                      {nameToKor(item.inference.result[0].label_name)}
+                      {/* {item.inference.result[0].label_name} */}
+                    </Text>
+                    <Text
+                      style={{
+                        marginLeft: 10,
+                        color: "black",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 19,
+                        fontSize: 15,
+                        maxWidth: 30,
+                        maxHeight: 15,
+                      }}
+                    ></Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "flex-end",
+                    justifyContent: "center",
+                    marginTop: 40,
+                  }}
+                >
+                  <Ionicons
+                    style={{ marginRight: 5 }}
+                    name="search"
+                    size={24}
+                    color="#3DD598"
+                    onPress={() =>
+                      navigation.navigate("DetailPage", {
+                        index: index,
+                        DATA2: im,
+                      })
+                    }
+                  />
+
+                  <View style={{ marginLeft: 30 }}>
+                    <Text style={{ fontSize: 10, color: "black" }}>
+                      상세보기
+                    </Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flex: 0.5,
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <AntDesign
+                      name="closesquare"
+                      size={24}
+                      color="white"
+                      onPress={() => deletebutton(index, item.id)}
+                      style={{
+                        marginTop: 5,
+                        marginRight: 5,
+                        borderRadius: 12,
+                      }}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          )}
-        />
+            )}
+          />
+        </View>
+        <View>
+          <View
+            style={{
+              borderBottomColor: "grey",
+              borderBottomWidth: 0.2,
+            }}
+          />
+        </View>
+        <View style={stylesheet.footer}>
+          <View>
+            <SimpleLineIcons name="folder" size={30} color="#3DD598" />
+          </View>
+          <View>
+            <SimpleLineIcons
+              name="camera"
+              size={30}
+              color="#989898"
+              onPress={() => navigation.navigate("ExpoCameraPage")}
+            />
+          </View>
+          <View>
+            <MaterialCommunityIcons
+              name="map-marker-outline"
+              size={30}
+              color="#989898"
+              onPress={() =>
+                navigation.navigate("MapPage", {
+                  listData: im,
+                  currentLocation: location,
+                })
+              }
+            />
+          </View>
+        </View>
       </View>
-      <BorderLine />
-      <ListFooterComponent />
-    </View>
+    )
   );
 }
 
 const stylesheet = StyleSheet.create({
   container: {
+    backgroundColor: "#FCFCFC",
     flex: 1,
   },
   header: {
@@ -377,14 +486,18 @@ const stylesheet = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
+    backgroundColor: "#FFFFFF",
   },
 
   logotext: {
     fontSize: 14,
+    marginLeft: 10,
   },
   tinyLogo: {
     width: 80,
     height: 80,
     borderRadius: 12,
+    marginLeft: 15,
+    marginTop: 3,
   },
 });

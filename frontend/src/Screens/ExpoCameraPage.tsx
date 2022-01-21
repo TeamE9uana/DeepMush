@@ -128,6 +128,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     await setLoading(false);
     await setPreviewVisible(false);
     await setCapturedImage(null);
+
   };
 
   // Reset image and allow user to retake photo
@@ -159,7 +160,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   };
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let result = await ImagePicker.launchImageibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowEditing: true,
       aspect: [1, 1],
