@@ -60,6 +60,7 @@ export function DetailPage({ route, navigation }) {
         <View style={{ flex: 5 }}>
           <Image
             style={stylesheet.tinyLogo}
+
             source={{ uri: DATA2[index].image }}
           />
           <View>
@@ -96,6 +97,7 @@ export function DetailPage({ route, navigation }) {
               </Text>
             </View>
             <View>
+
               <Text
                 style={{
                   fontSize: 20,

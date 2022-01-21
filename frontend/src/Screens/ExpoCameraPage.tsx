@@ -53,13 +53,14 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     location = await Location.getCurrentPositionAsync({});
 
     //위도 경도 콘솔
-    await console.log(location.coords.latitude);
-    await console.log(location.coords.longitude);
+    await console.log("this is latitude : " + location.coords.latitude);
+    await console.log("this is longitude : " + location.coords.longitude);
   };
 
   // Gets permission from user to use camera
   const handleStartCamera = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
+    console.log("handlestartcamera !!!");
     if (status === "granted") {
       setStartCamera(true);
     } else {
@@ -77,13 +78,14 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   const handleTakePicture = async () => {
     if (!camera) return;
     const photo = await camera.takePictureAsync({ exif: true });
-    console.log(JSON.stringify(photo));
     setPreviewVisible(true);
     setCapturedImage(photo);
   };
 
   // Saves the image to the file system
   const handleSaveImage = async () => {
+    await setLoading(true);
+
     let newUri = "";
     let image = capturedImage.uri;
     const fileName = image.split("/").pop();
@@ -91,45 +93,42 @@ export const ExpoCameraPage = ({ navigation }: any) => {
 
     await expoLocation();
 
-    try {
-      await FileSystem.moveAsync({ from: image, to: newUri });
-      setPreviewVisible(false);
-      setCapturedImage(null);
+    await FileSystem.moveAsync({ from: image, to: newUri });
 
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Token ${token}`);
-      myHeaders.append("Content-Type", "multipart/form-data");
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Token ${token}`);
+    myHeaders.append("Content-Type", "multipart/form-data");
 
-      var formdata = new FormData();
-      console.log(newUri);
+    var formdata = new FormData();
 
-      formdata.append("mushroom_image", {
-        name: "mush01.jpg",
-        type: "image/jpeg",
-        uri: newUri,
-      });
+    formdata.append("lat", location.coords.latitude);
+    formdata.append("lng", location.coords.longitude);
 
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow",
-      };
+    console.log(newUri);
 
-      setLoading(true);
+    formdata.append("mushroom_image", {
+      name: "mush01.jpg",
+      type: "image/jpeg",
+      uri: newUri,
+    });
 
-      await fetch("https://backend.deepmush.io/images/", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .then(void console.log("upload success!!"))
-        .catch((error) => console.log("error", error));
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
 
-      setLoading(false);
+    await fetch("https://backend.deepmush.io/images/", requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .then(void console.log("upload success!!"))
+      .catch((error) => console.log("error", error));
 
-      await console.log(Data);
-    } catch (err) {
-      throw new Error("File could not be saved.");
-    }
+    await setLoading(false);
+    await setPreviewVisible(false);
+    await setCapturedImage(null);
+
   };
 
   // Reset image and allow user to retake photo
@@ -170,6 +169,8 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     });
 
     if (!result.cancelled) {
+      await setLoading(true);
+
       //setImage(result.uri);
       // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
 
@@ -181,6 +182,9 @@ export const ExpoCameraPage = ({ navigation }: any) => {
 
       var formdata = new FormData();
       console.log(result.uri);
+
+      formdata.append("lat", location.coords.latitude);
+      formdata.append("lng", location.coords.longitude);
 
       formdata.append("mushroom_image", {
         name: "mush1.jpg",
@@ -196,14 +200,12 @@ export const ExpoCameraPage = ({ navigation }: any) => {
         redirect: "follow",
       };
 
-      setLoading(true);
-
-      fetch("https://backend.deepmush.io/images/", requestOptions)
+      await fetch("https://backend.deepmush.io/images/", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
 
-      setLoading(false);
+      await setLoading(false);
     }
   };
   return (
@@ -251,7 +253,10 @@ export const ExpoCameraPage = ({ navigation }: any) => {
               </View>
 
               <View>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <TouchableOpacity
+                  disabled={loading}
+                  onPress={() => navigation.goBack()}
+                >
                   <Text style={{ color: "white", fontSize: 20 }}>✖</Text>
                 </TouchableOpacity>
               </View>
@@ -397,8 +402,6 @@ const styles = StyleSheet.create({
 
 // Image preview section
 const CameraPreview = ({ photo, retakeImage, saveImage }: any) => {
-  console.log(photo);
-
   return (
     <View style={previewStyles.container}>
       <ImageBackground

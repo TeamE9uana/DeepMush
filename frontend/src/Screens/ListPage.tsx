@@ -25,6 +25,17 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { DetailPage } from "./DetailPage";
 import SearchBar from "react-native-dynamic-search-bar";
+import "localstorage-polyfill";
+
+import { Button, Menu, Divider, Provider, List } from "react-native-paper";
+import {
+  ListPageHeader,
+  ListPageHeaderComponent,
+} from "../Components/ListPageHeaderComponent";
+import { BorderLine } from "../Components/BorderLineComponent";
+import { SearchBarComponent } from "../Components/SearchBarComponent";
+import { ListBodyComponent } from "../Components/ListBodyComponent";
+import { ListFooterComponent } from "../Components/ListFooterComponent";
 import * as Location from "expo-location";
 
 // 메인 flatlist에 사용 되는 json
@@ -222,19 +233,6 @@ export function ListPage({
     fetchAndSetList();
   }, [isFocused]);
 
-  /*
-      {item.inferences[0].result[0].label_name === undefined
-                      ? "불일치"
-                      : item.inferences[0].result[0].label_name}
-  */
-
-  /*
-                    {item.inferences[0].result[0].prob === undefined
-                      ? "불일치"
-                      : item.inferences[0].result[0].prob}
-                    %
-                      */
-
   return (
     console.log(location),
     (
@@ -309,6 +307,7 @@ export function ListPage({
                   // backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
                 }}
               >
+
                 <View
                   style={{
                     alignItems: "center",
@@ -324,7 +323,6 @@ export function ListPage({
                     }}
                   />
                 </View>
-
                 <View
                   style={{ marginLeft: 20, flexDirection: "column", flex: 1 }}
                 >
@@ -392,6 +390,7 @@ export function ListPage({
                       })
                     }
                   />
+
                   <View style={{ marginLeft: 30 }}>
                     <Text style={{ fontSize: 10, color: "black" }}>
                       상세보기

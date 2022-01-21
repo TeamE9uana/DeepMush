@@ -26,21 +26,63 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen
-    //       name="ListPage"
-    //       component={ListPage}
-    //       options={{ headerShown: false }}
-    //     />
-    //     <Stack.Screen
-    //       name="MapPage"
-    //       component={MapPage}
-    //       options={{ headerShown: false }}
-    //     />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="LoginPage"
+          component={LoginPage}
+        />
+        <Stack.Screen
+          name="ListPage"
+          component={ListPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ExpoCameraPage"
+          component={ExpoCameraPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="DetailPage" component={DetailPage} />
+        <Stack.Screen name="Websee" component={WebSee} />
+        <Stack.Screen name="UserInfoPage" component={UserInfoPage} />
+        <Stack.Screen name="DetailMapPage" component={DetailMapPage} />
 
+        <Stack.Screen
+          name="MapPage"
+          component={MapPage}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+
+    /*
+            <Stack.Screen
+          options={{ headerShown: false }}
+          name="LoginPage"
+          component={LoginPage}
+        />
+        <Stack.Screen
+          name="ListPage"
+          component={ListPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ExpoCameraPage"
+          component={ExpoCameraPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="DetailPage" component={DetailPage} />
+        <Stack.Screen name="Websee" component={WebSee} />
+        <Stack.Screen name="UserInfoPage" component={UserInfoPage} />
+
+        <Stack.Screen
+          name="MapPage"
+          component={MapPage}
+          options={{ headerShown: false }}
+        />
+    */
+    /*
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
