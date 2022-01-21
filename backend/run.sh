@@ -7,7 +7,8 @@ python3 manage.py migrate auth
 python3 manage.py migrate authtoken
 python3 manage.py migrate --run-syncdb
 python3 manage.py migrate --run-syncdb --database=mongodb
-python3 manage.py collectstatic --noinput -i .
+python3 manage.py collectstatic --noinput -i "*.py" -i "*.sh" -i "*.txt" -i "*.md" -i ".dockerignore" \
+    -i "*.json" -i ".gitignore" -i "*.pyc" -i Dockerfile -i "*.sqlite3" -i "*.log" -i "*.pt" -i "*.yaml" -i "*.yml"
 
 echo Starting Gunicorn.
 
