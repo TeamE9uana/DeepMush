@@ -23,6 +23,28 @@ export function DetailPage({ route, navigation }) {
   // imagelist(json) , json index params from ListPage
   const { index, DATA2 } = route.params;
 
+  function nameToKor(name: string) {
+    if (name === "enoki") {
+      return "팽이버섯";
+    } else if (name === "shitake") {
+      return "표고버섯";
+    } else if (name === "songi") {
+      return "새송이버섯";
+    } else if (name === "yellowegg") {
+      return "노란달걀버섯";
+    } else if (name === "woodear") {
+      return "목이버섯";
+    } else if (name === "neungi") {
+      return "능이버섯";
+    } else if (name === "noru") {
+      return "노루궁뎅이버섯";
+    } else if (name === "songe") {
+      return "송이버섯";
+    } else if (name === "youngji") {
+      return "영지버섯";
+    }
+  }
+
   return (
     <View style={stylesheet.container}>
       <View>
@@ -30,7 +52,7 @@ export function DetailPage({ route, navigation }) {
           style={{
             marginBottom: 5,
             borderBottomColor: "black",
-            borderBottomWidth: 1,
+            borderBottomWidth: 0.3,
           }}
         />
       </View>
@@ -38,13 +60,13 @@ export function DetailPage({ route, navigation }) {
         <View style={{ flex: 5 }}>
           <Image
             style={stylesheet.tinyLogo}
-            source={require("../images/mush4.jpeg")}
+            source={{ uri: DATA2[index].image }}
           />
           <View>
             <View
               style={{
                 borderBottomColor: "black",
-                borderBottomWidth: 1,
+                borderBottomWidth: 0.3,
                 marginTop: 5,
               }}
             />
@@ -56,24 +78,33 @@ export function DetailPage({ route, navigation }) {
             flex: 1,
 
             flexDirection: "row",
-            marginLeft: 20,
-            backgroundColor: "#BDE39F",
-            width: "100%",
+            backgroundColor: "#FFFFFF",
+            width: "95%",
           }}
         >
           <View
             style={{
-              flex: 4,
+              flex: 8,
+              marginRight: 20,
 
               justifyContent: "center",
             }}
           >
             <View>
-              <Text style={{ fontSize: 13 }}>{DATA2[index].created_at}</Text>
+              <Text style={{ fontSize: 13, marginLeft: 5 }}>
+                {DATA2[index].created_at.substring(0, 10)}
+              </Text>
             </View>
             <View>
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                {DATA2[index].id}
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  marginTop: 3,
+                }}
+              >
+                {nameToKor(DATA2[index].inference.result[0].label_name)}
               </Text>
             </View>
           </View>
@@ -81,7 +112,7 @@ export function DetailPage({ route, navigation }) {
           <View
             style={{
               flex: 2.5,
-              backgroundColor: "skyblue",
+              backgroundColor: "#3DD598",
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -94,9 +125,9 @@ export function DetailPage({ route, navigation }) {
               }
             >
               <MaterialCommunityIcons
-                name="map-marker-outline"
+                name="map-marker"
                 size={30}
-                color="black"
+                color="white"
               />
             </TouchableOpacity>
           </View>
@@ -117,7 +148,10 @@ export function DetailPage({ route, navigation }) {
 
             marginLeft: 20,
             marginTop: 2,
-            width: "100%",
+            width: "95%",
+            marginRight: 20,
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Text style={{ fontSize: 17, fontWeight: "bold" }}>Description</Text>

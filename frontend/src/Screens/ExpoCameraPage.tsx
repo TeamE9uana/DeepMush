@@ -67,6 +67,12 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     }
   };
 
+  useEffect(() => {
+    if (startCamera == false) {
+      handleStartCamera();
+    }
+  });
+
   // Takes photo, saves it to variable, and opens preview
   const handleTakePicture = async () => {
     if (!camera) return;
