@@ -27,7 +27,7 @@ export const LoginPage = ({ navigation }: any) => {
       <View style={stylesheet.body}>
         <Image
           style={stylesheet._image_1}
-          source={{ uri: imageUrl_image_1 }}
+          source={require("../images/mainImage.jpeg")}
         ></Image>
       </View>
 
@@ -129,7 +129,7 @@ const stylesheet = StyleSheet.create({
     shadowOpacity: 0.8,
     elevation: 50,
     shadowRadius: 15,
-    shadowOffset: { width: 1, height: 13 },
+    shadowOffset: { width: 1, height: 5 },
   },
   kakaoButton: {
     borderColor: "black",
@@ -172,6 +172,3 @@ const stylesheet = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-const imageUrl_image_1 =
-  "https://sizze-figma-plugin-images-upload.s3.us-east-2.amazonaws.com/fe45c1fbd6a959d2d502bf5e016fd5c7";

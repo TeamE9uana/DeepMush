@@ -123,14 +123,14 @@ export const MapPage = ({ route, navigation }) => {
         <View style={stylesheet.footer}>
           <View>
             <TouchableOpacity onPress={() => navigation.navigate("ListPage")}>
-              <SimpleLineIcons name="folder" size={30} color="black" />
+              <SimpleLineIcons name="folder" size={30} color="#989898" />
             </TouchableOpacity>
           </View>
           <View>
             <SimpleLineIcons
               name="camera"
               size={30}
-              color="black"
+              color="#989898"
               onPress={() => navigation.navigate("ExpoCameraPage")}
             />
           </View>
@@ -138,7 +138,7 @@ export const MapPage = ({ route, navigation }) => {
             <MaterialCommunityIcons
               name="map-marker-outline"
               size={30}
-              color="blue"
+              color="#3DD598"
               // onPress={() => navigation.navigate("MapPage")}
             />
           </View>

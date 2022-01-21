@@ -103,6 +103,28 @@ export function ListPage({
       .catch((error) => console.log("error", error));
   };
 
+  function nameToKor(name: string) {
+    if (name === "enoki") {
+      return "팽이버섯";
+    } else if (name === "shitake") {
+      return "표고버섯";
+    } else if (name === "songi") {
+      return "새송이버섯";
+    } else if (name === "yellowegg") {
+      return "노란달걀버섯";
+    } else if (name === "woodear") {
+      return "목이버섯";
+    } else if (name === "neungi") {
+      return "능이버섯";
+    } else if (name === "noru") {
+      return "노루궁뎅이버섯";
+    } else if (name === "songe") {
+      return "송이버섯";
+    } else if (name === "youngji") {
+      return "영지버섯";
+    }
+  }
+
   // 텍스트 검색 state 서버 작업 완료시 로컬 데이터인 DATA2에서 im으로 변경필요
   async function searchData() {
     await console.log("searchbutton pushed !!!");
@@ -237,7 +259,7 @@ export function ListPage({
         <View>
           <View
             style={{
-              borderBottomColor: "black",
+              borderBottomColor: "grey",
               borderBottomWidth: 0.3,
               marginBottom: 9,
             }}
@@ -245,12 +267,14 @@ export function ListPage({
 
           <SearchBar
             style={{
-              marginBottom: 9,
+              marginBottom: 20,
+              marginTop: 10,
+              width: 320,
             }}
             fontColor="#c6c6c6"
-            iconColor="#c6c6c6"
+            iconColor="#3DD598"
             shadowColor="#282828"
-            cancelIconColor="#c6c6c6"
+            cancelIconColor="#3DD598"
             placeholder="Search here"
             onChangeText={(text) => SetfilterText(text)}
             onSearchPress={() => searchData()}
@@ -269,12 +293,20 @@ export function ListPage({
                   flexDirection: "row",
                   alignItems: "flex-start",
                   justifyContent: "center",
-                  marginBottom: 9,
+                  marginBottom: 13,
                   height: 105,
-
-                  width: 319,
-
-                  backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
+                  borderColor: "#989898",
+                  borderWidth: 0.2,
+                  width: 320,
+                  backgroundColor: "#FFFFFF",
+                  shadowColor: "#C0C0C0",
+                  shadowOpacity: 0.4,
+                  elevation: 50,
+                  shadowRadius: 5,
+                  shadowOffset: { width: 3, height: 3 },
+                  marginRight: 20,
+                  marginLeft: 20,
+                  // backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
                 }}
               >
                 <View
@@ -299,10 +331,10 @@ export function ListPage({
                   <View>
                     <Text
                       style={{
-                        color: "white",
+                        color: "black",
                         alignItems: "flex-end",
-                        marginTop: 5,
-                        marginBottom: 10,
+                        marginTop: 15,
+                        marginBottom: 0,
                         fontSize: 12,
                         maxWidth: 80,
                         maxHeight: 12,
@@ -315,19 +347,20 @@ export function ListPage({
                   <View style={{ flexDirection: "row" }}>
                     <Text
                       style={{
-                        color: "white",
+                        color: "black",
                         alignItems: "center",
                         justifyContent: "center",
                         marginTop: 15,
                         fontSize: 20,
                       }}
                     >
-                      {item.inference.result[0].label_name}
+                      {nameToKor(item.inference.result[0].label_name)}
+                      {/* {item.inference.result[0].label_name} */}
                     </Text>
                     <Text
                       style={{
                         marginLeft: 10,
-                        color: "white",
+                        color: "black",
                         alignItems: "center",
                         justifyContent: "center",
                         marginTop: 19,
@@ -336,20 +369,6 @@ export function ListPage({
                         maxHeight: 15,
                       }}
                     ></Text>
-
-                    {/* <Text
-                      style={{
-                        color: "white",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginTop: 19,
-                        fontSize: 15,
-                        maxWidth: 48,
-                        maxHeight: 15,
-                      }}
-                    >
-                      {item.inference.result[0].prob}%
-                    </Text> */}
                   </View>
                 </View>
 
@@ -365,7 +384,7 @@ export function ListPage({
                     style={{ marginRight: 5 }}
                     name="search"
                     size={24}
-                    color="blue"
+                    color="#3DD598"
                     onPress={() =>
                       navigation.navigate("DetailPage", {
                         index: index,
@@ -374,7 +393,7 @@ export function ListPage({
                     }
                   />
                   <View style={{ marginLeft: 30 }}>
-                    <Text style={{ fontSize: 10, color: "white" }}>
+                    <Text style={{ fontSize: 10, color: "black" }}>
                       상세보기
                     </Text>
                   </View>
@@ -412,20 +431,20 @@ export function ListPage({
         <View>
           <View
             style={{
-              borderBottomColor: "black",
-              borderBottomWidth: 0.3,
+              borderBottomColor: "grey",
+              borderBottomWidth: 0.2,
             }}
           />
         </View>
         <View style={stylesheet.footer}>
           <View>
-            <SimpleLineIcons name="folder" size={30} color="blue" />
+            <SimpleLineIcons name="folder" size={30} color="#3DD598" />
           </View>
           <View>
             <SimpleLineIcons
               name="camera"
               size={30}
-              color="black"
+              color="#989898"
               onPress={() => navigation.navigate("ExpoCameraPage")}
             />
           </View>
@@ -433,7 +452,7 @@ export function ListPage({
             <MaterialCommunityIcons
               name="map-marker-outline"
               size={30}
-              color="black"
+              color="#989898"
               onPress={() =>
                 navigation.navigate("MapPage", {
                   listData: im,
@@ -450,7 +469,7 @@ export function ListPage({
 
 const stylesheet = StyleSheet.create({
   container: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#FCFCFC",
     flex: 1,
   },
   header: {
@@ -468,6 +487,7 @@ const stylesheet = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
+    backgroundColor: "#FFFFFF",
   },
 
   logotext: {
