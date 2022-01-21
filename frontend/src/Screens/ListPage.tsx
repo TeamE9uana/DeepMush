@@ -414,7 +414,7 @@ export function ListPage({
                     <AntDesign
                       name="closesquare"
                       size={24}
-                      color="white"
+                      color="#3DD598"
                       onPress={() => deletebutton(index, item.id)}
                       style={{
                         marginTop: 5,

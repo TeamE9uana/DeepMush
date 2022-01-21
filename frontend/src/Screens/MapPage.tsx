@@ -111,7 +111,7 @@ export const MapPage = ({ route, navigation }) => {
               longitude: currentLocation.coords.longitude,
             }}
             description="currentLocation"
-            pinColor={"black"}
+            pinColor={"#21C583"}
           >
             <Callout tooltip></Callout>
           </Marker>
