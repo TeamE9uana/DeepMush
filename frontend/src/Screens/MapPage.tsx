@@ -81,7 +81,7 @@ export const MapPage = ({ route, navigation }) => {
   const [markers, setMarkers] = useState(listData);
 
   return (
-    console.log(listData[0]),
+    console.log(listData),
     (
       <View style={styles.container}>
         <MapView
@@ -94,16 +94,21 @@ export const MapPage = ({ route, navigation }) => {
             longitudeDelta: 0.04,
           }}
         >
-          {markers.map((props, index) => (
-            <>
-              <Marker
-                key={index}
-                coordinate={{ latitude: props.lat, longitude: props.lng }}
-                onPress={(evt) => setClicked(!clicked)}
-                description={props.name}
-              />
-            </>
-          ))}
+          {markers.map(
+            (props, index) => (
+              console.log(props.lat + "  " + index),
+              (
+                <>
+                  <Marker
+                    key={index}
+                    coordinate={{ latitude: props.lat, longitude: props.lng }}
+                    onPress={(evt) => setClicked(!clicked)}
+                    description={props.name}
+                  />
+                </>
+              )
+            )
+          )}
 
           <Marker
             coordinate={{

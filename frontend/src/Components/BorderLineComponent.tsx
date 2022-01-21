@@ -6,9 +6,8 @@ export function BorderLine() {
     <View>
       <View
         style={{
-          borderBottomColor: "black",
-          borderBottomWidth: 1,
-          marginBottom: 9,
+          borderBottomColor: "grey",
+          borderBottomWidth: 0.3,
         }}
       />
     </View>

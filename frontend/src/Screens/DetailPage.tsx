@@ -18,32 +18,11 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
+import { nameToKor } from "../Components/functionComponent";
 
 export function DetailPage({ route, navigation }) {
   // imagelist(json) , json index params from ListPage
   const { index, DATA2 } = route.params;
-
-  function nameToKor(name: string) {
-    if (name === "enoki") {
-      return "팽이버섯";
-    } else if (name === "shitake") {
-      return "표고버섯";
-    } else if (name === "songi") {
-      return "새송이버섯";
-    } else if (name === "yellowegg") {
-      return "노란달걀버섯";
-    } else if (name === "woodear") {
-      return "목이버섯";
-    } else if (name === "neungi") {
-      return "능이버섯";
-    } else if (name === "noru") {
-      return "노루궁뎅이버섯";
-    } else if (name === "songe") {
-      return "송이버섯";
-    } else if (name === "youngji") {
-      return "영지버섯";
-    }
-  }
 
   return (
     <View style={stylesheet.container}>
@@ -60,8 +39,7 @@ export function DetailPage({ route, navigation }) {
         <View style={{ flex: 5 }}>
           <Image
             style={stylesheet.tinyLogo}
-
-            source={{ uri: DATA2[index].image }}
+            source={{ uri: DATA2[index].inference.result_image }}
           />
           <View>
             <View
@@ -97,7 +75,6 @@ export function DetailPage({ route, navigation }) {
               </Text>
             </View>
             <View>
-
               <Text
                 style={{
                   fontSize: 20,

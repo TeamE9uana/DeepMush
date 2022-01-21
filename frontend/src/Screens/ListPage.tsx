@@ -37,6 +37,7 @@ import { SearchBarComponent } from "../Components/SearchBarComponent";
 import { ListBodyComponent } from "../Components/ListBodyComponent";
 import { ListFooterComponent } from "../Components/ListFooterComponent";
 import * as Location from "expo-location";
+import { nameToKor } from "../Components/functionComponent";
 
 // 메인 flatlist에 사용 되는 json
 let im = [];
@@ -114,28 +115,6 @@ export function ListPage({
       .catch((error) => console.log("error", error));
   };
 
-  function nameToKor(name: string) {
-    if (name === "enoki") {
-      return "팽이버섯";
-    } else if (name === "shitake") {
-      return "표고버섯";
-    } else if (name === "songi") {
-      return "새송이버섯";
-    } else if (name === "yellowegg") {
-      return "노란달걀버섯";
-    } else if (name === "woodear") {
-      return "목이버섯";
-    } else if (name === "neungi") {
-      return "능이버섯";
-    } else if (name === "noru") {
-      return "노루궁뎅이버섯";
-    } else if (name === "songe") {
-      return "송이버섯";
-    } else if (name === "youngji") {
-      return "영지버섯";
-    }
-  }
-
   // 텍스트 검색 state 서버 작업 완료시 로컬 데이터인 DATA2에서 im으로 변경필요
   async function searchData() {
     await console.log("searchbutton pushed !!!");
@@ -159,7 +138,7 @@ export function ListPage({
         //console.log(typeof im[i].id.toString());
         console.log(i);
         //데이터 검색 if 문
-        if (filterText === im[i].id.toString()) {
+        if (filterText === nameToKor(im[i].inference.result[0].label_name)) {
           im2.push(im[i]);
 
           console.log("searchmatchd!!");
@@ -234,235 +213,131 @@ export function ListPage({
   }, [isFocused]);
 
   return (
-    console.log(location),
-    (
-      <View style={stylesheet.container}>
-        <View style={stylesheet.header}>
-          <View>
-            <Text style={stylesheet.logotext}>🍄deepmush</Text>
-          </View>
-          <View>
-            <Text style={{ marginRight: 25, fontSize: 16 }}>목록</Text>
-          </View>
-
-          <View style={{ flexDirection: "row" }}>
-            <Ionicons name="search" size={24} color="black" />
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={24}
-              color="black"
-            />
-          </View>
+    <View style={stylesheet.container}>
+      <View style={stylesheet.header}>
+        <View>
+          <Text style={stylesheet.logotext}>🍄deepmush</Text>
         </View>
         <View>
-          <View
-            style={{
-              borderBottomColor: "grey",
-              borderBottomWidth: 0.3,
-              marginBottom: 9,
-            }}
-          />
-
-          <SearchBar
-            style={{
-              marginBottom: 20,
-              marginTop: 10,
-              width: 320,
-            }}
-            fontColor="#c6c6c6"
-            iconColor="#3DD598"
-            shadowColor="#282828"
-            cancelIconColor="#3DD598"
-            placeholder="Search here"
-            onChangeText={(text) => SetfilterText(text)}
-            onSearchPress={() => searchData()}
-            onClearPress={() => SetfilterText("")}
-          />
+          <Text style={{ marginRight: 25, fontSize: 16 }}>목록</Text>
         </View>
-        <View style={stylesheet.body}>
-          <View style={{}} />
-          <FlatList
-            data={im3}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({ item, index }) => (
-              <View
-                style={{
-                  borderRadius: 8,
-                  flexDirection: "row",
-                  alignItems: "flex-start",
-                  justifyContent: "center",
-                  marginBottom: 13,
-                  height: 105,
-                  borderColor: "#989898",
-                  borderWidth: 0.2,
-                  width: 320,
-                  backgroundColor: "#FFFFFF",
-                  shadowColor: "#C0C0C0",
-                  shadowOpacity: 0.4,
-                  elevation: 50,
-                  shadowRadius: 5,
-                  shadowOffset: { width: 3, height: 3 },
-                  marginRight: 20,
-                  marginLeft: 20,
-                  // backgroundColor: index % 2 == 0 ? "#BDE39F" : "#BDE37F",
-                }}
-              >
 
-                <View
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: 10,
-                    flex: 1,
-                  }}
-                >
-                  <Image
-                    style={stylesheet.tinyLogo}
-                    source={{
-                      uri: item.image,
-                    }}
-                  />
-                </View>
-                <View
-                  style={{ marginLeft: 20, flexDirection: "column", flex: 1 }}
-                >
-                  <View>
-                    <Text
-                      style={{
-                        color: "black",
-                        alignItems: "flex-end",
-                        marginTop: 15,
-                        marginBottom: 0,
-                        fontSize: 12,
-                        maxWidth: 80,
-                        maxHeight: 12,
-                      }}
-                    >
-                      {item.created_at.substring(0, 10)}
-                    </Text>
-                  </View>
-
-                  <View style={{ flexDirection: "row" }}>
-                    <Text
-                      style={{
-                        color: "black",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginTop: 15,
-                        fontSize: 20,
-                      }}
-                    >
-                      {nameToKor(item.inference.result[0].label_name)}
-                      {/* {item.inference.result[0].label_name} */}
-                    </Text>
-                    <Text
-                      style={{
-                        marginLeft: 10,
-                        color: "black",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginTop: 19,
-                        fontSize: 15,
-                        maxWidth: 30,
-                        maxHeight: 15,
-                      }}
-                    ></Text>
-                  </View>
-                </View>
-
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: "flex-end",
-                    justifyContent: "center",
-                    marginTop: 40,
-                  }}
-                >
-                  <Ionicons
-                    style={{ marginRight: 5 }}
-                    name="search"
-                    size={24}
-                    color="#3DD598"
-                    onPress={() =>
-                      navigation.navigate("DetailPage", {
-                        index: index,
-                        DATA2: im,
-                      })
-                    }
-                  />
-
-                  <View style={{ marginLeft: 30 }}>
-                    <Text style={{ fontSize: 10, color: "black" }}>
-                      상세보기
-                    </Text>
-                  </View>
-                </View>
-
-                <View
-                  style={{
-                    flex: 0.5,
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <AntDesign
-                      name="closesquare"
-                      size={24}
-                      color="white"
-                      onPress={() => deletebutton(index, item.id)}
-                      style={{
-                        marginTop: 5,
-                        marginRight: 5,
-                        borderRadius: 12,
-                      }}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
+        <View style={{ flexDirection: "row" }}>
+          <AntDesign
+            style={{ marginRight: 15 }}
+            name="user"
+            size={23}
+            color="black"
+            onPress={() => navigation.navigate("UserInfoPage")}
           />
-        </View>
-        <View>
-          <View
-            style={{
-              borderBottomColor: "grey",
-              borderBottomWidth: 0.2,
-            }}
-          />
-        </View>
-        <View style={stylesheet.footer}>
-          <View>
-            <SimpleLineIcons name="folder" size={30} color="#3DD598" />
-          </View>
-          <View>
-            <SimpleLineIcons
-              name="camera"
-              size={30}
-              color="#989898"
-              onPress={() => navigation.navigate("ExpoCameraPage")}
-            />
-          </View>
-          <View>
-            <MaterialCommunityIcons
-              name="map-marker-outline"
-              size={30}
-              color="#989898"
-              onPress={() =>
-                navigation.navigate("MapPage", {
-                  listData: im,
-                  currentLocation: location,
-                })
-              }
-            />
-          </View>
         </View>
       </View>
-    )
+      <View>
+        <View>
+          <BorderLine />
+        </View>
+
+        <SearchBar
+          style={stylesheet.serachbar}
+          fontColor="#c6c6c6"
+          iconColor="#3DD598"
+          shadowColor="#282828"
+          cancelIconColor="#3DD598"
+          placeholder="Search here"
+          onChangeText={(text) => SetfilterText(text)}
+          onSearchPress={() => searchData()}
+          onClearPress={() => SetfilterText("")}
+        />
+      </View>
+      <View style={stylesheet.body}>
+        <FlatList
+          data={im3}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item, index }) => (
+            <View style={stylesheet.flatlist}>
+              <View style={stylesheet.flatcontainer}>
+                <Image
+                  style={stylesheet.tinyLogo}
+                  source={{
+                    uri: item.inference.result_image,
+                  }}
+                />
+              </View>
+              <View style={stylesheet.flattextcontainer}>
+                <View>
+                  <Text style={stylesheet.createdat}>
+                    {item.created_at.substring(0, 10)}
+                  </Text>
+                </View>
+
+                <Text style={stylesheet.resulttext}>
+                  {nameToKor(item.inference.result[0].label_name)}
+                  {/* {item.inference.result[0].label_name} */}
+                </Text>
+              </View>
+
+              <View style={stylesheet.detailcontainer}>
+                <Ionicons
+                  style={{ marginRight: 5 }}
+                  name="search"
+                  size={24}
+                  color="#3DD598"
+                  onPress={() =>
+                    navigation.navigate("DetailPage", {
+                      index: index,
+                      DATA2: im,
+                    })
+                  }
+                />
+
+                <View style={{ marginLeft: 30 }}>
+                  <Text style={{ fontSize: 10, color: "black" }}>상세보기</Text>
+                </View>
+              </View>
+
+              <TouchableOpacity style={stylesheet.deletecontainer}>
+                <AntDesign
+                  name="closesquare"
+                  size={24}
+                  color="#3DD598"
+                  onPress={() => deletebutton(index, item.id)}
+                  style={stylesheet.deleteicon}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      </View>
+      <View>
+        <BorderLine />
+      </View>
+      <View style={stylesheet.footer}>
+        <View>
+          <SimpleLineIcons name="folder" size={30} color="#3DD598" />
+        </View>
+        <View>
+          <SimpleLineIcons
+            name="camera"
+            size={30}
+            color="#989898"
+            onPress={() => navigation.navigate("ExpoCameraPage")}
+          />
+        </View>
+        <View>
+          <MaterialCommunityIcons
+            name="map-marker-outline"
+            size={30}
+            color="#989898"
+            onPress={() =>
+              navigation.navigate("MapPage", {
+                listData: im,
+                currentLocation: location,
+              })
+            }
+          />
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -500,4 +375,68 @@ const stylesheet = StyleSheet.create({
     marginLeft: 15,
     marginTop: 3,
   },
+
+  serachbar: { marginBottom: 20, marginTop: 10, width: 320 },
+
+  flatlist: {
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    marginBottom: 13,
+    height: 105,
+    borderColor: "#989898",
+    borderWidth: 0.2,
+    width: 320,
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#C0C0C0",
+    shadowOpacity: 0.4,
+    elevation: 50,
+    shadowRadius: 5,
+    shadowOffset: { width: 3, height: 3 },
+    marginRight: 20,
+    marginLeft: 20,
+  },
+
+  flatcontainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+    flex: 1,
+  },
+
+  flattextcontainer: {
+    marginLeft: 20,
+    flexDirection: "column",
+    flex: 1,
+  },
+
+  createdat: {
+    color: "black",
+    alignItems: "flex-end",
+    marginTop: 15,
+    marginBottom: 0,
+    fontSize: 12,
+    maxWidth: 80,
+    maxHeight: 12,
+  },
+
+  resulttext: {
+    color: "black",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 15,
+    fontSize: 20,
+  },
+
+  detailcontainer: {
+    flex: 1,
+    alignItems: "flex-end",
+    justifyContent: "center",
+    marginTop: 40,
+  },
+
+  deletecontainer: { alignItems: "center", justifyContent: "center" },
+
+  deleteicon: { marginTop: 5, marginRight: 5, borderRadius: 12 },
 });
