@@ -25,124 +25,151 @@ export function DetailPage({ route, navigation }) {
   const { index, DATA2 } = route.params;
 
   return (
-    <View style={stylesheet.container}>
-      <View>
-        <View
-          style={{
-            marginBottom: 5,
-            borderBottomColor: "black",
-            borderBottomWidth: 0.3,
-          }}
-        />
-      </View>
-      <View style={stylesheet.body}>
-        <View style={{ flex: 5 }}>
-          <Image
-            style={stylesheet.tinyLogo}
-            source={{ uri: DATA2[index].inference.result_image }}
+    /*
+    {DATA2[index].inference.result[0].prob == 0
+      ? DATA2[index].infrence.result[0].prob
+      : DATA2[index].inference.result[0].prob.substring(1, 3)}
+    console.log(),
+*/
+    console.log(DATA2[index].inference.result[0].prob),
+    (
+      <View style={stylesheet.container}>
+        <View>
+          <View
+            style={{
+              marginBottom: 5,
+              borderBottomColor: "black",
+              borderBottomWidth: 0.3,
+            }}
           />
+        </View>
+        <View style={stylesheet.body}>
+          <View style={{ flex: 5 }}>
+            <Image
+              style={stylesheet.tinyLogo}
+              source={{ uri: DATA2[index].inference.result_image }}
+            />
+            <View>
+              <View
+                style={{
+                  borderBottomColor: "black",
+                  borderBottomWidth: 0.3,
+                  marginTop: 5,
+                }}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+
+              flexDirection: "row",
+              backgroundColor: "#FFFFFF",
+              width: "95%",
+            }}
+          >
+            <View
+              style={{
+                flex: 5,
+                marginRight: 20,
+
+                justifyContent: "center",
+              }}
+            >
+              <View>
+                <Text style={{ fontSize: 13, marginLeft: 5 }}>
+                  {DATA2[index].created_at.substring(0, 10)}
+                </Text>
+              </View>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    marginLeft: 5,
+                    marginTop: 3,
+                  }}
+                >
+                  {nameToKor(DATA2[index].inference.result[0].label_name)}
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flex: 5,
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ fontSize: 20 }}>
+                {DATA2[index].inference.result[0].prob == 0
+                  ? DATA2[index].inference.result[0].prob
+                  : DATA2[index].inference.result[0].prob
+                      .toString()
+                      .substring(2, 4)}
+                %
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flex: 3,
+                backgroundColor: "#3DD598",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("DetailMapPage", {
+                    mapData: DATA2[index],
+                  })
+                }
+              >
+                <MaterialCommunityIcons
+                  name="map-marker"
+                  size={30}
+                  color="white"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
           <View>
             <View
               style={{
                 borderBottomColor: "black",
-                borderBottomWidth: 0.3,
+                borderBottomWidth: 1,
                 marginTop: 5,
               }}
             />
           </View>
-        </View>
-
-        <View
-          style={{
-            flex: 1,
-
-            flexDirection: "row",
-            backgroundColor: "#FFFFFF",
-            width: "95%",
-          }}
-        >
           <View
             style={{
-              flex: 8,
+              flex: 4,
+
+              marginLeft: 20,
+              marginTop: 2,
+              width: "95%",
               marginRight: 20,
-
               justifyContent: "center",
-            }}
-          >
-            <View>
-              <Text style={{ fontSize: 13, marginLeft: 5 }}>
-                {DATA2[index].created_at.substring(0, 10)}
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  marginLeft: 5,
-                  marginTop: 3,
-                }}
-              >
-                {nameToKor(DATA2[index].inference.result[0].label_name)}
-              </Text>
-            </View>
-          </View>
-
-          <View
-            style={{
-              flex: 2.5,
-              backgroundColor: "#3DD598",
               alignItems: "center",
-              justifyContent: "center",
             }}
           >
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("DetailMapPage", {
-                  mapData: DATA2[index],
-                })
-              }
-            >
-              <MaterialCommunityIcons
-                name="map-marker"
-                size={30}
-                color="white"
-              />
-            </TouchableOpacity>
+            <Text style={{ fontSize: 17, fontWeight: "bold" }}>
+              Description
+            </Text>
+
+            <ScrollView style={{ marginTop: 20 }}>
+              <Text>{DATA2[index].description}</Text>
+            </ScrollView>
           </View>
         </View>
 
-        <View>
-          <View
-            style={{
-              borderBottomColor: "black",
-              borderBottomWidth: 1,
-              marginTop: 5,
-            }}
-          />
-        </View>
-        <View
-          style={{
-            flex: 4,
-
-            marginLeft: 20,
-            marginTop: 2,
-            width: "95%",
-            marginRight: 20,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ fontSize: 17, fontWeight: "bold" }}>Description</Text>
-
-          <ScrollView style={{ marginTop: 20 }}>
-            <Text>{DATA2[index].description}</Text>
-          </ScrollView>
-        </View>
+        <View style={stylesheet.footer}></View>
       </View>
-
-      <View style={stylesheet.footer}></View>
-    </View>
+    )
   );
 }
 
