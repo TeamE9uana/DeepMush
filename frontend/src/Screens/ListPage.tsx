@@ -37,7 +37,7 @@ import { SearchBarComponent } from "../Components/SearchBarComponent";
 import { ListBodyComponent } from "../Components/ListBodyComponent";
 import { ListFooterComponent } from "../Components/ListFooterComponent";
 import * as Location from "expo-location";
-import { nameToKor } from "../Components/functionComponent";
+import { nameToKor, 빈결과검출 } from "../Components/functionComponent";
 
 // 메인 flatlist에 사용 되는 json
 let im = [];
@@ -163,7 +163,7 @@ export function ListPage({
 
   // listpage 동작시 useEffect 작동 -> get Method 실행해서 이미지 리스트들을 받아오고 im state에 결과값을 저장한다
   useEffect(() => {
-    expoLocation();
+    setLocation(expoLocation());
     //get method - fetch
     async function fetchAndSetList() {
       var myHeaders = await new Headers();
@@ -187,21 +187,7 @@ export function ListPage({
       //await console.log("this is im inference result" + im[3].inference.result);
       //await console.log("this is im inference result" + im[0].inference.result);
 
-      for (let i = 0; i < im.length; i++) {
-        var count = 0;
-        for await (const element of im[i].inference.result) {
-          count++;
-        }
-
-        if (count == 0) {
-          await console.log("result is empty");
-          im[i].inference.result = [{ prob: "0", label_name: "empty" }];
-
-          console.log("[empty]" + im[i].inference.result[0].prob);
-        } else {
-          await console.log("result is not empty");
-        }
-      }
+      await 빈결과검출(im, im3);
 
       im3 = im;
 

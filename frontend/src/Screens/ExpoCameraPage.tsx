@@ -21,6 +21,7 @@ import { ListPage } from "./ListPage";
 
 import { ExifParserFactory } from "ts-exif-parser";
 import * as Location from "expo-location";
+import { expoLocation } from "../Components/functionComponent";
 
 let cameraFace = "back";
 
@@ -29,7 +30,6 @@ export const ExpoCameraPage = ({ navigation }: any) => {
 
   let camera: Camera;
 
-  let location = null;
   const [startCamera, setStartCamera] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState<any>(null);
@@ -41,21 +41,6 @@ export const ExpoCameraPage = ({ navigation }: any) => {
   const [errorMsg, setErrorMsg] = useState(null);
 
   // expo-location
-  const expoLocation = async () => {
-    //expo-location 권한요청
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
-      return;
-    }
-
-    //현재위치데이터 받아오기
-    location = await Location.getCurrentPositionAsync({});
-
-    //위도 경도 콘솔
-    await console.log("this is latitude : " + location.coords.latitude);
-    await console.log("this is longitude : " + location.coords.longitude);
-  };
 
   // Gets permission from user to use camera
   const handleStartCamera = async () => {
@@ -91,7 +76,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
     const fileName = image.split("/").pop();
     newUri = FileSystem.documentDirectory + fileName;
 
-    await expoLocation();
+    var location = await expoLocation();
 
     await FileSystem.moveAsync({ from: image, to: newUri });
 
@@ -173,7 +158,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
       //setImage(result.uri);
       // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
 
-      await expoLocation();
+      var location = await expoLocation();
 
       var myHeaders = new Headers();
       myHeaders.append("Authorization", `Token ${token}`);
@@ -239,16 +224,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
                 </TouchableOpacity>
               </View>
               <View>
-                <Text
-                  style={{
-                    color: "white",
-                    fontSize: 20,
-                    marginLeft: 70,
-                    marginRight: 70,
-                  }}
-                >
-                  deepmush
-                </Text>
+                <Text style={styles.logotext}>deepmush</Text>
               </View>
 
               <View>
@@ -396,6 +372,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-around",
+  },
+
+  logotext: {
+    color: "white",
+    fontSize: 20,
+    marginLeft: 70,
+    marginRight: 70,
   },
 });
 
