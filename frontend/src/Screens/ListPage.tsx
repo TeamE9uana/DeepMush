@@ -58,6 +58,7 @@ export function ListPage({
 
   const expoLocation = async () => {
     await setLoading(true);
+
     //expo-location 권한요청
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -69,10 +70,11 @@ export function ListPage({
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
 
-    await setLoading(false);
     //위도 경도 콘솔
     await console.log(location.coords.latitude);
     await console.log(location.coords.longitude);
+
+    await setLoading(false);
   };
   // const { didupload } = route.params;
 
@@ -170,8 +172,6 @@ export function ListPage({
 
   // listpage 동작시 useEffect 작동 -> get Method 실행해서 이미지 리스트들을 받아오고 im state에 결과값을 저장한다
   useEffect(() => {
-    expoLocation();
-
     //get method - fetch
     async function fetchAndSetList() {
       await setLoading(true);
@@ -203,6 +203,7 @@ export function ListPage({
 
       await setupdatedata(im);
       await setLoading(false);
+      expoLocation();
 
       //console.log(im);
     }

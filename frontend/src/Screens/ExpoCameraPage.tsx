@@ -228,10 +228,7 @@ export const ExpoCameraPage = ({ navigation }: any) => {
               </View>
 
               <View>
-                <TouchableOpacity
-                  disabled={loading}
-                  onPress={() => navigation.goBack()}
-                >
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                   <Text style={{ color: "white", fontSize: 20 }}>✖</Text>
                 </TouchableOpacity>
               </View>
