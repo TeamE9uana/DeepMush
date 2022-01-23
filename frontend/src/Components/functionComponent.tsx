@@ -36,9 +36,10 @@ export const expoLocation = async () => {
   var location = await Location.getCurrentPositionAsync({});
 
   //위도 경도 콘솔
+  /*
   await console.log("this is latitude : " + location.coords.latitude);
   await console.log("this is longitude : " + location.coords.longitude);
-
+*/
   return location;
 };
 
@@ -50,12 +51,12 @@ export const 빈결과검출 = async (im, im3) => {
     }
 
     if (count == 0) {
-      await console.log("result is empty");
+      //await console.log("result is empty");
       im[i].inference.result = [{ prob: "0", label_name: "empty" }];
 
-      console.log("[empty]" + im[i].inference.result[0].prob);
+      //console.log("[empty]" + im[i].inference.result[0].prob);
     } else {
-      await console.log("result is not empty");
+      //await console.log("result is not empty");
     }
   }
 };
