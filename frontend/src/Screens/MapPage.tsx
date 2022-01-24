@@ -100,6 +100,7 @@ export const MapPage = ({ route, navigation }) => {
               coordinate={{ latitude: props.lat, longitude: props.lng }}
               onPress={(evt) => setClicked(!clicked)}
               description={props.name}
+              image={require("../images/mushIcon14.png")}
             />
           </>
         ))}
