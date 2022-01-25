@@ -37,7 +37,8 @@ import { SearchBarComponent } from "../Components/SearchBarComponent";
 import { ListBodyComponent } from "../Components/ListBodyComponent";
 import { ListFooterComponent } from "../Components/ListFooterComponent";
 import * as Location from "expo-location";
-import { nameToKor } from "../Components/functionComponent";
+import { nameToKor, 빈결과검출 } from "../Components/functionComponent";
+import Spinner from "react-native-loading-spinner-overlay";
 
 // 메인 flatlist에 사용 되는 json
 let im = [];
@@ -51,11 +52,13 @@ export function ListPage({
   navigation,
 }) {
   const [location, setLocation] = useState(null);
-
   const isFocused = useIsFocused();
   const [errorMsg, setErrorMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const expoLocation = async () => {
+    await setLoading(true);
+
     //expo-location 권한요청
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -66,9 +69,12 @@ export function ListPage({
     //현재위치데이터 받아오기
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
+
     //위도 경도 콘솔
     await console.log(location.coords.latitude);
     await console.log(location.coords.longitude);
+
+    await setLoading(false);
   };
   // const { didupload } = route.params;
 
@@ -86,6 +92,7 @@ export function ListPage({
 
   // not completed - deletebutton , 삭제 api 연동 필요
   var deletebutton = async (index, id) => {
+    await setLoading(true);
     var le = im.length;
 
     setupdatedata(im.splice(index, 1));
@@ -113,6 +120,8 @@ export function ListPage({
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
+
+    await setLoading(false);
   };
 
   // 텍스트 검색 state 서버 작업 완료시 로컬 데이터인 DATA2에서 im으로 변경필요
@@ -163,9 +172,10 @@ export function ListPage({
 
   // listpage 동작시 useEffect 작동 -> get Method 실행해서 이미지 리스트들을 받아오고 im state에 결과값을 저장한다
   useEffect(() => {
-    expoLocation();
     //get method - fetch
     async function fetchAndSetList() {
+      await setLoading(true);
+
       var myHeaders = await new Headers();
       await myHeaders.append("Authorization", `Token ${token}`);
       await myHeaders.append("Content-Type", "multipart/form-data");
@@ -187,25 +197,16 @@ export function ListPage({
       //await console.log("this is im inference result" + im[3].inference.result);
       //await console.log("this is im inference result" + im[0].inference.result);
 
-      for (let i = 0; i < im.length; i++) {
-        var count = 0;
-        for await (const element of im[i].inference.result) {
-          count++;
-        }
-
-        if (count == 0) {
-          await console.log("result is empty");
-          im[i].inference.result = [{ prob: "0", label_name: "empty" }];
-
-          console.log("[empty]" + im[i].inference.result[0].prob);
-        } else {
-          await console.log("result is not empty");
-        }
-      }
+      await 빈결과검출(im, im3);
 
       im3 = im;
 
       await setupdatedata(im);
+      await setLoading(false);
+
+      if (location == null) {
+        expoLocation();
+      }
 
       //console.log(im);
     }
@@ -214,6 +215,8 @@ export function ListPage({
 
   return (
     <View style={stylesheet.container}>
+      <Spinner visible={loading} textContent={"Loading..."} />
+
       <View style={stylesheet.header}>
         <View>
           <Text style={stylesheet.logotext}>🍄deepmush</Text>

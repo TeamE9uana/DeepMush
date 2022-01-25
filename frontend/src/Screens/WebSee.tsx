@@ -41,17 +41,11 @@ export function WebSee({ route, navigation }: any) {
   const _handleMessage = async (event: any) => {
     result = await JSON.parse(event.nativeEvent.data);
     await console.log("testing " + url);
-    await console.log(result);
-    await console.log(result.profile.id);
-    await console.log(result.profile.name);
-    await console.log(result.profile.email);
 
     await localStorage.setItem("access_token", result.access_token);
     await localStorage.setItem("name", result.profile.name);
     await localStorage.setItem("email", result.profile.email);
     await localStorage.setItem("id", result.profile.id);
-
-    await console.log(localStorage.getItem("access_token"));
 
     await navigation.navigate("ListPage");
   };

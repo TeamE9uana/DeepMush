@@ -64,6 +64,7 @@ const midLocation: Coordinate = {
 
 export const MapPage = ({ route, navigation }) => {
   const { listData, currentLocation } = route.params;
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitleVisivle: false,
@@ -81,75 +82,68 @@ export const MapPage = ({ route, navigation }) => {
   const [markers, setMarkers] = useState(listData);
 
   return (
-    console.log(listData),
-    (
-      <View style={styles.container}>
-        <MapView
-          style={styles.map}
-          provider={"google"}
-          initialRegion={{
+    <View style={styles.container}>
+      <MapView
+        style={styles.map}
+        provider={"google"}
+        initialRegion={{
+          latitude: currentLocation.coords.latitude,
+          longitude: currentLocation.coords.longitude,
+          latitudeDelta: 0.03,
+          longitudeDelta: 0.04,
+        }}
+      >
+        {markers.map((props, index) => (
+          <>
+            <Marker
+              key={index}
+              coordinate={{ latitude: props.lat, longitude: props.lng }}
+              onPress={(evt) => setClicked(!clicked)}
+              description={props.name}
+              image={require("../images/mushIcon14.png")}
+            />
+          </>
+        ))}
+
+        <Marker
+          coordinate={{
             latitude: currentLocation.coords.latitude,
             longitude: currentLocation.coords.longitude,
-            latitudeDelta: 0.03,
-            longitudeDelta: 0.04,
           }}
+          description="currentLocation"
+          pinColor={"black"}
         >
-          {markers.map(
-            (props, index) => (
-              console.log(props.lat + "  " + index),
-              (
-                <>
-                  <Marker
-                    key={index}
-                    coordinate={{ latitude: props.lat, longitude: props.lng }}
-                    onPress={(evt) => setClicked(!clicked)}
-                    description={props.name}
-                  />
-                </>
-              )
-            )
-          )}
+          <Callout tooltip></Callout>
+        </Marker>
 
-          <Marker
-            coordinate={{
-              latitude: currentLocation.coords.latitude,
-              longitude: currentLocation.coords.longitude,
-            }}
-            description="currentLocation"
-            pinColor={"black"}
-          >
-            <Callout tooltip></Callout>
-          </Marker>
-
-          <TouchableOpacity
-            style={styles.touchableOpacityStyle}
-          ></TouchableOpacity>
-        </MapView>
-        <View style={stylesheet.footer}>
-          <View>
-            <TouchableOpacity onPress={() => navigation.navigate("ListPage")}>
-              <SimpleLineIcons name="folder" size={30} color="#989898" />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <SimpleLineIcons
-              name="camera"
-              size={30}
-              color="#989898"
-              onPress={() => navigation.navigate("ExpoCameraPage")}
-            />
-          </View>
-          <View>
-            <MaterialCommunityIcons
-              name="map-marker-outline"
-              size={30}
-              color="#3DD598"
-              // onPress={() => navigation.navigate("MapPage")}
-            />
-          </View>
+        <TouchableOpacity
+          style={styles.touchableOpacityStyle}
+        ></TouchableOpacity>
+      </MapView>
+      <View style={stylesheet.footer}>
+        <View>
+          <TouchableOpacity onPress={() => navigation.navigate("ListPage")}>
+            <SimpleLineIcons name="folder" size={30} color="#989898" />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <SimpleLineIcons
+            name="camera"
+            size={30}
+            color="#989898"
+            onPress={() => navigation.navigate("ExpoCameraPage")}
+          />
+        </View>
+        <View>
+          <MaterialCommunityIcons
+            name="map-marker-outline"
+            size={30}
+            color="#3DD598"
+            // onPress={() => navigation.navigate("MapPage")}
+          />
         </View>
       </View>
-    )
+    </View>
   );
 };
 

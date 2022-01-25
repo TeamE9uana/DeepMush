@@ -19,6 +19,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { nameToKor } from "../Components/functionComponent";
+import { BorderLine } from "../Components/BorderLineComponent";
 
 export function DetailPage({ route, navigation }) {
   // imagelist(json) , json index params from ListPage
@@ -26,76 +27,43 @@ export function DetailPage({ route, navigation }) {
 
   return (
     <View style={stylesheet.container}>
-      <View>
-        <View
-          style={{
-            marginBottom: 5,
-            borderBottomColor: "black",
-            borderBottomWidth: 0.3,
-          }}
-        />
-      </View>
+      <BorderLine />
+
       <View style={stylesheet.body}>
         <View style={{ flex: 5 }}>
           <Image
             style={stylesheet.tinyLogo}
             source={{ uri: DATA2[index].inference.result_image }}
           />
-          <View>
-            <View
-              style={{
-                borderBottomColor: "black",
-                borderBottomWidth: 0.3,
-                marginTop: 5,
-              }}
-            />
-          </View>
+          <BorderLine />
         </View>
 
-        <View
-          style={{
-            flex: 1,
-
-            flexDirection: "row",
-            backgroundColor: "#FFFFFF",
-            width: "95%",
-          }}
-        >
-          <View
-            style={{
-              flex: 8,
-              marginRight: 20,
-
-              justifyContent: "center",
-            }}
-          >
+        <View style={stylesheet.textcontainer}>
+          <View style={stylesheet.infocontainer}>
             <View>
               <Text style={{ fontSize: 13, marginLeft: 5 }}>
                 {DATA2[index].created_at.substring(0, 10)}
               </Text>
             </View>
             <View>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  marginLeft: 5,
-                  marginTop: 3,
-                }}
-              >
+              <Text style={stylesheet.label_name}>
                 {nameToKor(DATA2[index].inference.result[0].label_name)}
               </Text>
             </View>
           </View>
 
-          <View
-            style={{
-              flex: 2.5,
-              backgroundColor: "#3DD598",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <View style={stylesheet.percentcontainer}>
+            <Text style={{ fontSize: 20 }}>
+              {DATA2[index].inference.result[0].prob == 0
+                ? DATA2[index].inference.result[0].prob
+                : DATA2[index].inference.result[0].prob
+                    .toString()
+                    .substring(2, 4)}
+              %
+            </Text>
+          </View>
+
+          <View style={stylesheet.icon_container}>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("DetailMapPage", {
@@ -112,28 +80,10 @@ export function DetailPage({ route, navigation }) {
           </View>
         </View>
 
-        <View>
-          <View
-            style={{
-              borderBottomColor: "black",
-              borderBottomWidth: 1,
-              marginTop: 5,
-            }}
-          />
-        </View>
-        <View
-          style={{
-            flex: 4,
+        <BorderLine />
 
-            marginLeft: 20,
-            marginTop: 2,
-            width: "95%",
-            marginRight: 20,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ fontSize: 17, fontWeight: "bold" }}>Description</Text>
+        <View style={stylesheet.description_container}>
+          <Text style={stylesheet.description_textcontainer}>Description</Text>
 
           <ScrollView style={{ marginTop: 20 }}>
             <Text>{DATA2[index].description}</Text>
@@ -174,6 +124,50 @@ const stylesheet = StyleSheet.create({
     width: 393,
     height: 304,
   },
+
+  textcontainer: {
+    flex: 1,
+
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF",
+    width: "95%",
+  },
+
+  infocontainer: {
+    flex: 5,
+    marginRight: 20,
+    justifyContent: "center",
+  },
+
+  label_name: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 5,
+    marginTop: 3,
+  },
+
+  percentcontainer: {
+    flex: 5,
+    justifyContent: "center",
+  },
+
+  icon_container: {
+    flex: 3,
+    backgroundColor: "#3DD598",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  description_container: {
+    flex: 4,
+    marginLeft: 20,
+    marginTop: 2,
+    width: "95%",
+    marginRight: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  description_textcontainer: { fontSize: 17, fontWeight: "bold" },
 });
 
 export default DetailPage;
