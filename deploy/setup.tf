@@ -44,16 +44,10 @@ resource "null_resource" "ansible_exec" {
         command = <<EOF
             echo "[deepmush]" > inventory
             echo "${vultr_instance.k3s.main_ip} ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/vultr" >> inventory
+            
+            sleep 240s
+            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -T 9999 -i inventory setup.yaml
         EOF
-    }
-
-
-    provisioner "local-exec" {
-        command = <<EOT
-            sleep 120s
-            ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -T 9999 -i inventory setup.yaml
-        EOT
     }
 }
 
@@ -62,7 +56,7 @@ resource "null_resource" "k3s_launch" {
     provisioner "local-exec" {
         command = <<EOT
             KUBECONFIG=$(pwd)/k3s.yaml:$KUBECONFIG
-            kubectl config set-context deepmush-k3s
+            kubectl config use-context deepmush-k3s
             cd ..
             ./init-k3s-cluster.sh
         EOT
