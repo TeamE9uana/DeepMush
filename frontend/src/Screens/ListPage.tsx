@@ -203,7 +203,10 @@ export function ListPage({
 
       await setupdatedata(im);
       await setLoading(false);
-      expoLocation();
+
+      if (location == null) {
+        expoLocation();
+      }
 
       //console.log(im);
     }

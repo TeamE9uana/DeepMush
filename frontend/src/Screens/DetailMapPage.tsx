@@ -69,6 +69,7 @@ export const DetailMapPage = ({ route, navigation }) => {
         <Marker
           coordinate={{ latitude: mapData.lat, longitude: mapData.lng }}
           onPress={(evt) => setClicked(!clicked)}
+          image={require("../images/mushIcon14.png")}
           description="버섯넘버"
         />
         <TouchableOpacity
