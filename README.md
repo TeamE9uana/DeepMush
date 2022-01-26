@@ -116,7 +116,7 @@
 <br>
 <br>
 
-# directory tree
+# Directory tree
 
 ```
 .
@@ -172,22 +172,22 @@
 │   ├── shim.js
 │   └── src
 │   │   ├── Components
-│   │   │   ├── BorderLineComponent.tsx
-│   │   │   ├── ListBodyComponent.tsx
-│   │   │   ├── ListFooterComponent.tsx
-│   │   │   ├── ListPageHeaderComponent.tsx
-│   │   │   ├── SearchBarComponent.tsx
-│   │   │   └── functionComponent.tsx
+│   │   │   ├── BorderLineComponent.tsx //line component 
+│   │   │   ├── ListBodyComponent.tsx //mushromm list body component
+│   │   │   ├── ListFooterComponent.tsx // mushroom list foot component
+│   │   │   ├── ListPageHeaderComponent.tsx // mushroon list header component
+│   │   │   ├── SearchBarComponent.tsx //searchbar component
+│   │   │   └── functionComponent.tsx //empty mushroom detect and expolocation function component
 │   │   ├── MainContainer.tsx
 │   │   ├── Screens
-│   │   │   ├── DetailMapPage.tsx
-│   │   │   ├── DetailPage.tsx
-│   │   │   ├── ExpoCameraPage.tsx
-│   │   │   ├── ListPage.tsx
-│   │   │   ├── LoginPage.tsx
-│   │   │   ├── MapPage.tsx
-│   │   │   ├── UserInfoPage.tsx
-│   │   │   └── WebSee.tsx
+│   │   │   ├── DetailMapPage.tsx //detail mushroom location page
+│   │   │   ├── DetailPage.tsx //detail mushroom info page
+│   │   │   ├── ExpoCameraPage.tsx //camera and image to server api 
+│   │   │   ├── ListPage.tsx //mushroom list page
+│   │   │   ├── LoginPage.tsx //google login and kakao login
+│   │   │   ├── MapPage.tsx //all mushroom's location 
+│   │   │   ├── UserInfoPage.tsx //user info page 
+│   │   │   └── WebSee.tsx //webview page for social login
 │   ├── tsconfig.json
 │   ├── yarn-error.log
 │   └── yarn.lock
