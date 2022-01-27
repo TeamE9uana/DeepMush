@@ -6,7 +6,7 @@
 # **🍄 DeepMush**
 
 <img alt="Python" src ="https://img.shields.io/badge/Python-3776AB.svg?&style=for-the-badge&logo=Python&logoColor=white"/>
-<img alt="Expo" src ="https://img.shields.io/badge/Expo-#00020.svg?&style=for-the-badge&logo=Expo&logoColor=white"/>
+<img alt="Expo" src ="https://img.shields.io/badge/Expo-00020.svg?&style=for-the-badge&logo=Expo&logoColor=white"/>
 
 
 - 버섯 AI 분석 및 버섯채집위치 저장 플랫폼
