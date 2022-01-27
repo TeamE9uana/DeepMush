@@ -77,6 +77,7 @@
 
 
 ## **🏢 System Architecture**
+<br>
 
 
 <p align="center">  
@@ -86,22 +87,27 @@
 <br>
 
 ## 🔧 Tech stack
+<br>
+
 
 
 | 분류          | 기술                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 개발환경      | ![NHN](https://img.shields.io/badge/NHN_Cloud_Ubuntu-20.04-blue?logo=ubuntu) ![S3](https://img.shields.io/badge/S3-gray?logo=AmazonS3) ![Docker](https://img.shields.io/badge/docker-gray?logo=docker)                                                                                                                                                                                                                                                                                     |
-| [Frontend](frontend/README.md)     | ![react](https://img.shields.io/badge/react-gray?logo=react) ![expo](https://img.shields.io/badge/Expo-000020.svg?&logo=Expo&logoColor=white") ![Javascript](https://img.shields.io/badge/javascript-ES6+-yellow?logo=javascript) ![Styled-components](https://img.shields.io/badge/styled_components-gray?logo=styled-components)                                                                                                     |
-| [Backend](backend/README.md)      | ![Flask](https://img.shields.io/badge/flask-1.1.2-green?logo=flask) ![Python](https://img.shields.io/badge/python-3.7.6-skyblue?logo=python) ![Gunicorn](https://img.shields.io/badge/gunicorn-gray?logo=gunicorn) ![Postman](https://img.shields.io/badge/postman-gray?logo=postman) ![Swagger](https://img.shields.io/badge/swagger-gray?logo=swagger)                                                                                                                                   |
-| DB            | ![MongoDB](https://img.shields.io/badge/mongodb-gray?logo=mongodb)                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| Deep learning | ![Pytorch](https://img.shields.io/badge/pytorch-gray?logo=pytorch) ![Colab](https://img.shields.io/badge/colab-gray?logo=GoogleColab) ![Yolov5](https://img.shields.io/badge/yolov5-gray?logo=yolov5)                                                                                                                                                                                                                                                                                      |
-| Etc           | ![Nginx](https://img.shields.io/badge/Nginx-gray?logo=nginx) ![github](https://img.shields.io/badge/github-gray?logo=github) ![VScode](https://img.shields.io/badge/VScode-gray?logo=visual-studio-code) ![AWS](https://img.shields.io/badge/AWS-EC2_instance-orange?logo=aws) ![Prometheus](https://img.shields.io/badge/Prometheus-gray?logo=Prometheus) ![Grafana](https://img.shields.io/badge/Grafana-gray?logo=Grafana) |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | 
+| CI/CD      | ![Terraform](https://img.shields.io/badge/Terraform-purple?logo=Terraform) ![GithubActions](https://img.shields.io/badge/GithubActions-black?logo=GithubActions) ![AmazonAWS](https://img.shields.io/badge/AmazonAWS-black?logo=AmazonAWS) ![Ansible](https://img.shields.io/badge/Ansible-black?logo=Ansible)                                                                                                                                                                                                                                                                              |
+| 개발환경      |  ![Kubernetes](https://img.shields.io/badge/Kubernetes-black?logo=Kubernetes) ![S3](https://img.shields.io/badge/S3-orange?logo=AmazonS3)                                                                                                                                                                                                                                                                                      |
+| [Frontend](frontend/README.md)     | ![react](https://img.shields.io/badge/react-gray?logo=react) ![expo](https://img.shields.io/badge/Expo-000020.svg?&logo=Expo&logoColor=white") ![typescript](https://img.shields.io/badge/typescript-white?logo=typescript) ![Styled-components](https://img.shields.io/badge/styled_components-gray?logo=styled-components)                                                                                                     |
+| [Backend](backend/README.md)      | ![Django](https://img.shields.io/badge/Django-green?logo=Django) ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-gray?logo=RabbitMQ) ![Elasticsearch](https://img.shields.io/badge/Elasticsearch-005571?logo=Elasticsearch) ![Kibana](https://img.shields.io/badge/Kibana-purple?logo=Kibana)  ![Logstash](https://img.shields.io/badge/Logstash-yellow?logo=Logstash)  ![Gunicorn](https://img.shields.io/badge/gunicorn-green?logo=gunicorn) ![Swagger](https://img.shields.io/badge/swagger-gray?logo=swagger)                                                                                                                                   |
+| DB            | ![MongoDB](https://img.shields.io/badge/mongodb-gray?logo=mongodb) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-white?logo=PostgreSQL)                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Deep learning | ![Python](https://img.shields.io/badge/Python-yellow?logo=Python) ![Colab](https://img.shields.io/badge/colab-gray?logo=GoogleColab) ![Yolov5](https://img.shields.io/badge/yolov5-green?logo=yolov5) ![Selenium](https://img.shields.io/badge/Selenium-black?logo=Selenium)                                                                                                                                                                                                                                                                                  |
+| Etc           | ![Prometheus](https://img.shields.io/badge/Prometheus-gray?logo=Prometheus) ![Grafana](https://img.shields.io/badge/Grafana-gray?logo=Grafana) |
 
 <br>
 
 
 
 ## **📑 Swagger**
+<br>
+
 
 <p align="center">
 <img alt="swagger" src="https://user-images.githubusercontent.com/52617204/151116968-91daa564-0b19-4fd6-894e-939737c26150.png">
@@ -110,6 +116,7 @@
 <br>
 
 ## **🤖 AI**
+<br>
  
 <img alt="swagger" src="https://user-images.githubusercontent.com/52617204/151129010-5bb17820-b6f5-4b5c-8ab3-2073dcdb0642.png">
 <img alt="swagger" src="https://user-images.githubusercontent.com/52617204/151129058-aaf95002-6958-48dc-829c-95ac43d61dad.png">
@@ -133,6 +140,8 @@
 <br>
 
 # Directory tree
+<br>
+
 
 ```
 .
@@ -229,10 +238,12 @@
 
 
 
+<br>
 
 
 
 ## **👨‍👨‍👧‍👦 Members**
+<br>
 
 | 이름       | 개발분야                           | 소개페이지                                         | 
 | ---------- | ---------------------------------- |  -------------------------------------------------- |
