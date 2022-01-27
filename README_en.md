@@ -1,14 +1,14 @@
 
-한국어 | [English](README_en.md)
+[한국어](README.md) | [English]
 
 <br>
 
 # **🍄 DeepMush**
 
 
-- 버섯 AI 분석 및 버섯채집위치 저장 플랫폼
+- Platform for classifying and saving locations of mushrooms
 
-화면 흐름 모델
+App Flow Model
 
 
 <p>
@@ -18,20 +18,20 @@
 
 # Core Screen
 <br>
-1.소셜로그인
+1.Social Login
 <br>
-2.유저정보
+2.User Information
 <br>
-3.버섯리스트
+3.Mushroom List
 <br>
-4.카메라화면/AI분석
+4.Camera Interface/AI Classification
 <br>
-5.버섯위치정보
+5.Mushroom Location Data
 <br>
 <br>
 
 
-소셜로그인,유저정보
+Social Login and User Information
 <br>
 
 
@@ -44,7 +44,7 @@
 </p>
 <br>
 
-버섯리스트(검색/삭제/상세)
+Mushroom List(Search/Delete/Details)
 <p>
  <img width="250" height="545" alt="quizmaker_imageupload" src="https://user-images.githubusercontent.com/52617204/151110573-e3f309ff-6063-42d1-bee7-64d1f512db69.gif">
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -54,7 +54,7 @@
 </p>
 <br>
 
-카메라화면/AI분석(앨범업로드,촬영업로드,empty)
+Camera Interface/AI Classification(Album Upload,Camera Upload,empty)
 
 
 <p>
@@ -67,7 +67,7 @@
 <br>
 
 
-버섯위치정보
+Mushroom Location Data
 
 <p>
  <img width="250" height="545" alt="quizmaker_imageupload" src="https://user-images.githubusercontent.com/52617204/151110793-70e0f4fe-05bd-4232-b1b6-16ccad3acad3.gif">
@@ -84,7 +84,6 @@
 
 <br>
 
-## develop stack
 
 
 
@@ -221,10 +220,10 @@
 
 ## **👨‍👨‍👧‍👦 Members**
 
-| 이름       | 개발분야                           | 소개페이지                                         | 
+| Name       | Development Area                          | About                                         | 
 | ---------- | ---------------------------------- |  -------------------------------------------------- |
-|김민웅   | Front-end                          |  [개인 리포로 이동](https://github.com/POL6463)  |
-|김준형   | Front-end                          |                      [개인 리포로 이동](https://github.com/junhyeongkim2)   |
-|이지호   | Back-end                           |                   [개인 리포로 이동](https://github.com/DPS0340)   |
-|최우석   | Back-end                           |                   [개인 리포로 이동](https://github.com/wsChoe123) |
-|Ryan Lee | Deep learning                      |                                 [개인 리포로 이동](https://github.com/printSANO)   |
+|김민웅 Kevin Kim   | Front-end                          |  [Github Profile](https://github.com/POL6463)  |
+|김준형  JunHyeong Kim | Front-end                          |                      [Github Profile](https://github.com/junhyeongkim2)   |
+|이지호  Jiho Lee | Back-end                           |                   [Github Profile](https://github.com/DPS0340)   |
+|최우석  WooSeok Choe | Back-end                           |                   [Github Profile](https://github.com/wsChoe123) |
+|Ryan Lee | Deep learning                      |                                 [Github Profile](https://github.com/printSANO)   |
