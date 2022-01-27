@@ -4,6 +4,7 @@
 <br>
 
 # **🍄 DeepMush**
+<img alt="Python" src ="https://img.shields.io/badge/Python-#3776AB.svg?&style=for-the-badge&logo=Python&logoColor=#3776AB"/>
 
 
 - 버섯 AI 분석 및 버섯채집위치 저장 플랫폼
